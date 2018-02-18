@@ -21,10 +21,12 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){
-			firebase.database().ref('users/' + user.uid + '/wishlist/').once('value').then(function(snapshot) {
-				$scope.wishlist = snapshot.toJSON();
-				$scope.$apply();
-			});
+			if (user) {
+				firebase.database().ref('users/' + user.uid + '/wishlist/').once('value').then(function(snapshot) {
+					$scope.wishlist = snapshot.toJSON();
+					$scope.$apply();
+				});
+			}
 		});
 	}
 	
@@ -32,14 +34,16 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){
-			firebase.database().ref('users/' + user.uid + '/wishlist').child(collectibleName).remove()
-			  .then(function() {
-				console.log("Remove succeeded.");
-				$scope.fetchWishlist();
-			  })
-			  .catch(function(error) {
-				console.log("Remove failed: " + error.message);
-			  });
+			if (user) {
+				firebase.database().ref('users/' + user.uid + '/wishlist').child(collectibleName).remove()
+				.then(function() {
+					console.log("Remove succeeded.");
+					$scope.fetchWishlist();
+				})
+				.catch(function(error) {
+					console.log("Remove failed: " + error.message);
+				});
+			}
 		});
 	}
 	

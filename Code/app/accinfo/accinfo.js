@@ -21,10 +21,12 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){
-			firebase.database().ref('/users/' + user.uid).once('value').then(function(snapshot) {
-				$scope.userInfo = snapshot.toJSON();
-				$scope.$apply();
-			});
+			if (user) {
+				firebase.database().ref('/users/' + user.uid).once('value').then(function(snapshot) {
+					$scope.userInfo = snapshot.toJSON();
+					$scope.$apply();
+				});
+			}
 		});
 	}
 	
@@ -33,13 +35,15 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){
-			firebase.database().ref('users/' + user.uid).set({
-				username: username,
-				email: email,
-				firstName: firstName,
-				lastName: lastName
-			});
-			$rootScope.error("Information saved.");
+			if (user) {
+				firebase.database().ref('users/' + user.uid).set({
+					username: username,
+					email: email,
+					firstName: firstName,
+					lastName: lastName
+				});
+				$rootScope.error("Information saved.");
+			}
 		});
 	}
 	
