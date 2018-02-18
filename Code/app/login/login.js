@@ -27,23 +27,25 @@ angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
 		  console.log(errorCode + ": " + errorMessage);
-		  alert(errorMessage);
+		  $rootScope.error(errorMessage);
 		});
 	}
 	
-	$scope.forgotPassword = function(email) {
+	$scope.forgotPassword = function(email) {		
 		var auth = firebase.auth();
 
 		if (email == null) {
-			alert("Please enter your email.");
+			$rootScope.error("Please enter your email.");
 		} else {
 			auth.sendPasswordResetEmail(email).then(function() {
 			  console.log("Password reset email sent.");
+			  $rootScope.error("Password reset email sent.");
+			  $scope.forgotPasswordEmail = null;
 			}).catch(function(error) {
 			  console.log(error.message);
-			  alert(error.message);
+			  $rootScope.error(error.message);
+			  $scope.forgotPasswordEmail = null;
 			});
 		}
-	}
-	
+	}	
 });

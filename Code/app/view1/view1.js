@@ -22,7 +22,7 @@ angular.module('myApp.view1', ['ngRoute'])
 		  var errorMessage = error.message;
 		  console.log(errorCode + ": " + errorMessage);
 		  if (errorCode.includes("email-already-in-use")) {
-			  alert("User already exists.");
+			  $rootScope.error("User already exists.");
 		  } else {
 			  console.log(error.message);
 		  }
@@ -33,7 +33,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			  
 			user.sendEmailVerification().then(function() {
 			  	console.log("Verification email sent");
-			  	alert("Verification email sent.");
+			  	$rootScope.error("Verification email sent.");
 				firebase.database().ref('users/' + user.uid).set({
 					username: username,
 					email: email
@@ -79,7 +79,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			console.log("Reauthentication successful.");
 			user.updatePassword(newPassword).then(function() {
 			  console.log("Password changed.");
-			  alert("Password successfully changed.");
+			  $rootScope.error("Password successfully changed.");
 			}).catch(function(error) {
 			  var errorCode = error.code;
 			  var errorMessage = error.message;
@@ -112,7 +112,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			firebase.database().ref('users/' + user.uid).set(null);
 			user.delete().then(function() {
 			  console.log("Account successfully deleted.");
-			  alert("Account successfully deleted");
+			  $rootScope.error("Account successfully deleted");
 			}).catch(function(error) {
 			  console.log(error.message);
 			});	
@@ -218,7 +218,7 @@ angular.module('myApp.view1', ['ngRoute'])
 				firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set(true);
 
 			} else {
-				alert("Collectible with that name already exists.");
+				$rootScope.error("Collectible with that name already exists.");
 			}
 		});
 	}
@@ -237,7 +237,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			
 			firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(childSnapshot) {
 				if (snapshot.val().category != childSnapshot.val().category) {
-					alert("Item trove does not match folder.");
+					$rootScope.error("Item trove does not match folder.");
 				}
 				else {
 					firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/').child(collectibleName).set({

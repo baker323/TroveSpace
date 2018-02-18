@@ -67,7 +67,7 @@
                   <button ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
                 </div>
                 <div class="col-4 text-center">
-                  <button ng-click="deleteAccount()" type="button" id="btn" class="btn btn-warning">Delete Account</button>
+                  <button data-toggle="modal" data-target="#deleteAccountModal" type="button" id="btn" class="btn btn-warning">Delete Account</button>
                 </div>
               </div>
             </div>
@@ -75,6 +75,31 @@
         </div>
       </div>
     </div>
+	  
+		<!-- Modal -->
+	<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Delete Account</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="errorMessage" class="col col-lg-9">
+				Please enter your password to confirm deletion: <input type="password" ng-model="deleteAccountPassword" class="form-control" id="deleteAccountPassword" placeholder="Password" required>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="deleteAccount(deleteAccountPassword)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

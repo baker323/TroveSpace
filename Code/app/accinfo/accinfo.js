@@ -39,40 +39,36 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 				firstName: firstName,
 				lastName: lastName
 			});
-			alert("Information saved.");
+			$rootScope.error("Information saved.");
 		});
 	}
 	
-	$scope.deleteAccount = function() {
-		var option = window.confirm("Are you sure you want to delete your account?");
+	$scope.deleteAccount = function(password) {
 		
-		if (option == true) {
-			var password = prompt("Please enter your password to confirm account deletion.");
-		
-			var user = firebase.auth().currentUser;
-			var credential = firebase.auth.EmailAuthProvider.credential(
-				user.email,
-				password
-			);
-			user.reauthenticateWithCredential(credential).then(function() {
-				console.log("Reauthentication successful.");
+		var user = firebase.auth().currentUser;
+		var credential = firebase.auth.EmailAuthProvider.credential(
+			user.email,
+			password
+		);
+		user.reauthenticateWithCredential(credential).then(function() {
+			console.log("Reauthentication successful.");
 
-				firebase.database().ref('users/' + user.uid).set(null);
-				user.delete().then(function() {
-				  console.log("Account successfully deleted.");
-				  alert("Account successfully deleted.");
-				  $rootScope.loggedIn = false;
-		 		  $cookieStore.put('loggedIn', false);
-				  window.location.href = '#!/login';
-				}).catch(function(error) {
-				  console.log(error.message);
-				  alert(error.message);
-				});	
+			firebase.database().ref('users/' + user.uid).set(null);
+			user.delete().then(function() {
+			  console.log("Account successfully deleted.");
+			  $rootScope.error("Account successfully deleted.");
+			  $rootScope.loggedIn = false;
+			  $cookieStore.put('loggedIn', false);
+			  firebase.database().goOffline();
+			  window.location.href = '#!/login';
 			}).catch(function(error) {
-				console.log(error.message);
-				alert(error.message);
-			});
-		}
+			  console.log(error.message);
+			  $rootScope.error(error.message);
+			});	
+		}).catch(function(error) {
+			console.log(error.message);
+			$rootScope.error(error.message);
+		});
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {

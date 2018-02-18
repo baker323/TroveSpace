@@ -41,7 +41,7 @@
                       </div>
                       <div class="form-group text-left">
                         <input ng-model="password" type="password" class="form-control" id="pass" placeholder="Password" required>
-                        <a ng-click="forgotPassword(email)" href="">Forgot password?</a>
+                        <a data-toggle="modal" data-target="#forgotPasswordModal" href="">Forgot password?</a>
                       </div>
                       <button ng-click='login(email, password)' type="submit" class="btn bg-success mt-2">Submit</button>
                     </form>
@@ -53,6 +53,31 @@
         </div>
       </div>
     </div>
+	  
+	<!-- Modal -->
+	<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Forgot Password</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="errorMessage" class="col col-lg-9">
+				Please enter your email: <input ng-model="forgotPasswordEmail" class="form-control" id="forgotPasswordEmail" placeholder="Email" required>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="forgotPassword(forgotPasswordEmail)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
