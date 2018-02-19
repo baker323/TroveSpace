@@ -1,7 +1,7 @@
 describe('TroveSpace Signup', function() {
     it('should successfully sign up', function() {
         //browser.get('http://127.0.0.1:60788/login'); // for Mac
-        browser.get('http://127.0.0.1:60788/app/#!/register'); // for Windows
+        browser.get('http://127.0.0.1:60788/#!/register'); // for Windows
 
         element.all(by.model('username')).sendKeys('test0');
         element.all(by.model('email')).sendKeys('blahblahblah4@test.com');
