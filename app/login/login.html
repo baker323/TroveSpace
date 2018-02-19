@@ -25,31 +25,25 @@
     </style>
   </head>
   <body>
-    <h1 class="text-center display-1">Register...</h1>
+    <h1 class="text-center display-1">Sign In...</h1>
     <div class="container mt-4">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
           <div id="card" class="card text-center bg-dark text-white">
             <div class="card-body">
-              Register with...
+              Sign in with...
               <div class="container mt-2">
                 <div class="row justify-content-center">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <form ng-submit="createAccount(username, email, password, confirmPassword)" class="mt-4">
+                    <form class="mt-4">
                       <div class="form-group text-left">
-                        <input class="form-control" ng-model="username" id="username" placeholder="Username" required>
-                      </div>
-                      <div class="form-group text-left my-4">
                         <input ng-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" required>
                       </div>
-                      <div class="form-group text-left my-4">
-                        <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                      <div class="form-group text-left">
+                        <input ng-model="password" type="password" class="form-control" id="pass" placeholder="Password" required>
+                        <a data-toggle="modal" data-target="#forgotPasswordModal" href="">Forgot password?</a>
                       </div>
-                      <div class="form-group text-left my-4">
-                        <input ng-model="confirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
-                      </div>
-                      <button name="signup" class="btn bg-success mt-2 mx-3">Submit</button>
-                      <button type="cancel" class="btn bg-danger mt-2 mx-3">Cancel</button>
+                      <button ng-click='login(email, password)' type="submit" class="btn bg-success mt-2">Submit</button>
                     </form>
                   </div>
                 </div>
@@ -59,6 +53,31 @@
         </div>
       </div>
     </div>
+	  
+	<!-- Modal -->
+	<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Forgot Password</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="errorMessage" class="col col-lg-9">
+				Please enter your email: <input ng-model="forgotPasswordEmail" class="form-control" id="forgotPasswordEmail" placeholder="Email" required>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="forgotPassword(forgotPasswordEmail)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

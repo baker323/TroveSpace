@@ -1,0 +1,61 @@
+<p>This is the partial for view 1.</p>
+<button ng-click="createAccount('baker323','baker323@purdue.edu','trovespacey123')">Create Account</button>
+<button ng-click="login('baker323@purdue.edu','trovespacey123')">Log In</button>
+<button ng-click="logout()">Log Out</button>
+<button ng-click="changePassword('trovespacey123','trovespacey123')">Change Password</button>
+<button ng-click="forgotPassword('baker323@purdue.edu')">Forgot Password</button>
+<button ng-click="deleteAccount('trovespacey123')">Delete Account</button>
+<button ng-click="createFolder('folder1','trove1')">Create Collection</button>
+<button ng-click="renameFolder('folder1','folder2')">Rename Collection</button>
+<button ng-click="deleteFolder('folder1')">Delete Collection</button>
+<button ng-click="fetchAllCollections()">Fetch Collections</button>
+<ul ng-repeat="(key, value) in collections">
+	<li>
+		<h4>{{key}}</h4>
+	</li>
+</ul>
+<button ng-click="fetchCollection('folder1')">Fetch Collection</button>
+<ul ng-show="collection">
+	<li>
+		<h4>{{collection.category}}</h4>
+		<h4>{{collection.creationDate | date : "medium"}}</h4>
+	</li>
+</ul>
+<button ng-click="createTrove('trove1','description1',['field1', 'field2', 'field3', 'field4'])">Create Trove</button>
+<button ng-click="fetchTrove('trove1')">Fetch Trove</button>
+<ul ng-repeat="(key, value) in trove">
+	<li>
+		<h4>{{key}}: {{value}}</h4>
+	</li>
+</ul>
+<button ng-click="fetchAllTroves()">Fetch Troves</button>
+<ul ng-repeat="(key, value) in troves">
+	<li>
+		<h4>{{key}}</h4>
+	</li>
+</ul>
+<button ng-click="createCollectible('collectible1','description1','trove1',['field1', 'field2', 'field3', 'field4'],['field1', 'field2', 'field3', 'field4'])">Create Collectible</button>
+<button ng-click="fetchCollectible('collectible1','trove1')">Fetch Collectible</button>
+<ul ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='lastEditedBy'">
+	<li>
+		<h4>{{key}}: {{value}}</h4>
+	</li>
+</ul>
+<ul ng-show="collectible">
+	<li>
+		<h4>{{collectible.category}}</h4>
+		<h4>{{collectible.description}}</h4>
+		<h4>{{collectible.lastEditedBy}}</h4>
+	</li>
+</ul>
+<button ng-click="addToCollection('collectible1','folder1')">Add To Collection</button>
+<button ng-click="addToWishlist('collectible1')">Add To Wishlist</button>
+<button ng-click="fetchWishlist()">Fetch Wishlist</button>
+<ul ng-repeat="(key, value) in wishlist">
+	<li>
+		<h4>{{key}}</h4>
+	</li>
+</ul>
+<button ng-click="setMultipleCount('collectible1','folder1', 2)">Set Multiple</button>
+<button ng-click="getMultipleCount('collectible1','folder1')">Get Multiple</button>
+<h4>{{multipleCount}}</h4>
