@@ -1,0 +1,3 @@
+# TroveSpace
+
+People love collecting. From coins and stamps to antique canes and rubber duckies, almost everybody has something that they like to collect. Currently, there is no good software for people to manage and catalog their niche collections. Our site will be different from other similar systems because we will not focus on specific items such as records, video games, or baseball cards. Instead we will allow users to catalog their collection of any item. Currently there exists some software for general cataloging, but it is all in the form of native applications that are very outdated. Being web-based will be an advantage for us because we can also allow users to share their collections and interact with other collectors.
