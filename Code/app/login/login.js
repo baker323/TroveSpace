@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.login', ['ngRoute'])
+angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
@@ -9,34 +9,43 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginCtrl', function($scope) {
+.controller('LoginCtrl', function($rootScope, $scope, $cookieStore) {
+	if (window.location.href.includes('login') && $rootScope.loggedIn) {
+		window.location.href = "#!/troves";
+	}
 	
 	$scope.login = function(email, password) {
-		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		firebase.auth().signInWithEmailAndPassword(email, password).then(function(user) {
+			if (user) {
+				console.log("User logged in.");
+				$rootScope.loggedIn = true;
+				$cookieStore.put('loggedIn', true);
+				$cookieStore.put('loggedInUser', user.displayName);
+				window.location.href = '#!/troves';
+			}
+		}).catch(function(error) {
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
 		  console.log(errorCode + ": " + errorMessage);
-		});
-		
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user) {
-				console.log("User logged in.");
-			}
+		  $rootScope.error(errorMessage);
 		});
 	}
 	
-	$scope.forgotPassword = function(email) {
+	$scope.forgotPassword = function(email) {		
 		var auth = firebase.auth();
 
 		if (email == null) {
-			alert("Please enter your email.");
+			$rootScope.error("Please enter your email.");
 		} else {
 			auth.sendPasswordResetEmail(email).then(function() {
 			  console.log("Password reset email sent.");
+			  $rootScope.error("Password reset email sent.");
+			  $scope.forgotPasswordEmail = null;
 			}).catch(function(error) {
 			  console.log(error.message);
+			  $rootScope.error(error.message);
+			  $scope.forgotPasswordEmail = null;
 			});
 		}
-	}
-	
+	}	
 });
