@@ -35,21 +35,21 @@
               <div class="container mt-2">
                 <div class="row justify-content-center">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <form class="mt-4">
+                    <form ng-submit="createAccount(username, email, password, confirmPassword)" class="mt-4">
                       <div class="form-group text-left">
-                        <input class="form-control" id="username" placeholder="Username" required>
+                        <input class="form-control" ng-model="username" id="username" placeholder="Username" required>
                       </div>
                       <div class="form-group text-left my-4">
-                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" required>
+                        <input ng-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" required>
                       </div>
                       <div class="form-group text-left my-4">
-                        <input type="password" class="form-control" id="pass" placeholder="Password" required>
+                        <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
                       </div>
                       <div class="form-group text-left my-4">
-                        <input type="confirmpassword" class="form-control" id="pass" placeholder="Confirm Password" required>
+                        <input ng-model="confirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
                       </div>
                       <button type="submit" class="btn bg-success mt-2 mx-3">Submit</button>
-                      <button type="cancel" class="btn bg-danger mt-2 mx-3">Cancel</button>
+					  <button onclick="location.href='#!/login'" type="cancel" class="btn bg-danger mt-2 mx-3" formnovalidate>Cancel</button>
                     </form>
                   </div>
                 </div>

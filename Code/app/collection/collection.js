@@ -1,14 +1,18 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {
-    templateUrl: 'view1/view1.html',
-    controller: 'View1Ctrl'
+  $routeProvider.when('/collection', {
+    templateUrl: 'collection/collection.html',
+    controller: 'CollectionCtrl'
   });
 }])
 
-.controller('View1Ctrl', [function() {
-
-}]);
+.controller('CollectionCtrl', function($rootScope, $scope, $cookieStore) {
+	$rootScope.loggedIn = $cookieStore.get('loggedIn');
+	$rootScope.loggedInUser = $cookieStore.get('loggedInUser');
+	if (!$rootScope.loggedIn) {
+		window.location.href = '#!/login';
+	}
+});

@@ -1,14 +1,29 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {
-    templateUrl: 'view1/view1.html',
-    controller: 'View1Ctrl'
+  $routeProvider.when('/troves', {
+    templateUrl: 'troves/troves.html',
+    controller: 'TroveCtrl'
   });
 }])
 
-.controller('View1Ctrl', [function() {
-
-}]);
+.controller('TroveCtrl', function($rootScope, $scope, $cookieStore) {
+	$rootScope.loggedIn = $cookieStore.get('loggedIn');
+	$rootScope.loggedInUser = $cookieStore.get('loggedInUser');
+	if (!$rootScope.loggedIn) {
+		window.location.href = '#!/login';
+	}
+	
+	$scope.fetchAllTroves = function() {
+		firebase.database().ref('troves').once('value').then(function(snapshot) {
+			$scope.troves = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
+	$scope.$on('$viewContentLoaded', function() {
+		$scope.fetchAllTroves();
+	});
+});

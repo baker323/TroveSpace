@@ -57,9 +57,9 @@
         <div class="col-12 col-md-10">
           <div class="container">
             <div class="row">
-              <div class="col-4" id="postCol">
+              <div ng-repeat="(key, value) in troves" class="col-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 id="title">Hats</h5>
+                    <h5 id="title">{{key}}</h5>
                 </div>
               </div>
 

@@ -45,41 +45,29 @@
                   <div class="m-4">
                     <div class="my-3"><!--email-->
                       <label>Email address</label>
-                      <input class="form-control"  placeholder="Your Email">
+                      <input ng-model="userInfo.email" class="form-control" value="{{userInfo.email}}" disabled>
                     </div>
                     <div class="my-3"><!--username-->
                       <label>Username</label>
-                      <input class="form-control"  placeholder="Your Username">
+                      <input ng-model="userInfo.username" class="form-control" value="{{userInfo.username}}" disabled>
                     </div>
-                    <div class="my-3"><!--name-->
-                      <label>Name</label>
-                      <input class="form-control"  placeholder="Your Name">
+                    <div class="my-3"><!--first name-->
+                      <label>First Name</label>
+                      <input ng-model="userInfo.firstName" class="form-control"  placeholder="First Name" value="{{userInfo.firstName}}">
                     </div>
-                    <div class="my-3"><!--dob-->
-                      <label>DOB</label>
-                      <input class="form-control"  placeholder="Your DOB">
-                    </div>
-                    <div class="my-3"><!--fav trove-->
-                      <label>Favorite Trove</label>
-                      <input class="form-control"  placeholder="Fav Trove">
+                    <div class="my-3"><!--last name-->
+                      <label>Last Name</label>
+                      <input ng-model="userInfo.lastName" class="form-control" placeholder="Last Name" value="{{userInfo.lastName}}">
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row justify-content-center my-3 mb-4">
-                <div class="col-12 text-center">
-                  <button type="button"class="btn btn-primary" id="btn">Edit Information</button>
-                </div>
-              </div>
-              <div class="row justify-content-center my-3 mb-4">
                 <div class="col-4 text-center">
-                  <button type="button" id="btn" class="btn btn-success">Save</button>
+                  <button ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
                 </div>
                 <div class="col-4 text-center">
-                  <button type="button" id="btn" class="btn btn-danger">Cancel</button>
-                </div>
-                <div class="col-4 text-center">
-                  <button type="button" id="btn" class="btn btn-warning">Delete Account</button>
+                  <button data-toggle="modal" data-target="#deleteAccountModal" type="button" id="btn" class="btn btn-warning">Delete Account</button>
                 </div>
               </div>
             </div>
@@ -87,6 +75,31 @@
         </div>
       </div>
     </div>
+	  
+		<!-- Modal -->
+	<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Delete Account</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="errorMessage" class="col col-lg-9">
+				Please enter your password to confirm deletion: <input type="password" ng-model="deleteAccountPassword" class="form-control" id="deleteAccountPassword" placeholder="Password" required>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="deleteAccount(deleteAccountPassword)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
