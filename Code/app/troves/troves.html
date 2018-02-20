@@ -51,6 +51,9 @@
       <span class=" mb-0 h2 mx-auto">Troves</span>
     </nav>
     <!--Header ending-->
+	<div class="row justify-content-center">
+      <button class="btn" onclick="window.location.href = #!/createTrove">New Trove</button>
+    </div>
 
     <div class="container">
       <div class="row justify-content-center">
@@ -58,7 +61,7 @@
           <div class="container">
             <div class="row">
               <div ng-repeat="(key, value) in troves" class="col-4" id="postCol">
-                <div class="card" id="postCheck">
+                <div ng-click="fetchCollectiblesInTrove(key)" class="card" id="postCheck">
                     <h5 id="title">{{key}}</h5>
                 </div>
               </div>
@@ -113,6 +116,7 @@
         </div>
       </div>
     </div>
+	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

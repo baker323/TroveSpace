@@ -12,6 +12,9 @@ var app = angular.module('myApp', [
   'myApp.wishlist',
   'myApp.troves',
   'myApp.accinfo',
+  'myApp.createCollectible',
+  'myApp.createTrove',
+  'myApp.viewTrove',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

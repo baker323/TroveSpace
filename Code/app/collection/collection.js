@@ -15,4 +15,109 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	if (!$rootScope.loggedIn) {
 		window.location.href = '#!/login';
 	}
+	
+	$scope.createFolder = function(folderName, troveName) {
+		var user = firebase.auth().currentUser;
+		
+		firebase.database().ref('users/' + user.uid + '/folders').child(folderName).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('users/' + user.uid + '/folders').child(folderName)
+				.set({
+					creationDate: (new Date).getTime(),
+					category: troveName
+				});
+				$scope.folderName = null;
+				$scope.troveName = null;
+				$scope.fetchAllCollections();
+			} else {
+				$rootScope.error("Folder with that name already exists.");
+				$scope.folderName = null;
+				$scope.troveName = null;
+			}
+		});
+	}
+	
+	$scope.renameFolder = function(oldName, newName) {
+		var user = firebase.auth().currentUser;
+
+		firebase.database().ref('users/' + user.uid + '/folders').child(oldName).once('value').then(function(snapshot) {
+		  var data = snapshot.val();
+		  var update = {};
+		  update[oldName] = null;
+		  update[newName] = data;
+		  return firebase.database().ref('users/' + user.uid + '/folders').update(update);
+		});
+	}
+	
+	$scope.deleteFolder = function(folderName) {
+		var user = firebase.auth().currentUser;
+		
+		firebase.database().ref('users/' + user.uid + '/folders').child(folderName).remove()
+		  .then(function() {
+			console.log("Remove succeeded.");
+		  })
+		  .catch(function(error) {
+			console.log("Remove failed: " + error.message);
+		  });
+	}
+	
+	$scope.fetchAllCollections = function() {
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('/users/' + user.uid + '/folders').once('value').then(function(snapshot) {
+					$scope.collections = snapshot.toJSON();
+					$scope.$apply();
+				});
+				firebase.database().ref('/users/' + user.uid + '/folders').limitToFirst(1).once('value').then(function(snapshot) {
+					snapshot.forEach(function(childSnapshot) {
+						console.log(childSnapshot.key);
+						$scope.currentFolder = childSnapshot.key;
+						$scope.fetchCollectiblesInCollection($scope.currentFolder);
+						$scope.$apply();
+					});
+				});
+			}
+		});
+	}
+	
+	$scope.fetchCollectiblesInCollection = function(folderName) {
+		console.log(folderName);
+		var user = firebase.auth().currentUser;
+		
+		firebase.database().ref('/users/' + user.uid + '/folders/' + folderName + '/collectibles').once('value').then(function(snapshot) {
+			$scope.collection = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
+	$scope.fetchAllTroves = function() {
+		firebase.database().ref('troves').once('value').then(function(snapshot) {
+			$scope.troves = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
+	$scope.removeFromCollection = function(collectibleName, folderName) {
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
+				.then(function() {
+					console.log("Remove succeeded.");
+					$scope.fetchCollectiblesInCollection(folderName);
+				})
+				.catch(function(error) {
+					console.log("Remove failed: " + error.message);
+				});
+			}
+		});
+	}
+	
+	$scope.$on('$viewContentLoaded', function() {
+		$scope.fetchAllTroves();
+		$scope.fetchAllCollections();
+	});
 });
