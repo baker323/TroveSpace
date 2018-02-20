@@ -8,6 +8,8 @@ var app = angular.module('myApp', [
   'myApp.view2',
   'myApp.login',
   'myApp.register',
+  'myApp.createCollectible',
+  'myApp.createTrove',
   'myApp.collection',
   'myApp.wishlist',
   'myApp.troves',
