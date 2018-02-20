@@ -37,6 +37,11 @@
                 <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
                 <textarea ng-model="collectibleDescription" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
+              <div ng-repeat="a in b">
+                <label for="a.Name" class="bmd-label-floating">A.fieldName</label>
+                 <input ng-model="collectibleTitle" class="form-control" id="a.Name">
+              </div>
+              </div>
               <div class="text-center">
                 <button ng-click="createCollectible(collectibleTitle, collectibleDescription, troveName, [], [])" type="button" class="btn btn-success">Submit</button>
                 <button type="button" class="btn btn-danger">Cancel</button>
