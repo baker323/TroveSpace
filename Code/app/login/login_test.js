@@ -4,7 +4,7 @@ describe('TroveSpace Login', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
-        element.all(by.model('password')).first().sendKeys('test');
+        element.all(by.model('password')).first().sendKeys('testtest');
 
         element(by.name('login')).click();
 
@@ -17,7 +17,7 @@ describe('TroveSpace Login', function() {
     it('should deny user does not exist', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
 
-        element.all(by.model('email')).first().sendKeys('blahblahblah@test.com');
+        element.all(by.model('email')).first().sendKeys('testtest@test.com');
         element.all(by.model('password')).first().sendKeys('blahblahblah');
 
         element(by.name('login')).click();
@@ -31,14 +31,60 @@ describe('TroveSpace Login', function() {
     it('should successfully login', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
 
-        element.all(by.model('email')).first().sendKeys('user5@test.com');
-        element.all(by.model('password')).first().sendKeys('hellothere');
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
         element(by.name('login')).click();
-        browser.sleep(1000);
-        //expect(browser.getCurrentUrl()).toContain("profile");
-        //expect(element(by.name('greeting')).getText()).toEqual('Hello user5@test.com!');
-        //element(by.name('account')).click();
-        //element(by.name('logout')).click();
+        browser.sleep(2000);
+        element(by.name('settings')).click();
+        browser.sleep(2000);
+        element(by.name('pwChange')).click();
+        browser.sleep(2000);
+        // change Password
+        element.all(by.model('oldPassword')).first().sendKeys('test18');
+        element.all(by.model('newPassword')).first().sendKeys('TEST18');
+        element(by.name('submitPW')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Password successfully changed.");
+        element(by.name('confirm')).click();
+        browser.sleep(2000);
+        element(by.name('settings')).click();
+        browser.sleep(2000);
+        element(by.name('logout')).click();
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('TEST18');
+        element(by.name('login')).click();
+        browser.sleep(2000);
+        element(by.name('settings')).click();
+        browser.sleep(2000);
+        element(by.name('pwChange')).click();
+        browser.sleep(2000);
+
+        // change Password
+        element.all(by.model('oldPassword')).first().sendKeys('TEST18');
+        element.all(by.model('newPassword')).first().sendKeys('test18');
+        element(by.name('submitPW')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Password successfully changed.");
+        element(by.name('confirm')).click();
+        browser.sleep(2000);
+        element(by.name('settings')).click();
+        browser.sleep(2000);
+        element(by.name('logout')).click();
+    });
+
+    // change Account Information
+    it('should successfully change the account information', function() {
+        browser.get('http://127.0.0.1:60788/#!/login');
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+        element(by.name('login')).click();
+        browser.sleep(2000);
+        element(by.name('settings')).click();
+        browser.sleep(2000);
+
 
     });
+
+
 });
