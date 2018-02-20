@@ -52,14 +52,14 @@
       <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
     </nav>
 	<div class="row justify-content-center">
-      <select ng-model="currentFolder" class="btn">
+      <select ng-show="collections" ng-model="currentFolder" class="btn">
 		<option ng-repeat="(key, value) in collections">{{key}}</option>
 	  </select>
 	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
-	  <!--button class="btn" ng-click="renameFolder('folder1','folder2')">Rename</button>
-	  <button class="btn" ng-click="deleteFolder('folder1')">Delete</button-->
+	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
     </div>
-    <div class="container">
+    <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
@@ -70,55 +70,6 @@
                     <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
                 </div>
               </div>
-
-
-              <!--It is repeating from here! So you can delete this part because it will be a for loop here-->
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-              <div class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <button type="button" id="btn" class="btn btn-light">Remove</button>
-                </div>
-              </div>
-
-              <!--Till here is it repeating-->
-
-
             </div>
           </div>
         </div>
@@ -171,7 +122,7 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="renameFolder(folderName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+			<button ng-click="renameFolder(currentFolder, newName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
 		  </div>
 		</div>
 	  </div>

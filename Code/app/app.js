@@ -55,10 +55,14 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 			  var errorCode = error.code;
 			  var errorMessage = error.message;
 			  console.log(errorCode + ": " + errorMessage);
+			  $rootScope.error(errorMessage);
 			});
 		}).catch(function(error) {
 			console.log(error.message);
+			$rootScope.error(error.message);
 		});
+		$rootScope.oldPassword = null;
+		$rootScope.newPassword = null;
 	}
 	
 	$rootScope.error = function(errorMessage) {
