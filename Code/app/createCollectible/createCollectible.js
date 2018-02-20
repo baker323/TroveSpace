@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
->>>>>>> master
+
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/createCollectible', {
