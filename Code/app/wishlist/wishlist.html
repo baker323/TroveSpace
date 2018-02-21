@@ -62,7 +62,7 @@
               <div ng-repeat="(key, value) in wishlist" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
-                    <button ng-click="removeFromWishlist(key)" type="button" id="btn" class="btn btn-light">Remove</button>
+                    <button name="removeFromWishlist" ng-click="removeFromWishlist(key)" type="button" id="btn" class="btn btn-light">Remove</button>
                 </div>
               </div>
             </div>

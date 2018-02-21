@@ -1,6 +1,6 @@
 describe('TroveSpace Login', function() {
 
-/*
+
     it('should deny incorrect password', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
 
@@ -74,7 +74,7 @@ describe('TroveSpace Login', function() {
         element(by.name('logout')).click();
     });
 
-*/
+
     // change Account Information
     it('should successfully change the account information', function() {
         browser.get('http://127.0.0.1:60788/#!/login');

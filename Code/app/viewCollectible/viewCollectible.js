@@ -16,10 +16,10 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	if (!$rootScope.loggedIn) {
 		window.location.href = '#!/login';
 	}
-	
+
 	$scope.fetchCollectible = function(collectibleName) {
 		var user = firebase.auth().currentUser;
-		
+
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
@@ -29,10 +29,10 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			}
 		});
 	}
-	
+
 	$scope.getMultipleCount = function(collectibleName) {
 		var user = firebase.auth().currentUser;
-		
+
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('/collectibles/' + collectibleName + '/users/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
@@ -47,11 +47,11 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			}
 		});
 	}
-	
+
 	$scope.setMultipleCount = function(collectibleName, multipleValue) {
 		var user = firebase.auth().currentUser;
 		console.log("Set multiple count.");
-		
+
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
@@ -60,11 +60,20 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		});
 	}
 
+	$scope.goBack = function() {
+		console.log("Back");
+		window.location.href = '#!/viewTrove?'+$scope.collectible.category;
+	}
+
 	$scope.$on('$viewContentLoaded', function() {
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		$scope.collectibleName = decodeURIComponent(b);
-		$scope.fetchCollectible($scope.collectibleName);
-		$scope.getMultipleCount($scope.collectibleName);
+		if (a.indexOf("?") == -1) {
+			window.location.href = '#';
+		} else {
+			$scope.fetchCollectible($scope.collectibleName);
+			$scope.getMultipleCount($scope.collectibleName);
+		}
 	});
 });
