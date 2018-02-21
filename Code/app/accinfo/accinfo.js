@@ -36,7 +36,7 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 		
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
-				firebase.database().ref('users/' + user.uid).set({
+				firebase.database().ref('users/' + user.uid).update({
 					username: username,
 					email: email,
 					firstName: firstName,
