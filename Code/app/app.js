@@ -15,6 +15,7 @@ var app = angular.module('myApp', [
   'myApp.troves',
   'myApp.accinfo',
   'myApp.createCollectible',
+  'myApp.viewCollectible',
   'myApp.createTrove',
   'myApp.viewTrove',
   'myApp.version'
