@@ -37,12 +37,17 @@
             <label for="exampleFormControlTextarea1">Description</label>
             <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3" disabled></textarea>
           </div>
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users'" class="form-group">
+             <label for="exampleInput1">{{key}}</label>
+             <input ng-model="value" class="form-control" disabled>
+           </div>
          <div class="form-group">
              <label for="exampleInput1">Count</label>
              <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
            </div>
        </div>
        <div class="text-center">
+		<button onclick="location.href='#!/troves'" type="button" class="btn btn-danger">Back</button>
         <button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
       </div>
     </div>

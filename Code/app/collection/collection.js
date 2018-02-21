@@ -106,8 +106,14 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.database().ref('/users/' + user.uid + '/folders/' + folderName + '/collectibles').once('value').then(function(snapshot) {
-			$scope.collection = snapshot.toJSON();
-			$scope.$apply();
+			if (snapshot.val() == null) {
+				$scope.collection = snapshot.toJSON();
+				$scope.$apply();
+				$rootScope.error("There are currently no collectibles in this folder.");
+			} else {
+				$scope.collection = snapshot.toJSON();
+				$scope.$apply();
+			}
 		});
 	}
 	
@@ -133,6 +139,10 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 				});
 			}
 		});
+	}
+	
+	$scope.viewCollectible = function(troveName) {
+		window.location.href = '#!/viewCollectible?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {

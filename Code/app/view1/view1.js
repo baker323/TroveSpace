@@ -191,7 +191,6 @@ angular.module('myApp.view1', ['ngRoute'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		
 		firebase.database().ref('troves').once('value').then(function(snapshot) {
 			$scope.troves = snapshot.toJSON();
 		});

@@ -19,8 +19,13 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	$scope.fetchCollectibles = function(troveName) {
 		$scope.troveName = troveName;
 		firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
-			$scope.troveCollectibles = snapshot.toJSON();
-			$scope.$apply();
+			console.log(snapshot.val());
+			if (snapshot.val() == null) {
+				$rootScope.error("There are currently no collectibles in this trove.");
+			} else {
+				$scope.troveCollectibles = snapshot.toJSON();
+				$scope.$apply();
+			}
 		});
 	}
 	
@@ -28,6 +33,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set(true);
+		$rootScope.error("Item successfully added.");
 	}
 	
 	$scope.addToCollection = function(collectibleName, folderName) {
@@ -41,9 +47,10 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					$rootScope.error("Item trove does not match folder.");
 				}
 				else {
-					firebase.database().ref('collectibles/' + collectibleName + '/' + user.uid).set({
+					firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 						multipleCount: 1
 					});
+					$rootScope.error("Item successfully added.");
 				}
 			});
 		});

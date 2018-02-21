@@ -18,6 +18,12 @@ angular.module('myApp.createTrove', ['ngRoute', 'ngCookies'])
 	}
 
 	$scope.createTrove = function(troveName, description, customFields) {
+		console.log(customFields);
+		var array = [];
+		for (var i=0; i<customFields.length; i++) {
+			array.push(customFields[i].name);
+		}
+		customFields = array;
 		var user = firebase.auth().currentUser;
 
 		firebase.database().ref('troves').child(troveName)
@@ -27,11 +33,19 @@ angular.module('myApp.createTrove', ['ngRoute', 'ngCookies'])
 		for (var i=0; i < customFields.length; i++) {
 			firebase.database().ref('troves/' + troveName).child(customFields[i]).set(true);
 		}
-		window.location.href = '#!/troves';
+		window.location.href = '#!/viewTrove?'+troveName;
 	}
 	
-	$scope.addNewChoice = function() {
-		console.log("Add new choice");
-	}
+	$scope.choices = [];
+  
+  	$scope.addNewChoice = function() {
+    	var newItemNo = $scope.choices.length+1;
+    	$scope.choices.push({'id':'choice'+newItemNo});
+  	};
+    
+  	$scope.removeChoice = function() {
+    	var lastItem = $scope.choices.length-1;
+    	$scope.choices.splice(lastItem);
+  	};
 
 });

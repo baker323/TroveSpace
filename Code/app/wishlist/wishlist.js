@@ -23,6 +23,9 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/' + user.uid + '/wishlist/').once('value').then(function(snapshot) {
+					if (snapshot.val() == null) {
+						$rootScope.error("There are currently no collectibles on your wishlist.");
+					}
 					$scope.wishlist = snapshot.toJSON();
 					$scope.$apply();
 				});
@@ -45,6 +48,10 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 				});
 			}
 		});
+	}
+	
+	$scope.viewCollectible = function(troveName) {
+		window.location.href = '#!/viewCollectible?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {

@@ -22,8 +22,12 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('troves').once('value').then(function(snapshot) {
-					$scope.troves = snapshot.toJSON();
-					$scope.$apply();
+					if (snapshot.val() == null) {
+						$rootScope.error("There are not currently any troves.");
+					} else {
+						$scope.troves = snapshot.toJSON();
+						$scope.$apply();
+					}
 				});
 			}
 		});

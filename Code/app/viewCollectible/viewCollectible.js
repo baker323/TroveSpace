@@ -35,9 +35,14 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
-				firebase.database().ref('/collectibles/' + collectibleName + '/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
-					$scope.multipleCount = snapshot.toJSON();
-					$scope.$apply();
+				firebase.database().ref('/collectibles/' + collectibleName + '/users/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
+					if (snapshot.val() == null) {
+						$scope.multipleCount = 0;
+						$scope.$apply();
+					} else {
+						$scope.multipleCount = snapshot.toJSON();
+						$scope.$apply();
+					}
 				});
 			}
 		});
@@ -49,7 +54,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
-				firebase.database().ref('collectibles/' + collectibleName + '/' + user.uid).set({
+				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 					multipleCount: multipleValue});
 			}
 		});

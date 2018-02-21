@@ -64,7 +64,7 @@
             <div class="row justify-content-center justify-content-md-start">
               <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 id="title">{{key}}</h5>
+                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
                     <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
                 </div>
               </div>
