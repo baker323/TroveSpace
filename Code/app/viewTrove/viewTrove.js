@@ -17,14 +17,21 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchCollectibles = function(troveName) {
-		$scope.troveName = troveName;
-		firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
-			console.log(snapshot.val());
-			if (snapshot.val() == null) {
-				$rootScope.error("There are currently no collectibles in this trove.");
-			} else {
-				$scope.troveCollectibles = snapshot.toJSON();
-				$scope.$apply();
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+		
+				$scope.troveName = troveName;
+				firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
+					console.log(snapshot.val());
+					if (snapshot.val() == null) {
+						$rootScope.error("There are currently no collectibles in this trove.");
+					} else {
+						$scope.troveCollectibles = snapshot.toJSON();
+						$scope.$apply();
+					}
+				});
 			}
 		});
 	}

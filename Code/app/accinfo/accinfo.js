@@ -42,9 +42,9 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 					firstName: firstName,
 					lastName: lastName
 				});
-				$rootScope.error("Information saved.");
 			}
 		});
+		$rootScope.error("Information saved.");
 	}
 	
 	$scope.deleteAccount = function(password) {
@@ -63,7 +63,6 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 			  $rootScope.error("Account successfully deleted.");
 			  $rootScope.loggedIn = false;
 			  $cookieStore.put('loggedIn', false);
-			  firebase.database().goOffline();
 			  window.location.href = '#!/login';
 			}).catch(function(error) {
 			  console.log(error.message);

@@ -86,8 +86,12 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('/users/' + user.uid + '/folders').once('value').then(function(snapshot) {
-					$scope.collections = snapshot.toJSON();
-					$scope.$apply();
+					if (snapshot.val() == null) {
+						$rootScope.error("You currently don't have any folders.");
+					} else {
+						$scope.collections = snapshot.toJSON();
+						$scope.$apply();
+					}
 				});
 				firebase.database().ref('/users/' + user.uid + '/folders').limitToFirst(1).once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
