@@ -16,11 +16,11 @@
       font-weight: 500;
     }
 
+
     </style>
 
   </head>
   <body>
-
     <div class="container-fluid">
       <div class="row justify-content-center">
         <div class="col-12 col-sm-10 col-lg-8">
@@ -31,21 +31,24 @@
             <div class="card-body">
               <div class="form-group">
                  <label for="exampleInput1" class="bmd-label-floating">Title</label>
-                 <input ng-model="collectibleTitle" class="form-control" id="exampleInput1">
+                 <input class="form-control" id="exampleInput1">
               </div>
               <div class="form-group">
                 <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
-                <textarea ng-model="collectibleDescription" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
+
               <div class="text-center">
-                <button ng-click="createCollectible(collectibleTitle, collectibleDescription, troveName, [], [])" type="button" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-success">Submit</button>
                 <button type="button" class="btn btn-danger">Cancel</button>
               </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
   </body>
 </html>

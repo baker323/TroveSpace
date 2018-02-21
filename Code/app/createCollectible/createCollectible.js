@@ -1,5 +1,6 @@
 'use strict';
 
+
 angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 
 
