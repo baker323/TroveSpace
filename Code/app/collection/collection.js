@@ -38,14 +38,25 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.renameFolder = function(oldName, newName) {
+		console.log(oldName, newName);
 		var user = firebase.auth().currentUser;
-
-		firebase.database().ref('users/' + user.uid + '/folders').child(oldName).once('value').then(function(snapshot) {
-		  var data = snapshot.val();
-		  var update = {};
-		  update[oldName] = null;
-		  update[newName] = data;
-		  return firebase.database().ref('users/' + user.uid + '/folders').update(update);
+		
+		firebase.database().ref('users/' + user.uid + '/folders').child(newName).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('users/' + user.uid + '/folders').child(oldName).once('value').then(function(snapshot) {
+				  var data = snapshot.val();
+				  var update = {};
+				  update[oldName] = null;
+				  update[newName] = data;
+				  $scope.fetchAllTroves();
+				  $scope.fetchAllCollections();
+				  $scope.newName = null;
+				  return firebase.database().ref('users/' + user.uid + '/folders').update(update);
+				});
+			} else {
+				$rootScope.error("Folder with that name already exists.");
+				$scope.newName = null;
+			}
 		});
 	}
 	
@@ -55,9 +66,14 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		firebase.database().ref('users/' + user.uid + '/folders').child(folderName).remove()
 		  .then(function() {
 			console.log("Remove succeeded.");
+			$rootScope.error("Remove succeeded.");
+			$scope.fetchAllTroves();
+			$scope.fetchAllCollections();
+			$scope.fetchCollectiblesInCollection($scope.currentFolder);
 		  })
 		  .catch(function(error) {
 			console.log("Remove failed: " + error.message);
+			$rootScope.error(error.message);
 		  });
 	}
 	
