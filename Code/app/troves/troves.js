@@ -9,7 +9,7 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('TroveCtrl', function($rootScope, $scope, $cookieStore) {
+.controller('TroveCtrl', function($rootScope, $scope, $cookieStore, $timeout) {
 	$rootScope.loggedIn = $cookieStore.get('loggedIn');
 	$rootScope.loggedInUser = $cookieStore.get('loggedInUser');
 	if (!$rootScope.loggedIn) {
@@ -17,13 +17,36 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		firebase.database().ref('troves').once('value').then(function(snapshot) {
-			$scope.troves = snapshot.toJSON();
-			$scope.$apply();
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('troves').once('value').then(function(snapshot) {
+					if (snapshot.val() == null) {
+						$rootScope.error("There are not currently any troves.");
+					} else {
+						$scope.troves = snapshot.toJSON();
+						$scope.$apply();
+					}
+				});
+			}
 		});
+	}
+	
+	$scope.fetchTrove = function(troveName) {
+		
+		$scope.troveName = troveName;
+		firebase.database().ref('/troves/' + troveName).once('value').then(function(snapshot) {
+			$scope.trove = snapshot.toJSON();
+		});
+	}
+	
+	$scope.fetchCollectiblesInTrove = function(troveName) {
+		window.location.href = '#!/viewTrove?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
 		$scope.fetchAllTroves();
+		console.log("troves");
 	});
 });

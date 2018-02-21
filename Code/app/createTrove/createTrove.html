@@ -1,0 +1,75 @@
+<html lang="en">
+
+<head>
+  <title>Hello, world!</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <style>
+
+  #head {
+    font-weight: 500;
+  }
+
+  </style>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-lg-8">
+        <div class="card card-nav-tabs">
+          <h3 class="card-header card-header-primary" id="head">
+            Add Trove
+          </h3>
+          <div class="card-body">
+            <div class="form-group">
+             <label for="exampleInput1" class="bmd-label-floating">Title</label>
+             <input ng-model="troveName" class="form-control" id="troveName">
+           </div>
+           <div class="form-group">
+            <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
+            <textarea ng-model="troveDescription" class="form-control" id="troveDescription" rows="3"></textarea>
+          </div>
+          <div class="form-group" data-ng-repeat="choice in choices">
+           <input class="form-control" type="text" ng-model="choice.name" name="" placeholder="Enter field title">
+           <button class="remove btn btn-warning" ng-show="$last" ng-click="removeChoice()">Remove Field</button>
+         </div>
+
+         <div class="text-right">
+          <button class="addfields btn btn-primary" ng-click="addNewChoice()">Add field</button>
+          <button ng-click="createTrove(troveName, troveDescription, choices)" type="button" class="btn btn-success">Submit</button>
+        </div>
+        <div id="choicesDisplay">
+          <!--{{ choices }}-->
+        </div>
+      </div>
+
+            <!--div class="card-body">
+              <div class="form-group">
+                 <label for="exampleInput1" class="bmd-label-floating">Title</label>
+                 <input type="email" class="form-control" id="exampleInput1">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+
+              <a href="#" class="btn btn-primary">Add Fields</a>
+              <hr>
+              <div class="text-center">
+                <button type="button" class="btn btn-success">Submit</button>
+              </div>
+
+            </div-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  </html>

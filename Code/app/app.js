@@ -8,10 +8,16 @@ var app = angular.module('myApp', [
   'myApp.view2',
   'myApp.login',
   'myApp.register',
+  'myApp.createCollectible',
+  'myApp.createTrove',
   'myApp.collection',
   'myApp.wishlist',
   'myApp.troves',
   'myApp.accinfo',
+  'myApp.createCollectible',
+  'myApp.viewCollectible',
+  'myApp.createTrove',
+  'myApp.viewTrove',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
@@ -50,10 +56,14 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 			  var errorCode = error.code;
 			  var errorMessage = error.message;
 			  console.log(errorCode + ": " + errorMessage);
+			  $rootScope.error(errorMessage);
 			});
 		}).catch(function(error) {
 			console.log(error.message);
+			$rootScope.error(error.message);
 		});
+		$rootScope.oldPassword = null;
+		$rootScope.newPassword = null;
 	}
 	
 	$rootScope.error = function(errorMessage) {

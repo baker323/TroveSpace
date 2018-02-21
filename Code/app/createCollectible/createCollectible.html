@@ -1,0 +1,55 @@
+<html lang="en">
+  <head>
+    <title>TroveSpace</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+
+
+    <style>
+
+    #head {
+      font-weight: 500;
+    }
+
+    </style>
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-lg-8">
+          <div class="card card-nav-tabs">
+            <h3 class="card-header card-header-primary" id="head">
+              Create Collectible
+            </h3>
+            <div class="card-body">
+              <div class="form-group">
+                 <label for="exampleInput1" class="bmd-label-floating">Title</label>
+                 <input ng-model="collectibleTitle" class="form-control" id="collectibleTitle">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
+                <textarea ng-model="collectibleDescription" class="form-control" id="collectibleDescription" rows="3"></textarea>
+              </div>
+              <div id="customFields" ng-repeat="(key, value) in trove" ng-if="key!='description' && key!='collectibles'">
+                <label class="bmd-label-floating">{{key}}</label>
+                 <input ng-model="fieldValues[key]" class="form-control">
+              </div>
+              </div>
+              <div class="text-center">
+                <button ng-click="createCollectible(collectibleTitle, collectibleDescription, troveName, fieldValues)" type="button" class="btn btn-success">Submit</button>
+                <button ng-click="cancel()" type="button" class="btn btn-danger">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </body>
+</html>

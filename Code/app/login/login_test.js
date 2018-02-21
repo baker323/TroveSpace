@@ -1,5 +1,6 @@
 describe('TroveSpace Login', function() {
 
+/*
     it('should deny incorrect password', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
 
@@ -73,6 +74,7 @@ describe('TroveSpace Login', function() {
         element(by.name('logout')).click();
     });
 
+*/
     // change Account Information
     it('should successfully change the account information', function() {
         browser.get('http://127.0.0.1:60788/#!/login');
@@ -82,7 +84,12 @@ describe('TroveSpace Login', function() {
         browser.sleep(2000);
         element(by.name('settings')).click();
         browser.sleep(2000);
-
+        element(by.name('account')).click();
+        browser.sleep(2000);
+        element.all(by.model('userInfo.firstName')).first().sendKeys('test');
+        element.all(by.model('userInfo.lastName')).first().sendKeys('test');
+        element(by.name('updateUserInfo')).click();
+        browser.sleep(2000);
 
     });
 

@@ -10,7 +10,11 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+
+  <!-- Material Kit CSS -->
+  <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
 </head>
 <body>
 
@@ -50,8 +54,8 @@
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" disabled>
+      <button class="btn btn-outline my-2 my-sm-0" type="submit" disabled>Search</button>
     </form>
   </div>
 </nav>
@@ -104,8 +108,6 @@
 
   <div ng-view></div>
 
-  <div>Angular seed app: v<span app-version></span></div>
-
 
 <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
 <script>
@@ -130,16 +132,28 @@
   <script src="view1/view1.js"></script>
   <script src="view2/view2.js"></script>
   <script src="login/login.js"></script>
+  <script src="createCollectible/createCollectible.js"></script>
+  <script src="createTrove/createTrove.js"></script>
   <script src="collection/collection.js"></script>
   <script src="register/register.js"></script>
   <script src="accinfo/accinfo.js"></script>
   <script src="troves/troves.js"></script>
   <script src="wishlist/wishlist.js"></script>
+  <script src="createCollectible/createCollectible.js"></script>
+  <script src="createTrove/createTrove.js"></script>
+  <script src="viewTrove/viewTrove.js"></script>
+  <script src="viewCollectible/viewCollectible.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!--script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/bootstrap-material-design.min.js"></script>
+
+  <script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/plugins/nouislider.min.js"></script>
+
+  <script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/material-kit.min.js"></script-->
+
 </body>
 </html>

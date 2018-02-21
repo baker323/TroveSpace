@@ -9,7 +9,7 @@ angular.module('myApp.view1', ['ngRoute'])
   });
 }])
 
-.controller('View1Ctrl', function($scope) {
+.controller('View1Ctrl', function($scope, $rootScope) {
 	
 	$scope.createAccount = function(username, email, password) {
 		
@@ -176,8 +176,7 @@ angular.module('myApp.view1', ['ngRoute'])
 		
 		firebase.database().ref('troves').child(troveName)
 		.set({
-			description: description,
-			followerCount: 0
+			description: description
 		});
 		for (var i=0; i < customFields.length; i++) {
 			firebase.database().ref('troves/' + troveName).child(customFields[i]).set(true);
@@ -192,7 +191,6 @@ angular.module('myApp.view1', ['ngRoute'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		
 		firebase.database().ref('troves').once('value').then(function(snapshot) {
 			$scope.troves = snapshot.toJSON();
 		});

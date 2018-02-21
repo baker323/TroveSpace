@@ -37,7 +37,9 @@
       padding: 0 0 0px 10px;
     }
 
-    #dropdownMenuButton {
+    #btn {
+      width: 90px;
+      box-shadow: none;
       position: absolute;
       right: 0;
     }
@@ -47,150 +49,83 @@
   </head>
   <body>
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">Hats</span>
+      <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
+	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
+		<option ng-repeat="(key, value) in collections">{{key}}</option>
+	  </select>
+	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
+	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
     </nav>
-    <div class="container">
+    <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
-            <div class="row">
-              <div class="col-4" id="postCol">
+            <div class="row justify-content-center justify-content-md-start">
+              <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
+                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
+                    <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
                 </div>
               </div>
-
-
-              <!--It is repeating from here! So you can delete this part because it will be a for loop here-->
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Nike Black Hat</h5>
-                    <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Add to Collection</a>
-                        <a class="dropdown-item" href="#">Add to Wishlist</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <!--Till here is it repeating-->
-
-
             </div>
           </div>
         </div>
       </div>
     </div>
+	  
+	<!-- Modal -->
+	<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Create Folder</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="message" class="col col-lg-9">
+				Please name your folder: <input ng-model="folderName" class="form-control" id="folderName" placeholder="Folder Name" required>
+				Please chose a category: 
+				<select ng-model="troveName" class="form-control">
+					<option ng-repeat="(key, value) in troves">{{key}}</option>
+				</select>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="createFolder(folderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	  
+	<!-- Modal -->
+	<div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Rename Folder</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div name="message" class="col col-lg-9">
+				Please name your folder: <input ng-model="newName" class="form-control" id="newName" placeholder="Folder Name" required>
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-click="renameFolder(currentFolder, newName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

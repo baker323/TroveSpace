@@ -64,7 +64,7 @@
               </div>
               <div class="row justify-content-center my-3 mb-4">
                 <div class="col-4 text-center">
-                  <button ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
+                  <button name="updateUserInfo" ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
                 </div>
                 <div class="col-4 text-center">
                   <button name="delAcc" data-toggle="modal" data-target="#deleteAccountModal" type="button" id="btn" class="btn btn-warning">Delete Account</button>
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-		<!-- Modal -->
+	<!-- Modal -->
 	<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">

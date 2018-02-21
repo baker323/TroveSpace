@@ -51,68 +51,26 @@
       <span class=" mb-0 h2 mx-auto">Troves</span>
     </nav>
     <!--Header ending-->
+	<div class="row justify-content-center">
+      <button class="btn" onclick="location.href='#!/createTrove'">New Trove</button>
+    </div>
 
-    <div class="container">
+    <div ng-show="troves" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
             <div class="row">
               <div ng-repeat="(key, value) in troves" class="col-4" id="postCol">
-                <div class="card" id="postCheck">
+                <div ng-click="fetchCollectiblesInTrove(key)" class="card" id="postCheck">
                     <h5 id="title">{{key}}</h5>
                 </div>
               </div>
-
-
-              <!--It is repeating from here! So you can delete this part because it will be a for loop here-->
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Coins</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Vinyls</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Cats</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Stamps</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Dogs</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Headphones</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Printer</h5>
-                </div>
-              </div>
-              <div class="col-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 id="title">Balls</h5>
-                </div>
-              </div>
-              <!--Till here is it repeating-->
-
-
             </div>
           </div>
         </div>
       </div>
     </div>
+	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
