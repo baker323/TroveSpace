@@ -41,7 +41,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					$rootScope.error("Item trove does not match folder.");
 				}
 				else {
-					firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/').child(collectibleName).set({
+					firebase.database().ref('collectibles/' + collectibleName + '/' + user.uid).set({
 						multipleCount: 1
 					});
 				}
@@ -57,16 +57,17 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
-	$scope.fetchAllCollections = function() {
+	$scope.fetchAllCollections = function(troveName) {
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
-				firebase.database().ref('/users/' + user.uid + '/folders').once('value').then(function(snapshot) {
+				firebase.database().ref('/users/' + user.uid + '/folders').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
 					$scope.collections = snapshot.toJSON();
 					$scope.$apply();
 				});
-				firebase.database().ref('/users/' + user.uid + '/folders').limitToFirst(1).once('value').then(function(snapshot) {
+				
+				firebase.database().ref('/users/' + user.uid + '/folders').orderByChild('category').equalTo(troveName).limitToFirst(1).once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
 						console.log(childSnapshot.key);
 						$scope.currentFolder = childSnapshot.key;
@@ -78,15 +79,19 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
-	$scope.createNewCollectible = function(troveName) {
-		window.location.href = '#!/createCollectible?'+troveName;
+	$scope.createNewCollectible = function(collectibleName) {
+		window.location.href = '#!/createCollectible?'+collectibleName;
+	}
+	
+	$scope.viewCollectible = function(troveName) {
+		window.location.href = '#!/viewCollectible?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		var troveName = decodeURIComponent(b);
-		$scope.fetchAllCollections();
+		$scope.fetchAllCollections(troveName);
 		$scope.fetchCollectibles(troveName);
 	});
 	

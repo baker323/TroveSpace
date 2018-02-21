@@ -51,6 +51,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 				  $scope.fetchAllTroves();
 				  $scope.fetchAllCollections();
 				  $scope.newName = null;
+				  $rootScope.error("Folder successfully renamed.");
 				  return firebase.database().ref('users/' + user.uid + '/folders').update(update);
 				});
 			} else {
@@ -70,6 +71,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 			$scope.fetchAllTroves();
 			$scope.fetchAllCollections();
 			$scope.fetchCollectiblesInCollection($scope.currentFolder);
+			$rootScope.error("Folder successfully deleted.");
 		  })
 		  .catch(function(error) {
 			console.log("Remove failed: " + error.message);
@@ -78,6 +80,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchAllCollections = function() {
+		console.log("Fetch all collections.");
 		var user = firebase.auth().currentUser;
 		
 		firebase.auth().onAuthStateChanged(function(user){

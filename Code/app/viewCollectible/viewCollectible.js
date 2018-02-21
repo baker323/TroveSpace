@@ -16,44 +16,50 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	if (!$rootScope.loggedIn) {
 		window.location.href = '#!/login';
 	}
-
-	$scope.fetchTrove = function(troveName) {
-
-		firebase.database().ref('/troves/' + troveName).once('value').then(function(snapshot) {
-			$scope.trove = snapshot.toJSON();
+	
+	$scope.fetchCollectible = function(collectibleName) {
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
+					$scope.collectible = snapshot.toJSON();
+					$scope.$apply();
+				});
+			}
 		});
 	}
-
-	$scope.viewCollectible = function(collectibleName, description, troveName, customFields, fieldValues) {
-		console.log(troveName,collectibleName, description);
+	
+	$scope.getMultipleCount = function(collectibleName) {
 		var user = firebase.auth().currentUser;
-
-		firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
-			if (snapshot.val() == null) {
-				firebase.database().ref('collectibles').child(collectibleName).set({
-					description: description,
-					category: troveName,
-					lastEditedBy: user.displayName
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('/collectibles/' + collectibleName + '/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
+					$scope.multipleCount = snapshot.toJSON();
+					$scope.$apply();
 				});
-
-				// set custom fields
-				for (var i=0; i < customFields.length; i++) {
-					firebase.database().ref('collectibles/' + collectibleName).child(customFields[i]).set(fieldValues[i]);
-				}
-
-				// add to trove
-				firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set(true);
-
-			} else {
-				$rootScope.error("Collectible with that name already exists.");
 			}
-			window.location.href = '#!/viewTrove?'+troveName;
+		});
+	}
+	
+	$scope.setMultipleCount = function(collectibleName, multipleValue) {
+		var user = firebase.auth().currentUser;
+		console.log("Set multiple count.");
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('collectibles/' + collectibleName + '/' + user.uid).set({
+					multipleCount: multipleValue});
+			}
 		});
 	}
 
 	$scope.$on('$viewContentLoaded', function() {
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
-		$scope.troveName = decodeURIComponent(b);
+		$scope.collectibleName = decodeURIComponent(b);
+		$scope.fetchCollectible($scope.collectibleName);
+		$scope.getMultipleCount($scope.collectibleName);
 	});
 });

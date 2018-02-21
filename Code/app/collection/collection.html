@@ -50,15 +50,13 @@
   <body>
     <nav class="navbar navbar-light bg-light" justify-content-center>
       <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
-    </nav>
-	<div class="row justify-content-center">
-      <select ng-show="collections" ng-model="currentFolder" class="btn">
+	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
 		<option ng-repeat="(key, value) in collections">{{key}}</option>
 	  </select>
 	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
 	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
 	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
-    </div>
+    </nav>
     <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">

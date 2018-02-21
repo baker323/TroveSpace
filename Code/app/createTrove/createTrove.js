@@ -29,5 +29,9 @@ angular.module('myApp.createTrove', ['ngRoute', 'ngCookies'])
 		}
 		window.location.href = '#!/troves';
 	}
+	
+	$scope.addNewChoice = function() {
+		console.log("Add new choice");
+	}
 
 });

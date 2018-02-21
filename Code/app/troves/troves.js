@@ -17,9 +17,15 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		firebase.database().ref('troves').once('value').then(function(snapshot) {
-			$scope.troves = snapshot.toJSON();
-			$scope.$apply();
+		var user = firebase.auth().currentUser;
+		
+		firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('troves').once('value').then(function(snapshot) {
+					$scope.troves = snapshot.toJSON();
+					$scope.$apply();
+				});
+			}
 		});
 	}
 	
@@ -37,5 +43,6 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	
 	$scope.$on('$viewContentLoaded', function() {
 		$scope.fetchAllTroves();
+		console.log("troves");
 	});
 });
