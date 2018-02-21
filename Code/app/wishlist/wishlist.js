@@ -20,7 +20,7 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		console.log("Fetch wishlist");
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/' + user.uid + '/wishlist/').once('value').then(function(snapshot) {
 					if (snapshot.val() == null) {
@@ -30,13 +30,14 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 					$scope.$apply();
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
 	$scope.removeFromWishlist = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/' + user.uid + '/wishlist').child(collectibleName).remove()
 				.then(function() {
@@ -47,6 +48,7 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 					console.log("Remove failed: " + error.message);
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	

@@ -20,20 +20,21 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.fetchCollectible = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 					$scope.collectible = snapshot.toJSON();
 					$scope.$apply();
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
 	$scope.getMultipleCount = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('/collectibles/' + collectibleName + '/users/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
 					if (snapshot.val() == null) {
@@ -45,6 +46,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					}
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -52,11 +54,12 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		console.log("Set multiple count.");
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 					multipleCount: multipleValue});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	

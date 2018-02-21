@@ -19,7 +19,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	$scope.fetchCollectibles = function(troveName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 		
 				$scope.troveName = troveName;
@@ -33,6 +33,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					}
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -64,7 +65,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	$scope.fetchAllCollections = function(troveName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('/users/' + user.uid + '/folders').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
 					$scope.collections = snapshot.toJSON();
@@ -80,6 +81,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					});
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	

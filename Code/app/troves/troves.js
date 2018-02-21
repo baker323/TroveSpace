@@ -19,7 +19,7 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	$scope.fetchAllTroves = function() {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('troves').once('value').then(function(snapshot) {
 					if (snapshot.val() == null) {
@@ -30,6 +30,7 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 					}
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	

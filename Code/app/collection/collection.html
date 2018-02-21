@@ -49,7 +49,8 @@
   </head>
   <body>
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
+      <span ng-show="currentFolder" class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
+	  <span ng-hide="currentFolder" class=" mb-0 h2 mx-auto">Collection</span>
 	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
 		<option ng-repeat="(key, value) in collections">{{key}}</option>
 	  </select>

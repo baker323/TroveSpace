@@ -33,6 +33,7 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 			$cookieStore.put('loggedIn', false);
 			console.log("User logged out.");
 			window.location.href = '#!/login';
+			$rootScope.unsubscribe();
 		}).catch(function(error) {
 			console.log(error.message);
 		});
