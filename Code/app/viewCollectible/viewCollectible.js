@@ -59,12 +59,21 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			}
 		});
 	}
+	
+	$scope.goBack = function() {
+		console.log("Back");
+		window.location.href = '#!/viewTrove?'+$scope.collectible.category;
+	}
 
 	$scope.$on('$viewContentLoaded', function() {
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		$scope.collectibleName = decodeURIComponent(b);
-		$scope.fetchCollectible($scope.collectibleName);
-		$scope.getMultipleCount($scope.collectibleName);
+		if (a.indexOf("?") == -1) {
+			window.location.href = '#';
+		} else {
+			$scope.fetchCollectible($scope.collectibleName);
+			$scope.getMultipleCount($scope.collectibleName);
+		}
 	});
 });

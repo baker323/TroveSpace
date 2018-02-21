@@ -37,23 +37,13 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.addToCollection = function(collectibleName, folderName) {
-		console.log(collectibleName, folderName);
 		var user = firebase.auth().currentUser;
 		
-		firebase.database().ref('/users/' + user.uid + '/folders').child(folderName).once('value').then(function(snapshot) {
-			
-			firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(childSnapshot) {
-				if (snapshot.val().category != childSnapshot.val().category) {
-					$rootScope.error("Item trove does not match folder.");
-				}
-				else {
-					firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
-						multipleCount: 1
-					});
-					$rootScope.error("Item successfully added.");
-				}
-			});
+		firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
+			multipleCount: 1
 		});
+		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set(true);
+		$rootScope.error("Item successfully added.");
 	}
 	
 	$scope.addToFolder = function(collectibleName) {
@@ -98,8 +88,12 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		var troveName = decodeURIComponent(b);
-		$scope.fetchAllCollections(troveName);
-		$scope.fetchCollectibles(troveName);
+		if (a.indexOf("?") == -1) {
+			window.location.href = '#';
+		} else {
+			$scope.fetchAllCollections(troveName);
+			$scope.fetchCollectibles(troveName);
+		}
 	});
 	
 });

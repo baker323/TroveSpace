@@ -63,9 +63,10 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 		var b = a.substring(a.indexOf("?")+1);
 		$scope.fieldValues = [];
 		$scope.troveName = decodeURIComponent(b);
-		$scope.fetchTrove($scope.troveName);
-		if ($scope.troveName == null) {
+		if (a.indexOf("?") == -1) {
 			window.location.href = '#!/troves';
+		} else {
+			$scope.fetchTrove($scope.troveName);
 		}
 	});
 });
