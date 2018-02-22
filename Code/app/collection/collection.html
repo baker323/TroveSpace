@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,128 +9,128 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
+        #postCheck {
+            margin: 30px 0 30px 0;
+            border-radius: 7px;
+            box-shadow: none;
+            width: 100%;
+            height: 200px;
+            background-color: #ffffff;
+            background-image: url('nike.jpeg');
+            background-repeat: no-repeat;
+            background-size: 150px 150px;
+            background-position: center;
+            border: 0;
+            cursor: pointer;
+            -webkit-box-shadow: 2px 1px 25px 0px rgba(0, 0, 0, 0.24);
+            -moz-box-shadow: 2px 1px 25px 0px rgba(0, 0, 0, 0.24);
+            box-shadow: 2px 1px 25px 0px rgba(0, 0, 0, 0.24);
 
-    #postCheck {
-      margin: 30px 0 30px 0;
-      border-radius: 7px;
-      box-shadow: none;
-      width: 100%;
-      height: 200px;
-      background-color: #ffffff;
-      background-image: url('nike.jpeg');
-      background-repeat: no-repeat;
-      background-size: 150px 150px;
-      background-position: center;
-      border: 0;
-      cursor: pointer;
-      -webkit-box-shadow: 2px 1px 25px 0px rgba(0,0,0,0.24);
-      -moz-box-shadow: 2px 1px 25px 0px rgba(0,0,0,0.24);
-      box-shadow: 2px 1px 25px 0px rgba(0,0,0,0.24);
+        }
 
-    }
+        #title {
+            bottom: 0;
+            color: black;
+            font-size: 22px;
+            font-weight: 600;
+            position: absolute;
+            padding: 0 0 0px 10px;
+        }
 
-    #title {
-      bottom: 0;
-      color: black;
-      font-size: 22px;
-      font-weight: 600;
-      position: absolute;
-      padding: 0 0 0px 10px;
-    }
-
-    #btn {
-      width: 90px;
-      box-shadow: none;
-      position: absolute;
-      right: 0;
-    }
-
-
+        #btn {
+            width: 90px;
+            box-shadow: none;
+            position: absolute;
+            right: 0;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
-	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
+        <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
+        <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
 		<option ng-repeat="(key, value) in collections">{{key}}</option>
 	  </select>
-	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
-	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
-	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
+        <button name="newFolder" class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
+        <button name="renameFolder" ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+        <button name="deleteFolder" ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
     </nav>
     <div ng-show="currentFolder" class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10">
-          <div class="container">
-            <div class="row justify-content-center justify-content-md-start">
-              <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
-                    <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+                <div class="container">
+                    <div class="row justify-content-center justify-content-md-start">
+                        <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
+                            <div class="card" id="postCheck">
+                                <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
+                                <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-	  
-	<!-- Modal -->
-	<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<h3 class="modal-title" id="modalLabel">Create Folder</h3>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+    <!-- Modal -->
+    <div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalLabel">Create Folder</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
-		  </div>
-		  <div class="modal-body">
-			<div class="row">
-			  <div name="message" class="col col-lg-9">
-				Please name your folder: <input ng-model="folderName" class="form-control" id="folderName" placeholder="Folder Name" required>
-				Please chose a category: 
-				<select ng-model="troveName" class="form-control">
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div name="message" class="col col-lg-9">
+                              Please name your folder:
+                            <input ng-model="folderName" class="form-control" id="folderName" placeholder="Folder Name" required>
+                              Please chose a category:
+                            <select ng-model="troveName" class="form-control">
 					<option ng-repeat="(key, value) in troves">{{key}}</option>
 				</select>
-			  </div>
-			</div>
-		  </div>
-		  <div class="modal-footer">
-			<button ng-click="createFolder(folderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	  
-	<!-- Modal -->
-	<div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<h3 class="modal-title" id="modalLabel">Rename Folder</h3>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-click="createFolder(folderName, troveName)" name="confirmFolder" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalLabel">Rename Folder</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
-		  </div>
-		  <div class="modal-body">
-			<div class="row">
-			  <div name="message" class="col col-lg-9">
-				Please name your folder: <input ng-model="newName" class="form-control" id="newName" placeholder="Folder Name" required>
-			  </div>
-			</div>
-		  </div>
-		  <div class="modal-footer">
-			<button ng-click="renameFolder(currentFolder, newName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	  
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div name="message" class="col col-lg-9">
+                            Please name your folder: <input ng-model="newName" class="form-control" id="newName" placeholder="Folder Name" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-click="renameFolder(currentFolder, newName)" name="confirmNewName" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+</body>
+
 </html>
