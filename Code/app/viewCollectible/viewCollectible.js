@@ -61,6 +61,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			}
 			$rootScope.unsubscribe();
 		});
+		$rootScope.error("Information saved.");
 	}
 	
 	$scope.goBack = function() {
