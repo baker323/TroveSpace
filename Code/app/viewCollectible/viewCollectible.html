@@ -16,44 +16,96 @@
     font-weight: 500;
   }
 
+  #edit {
+    width: 110px;
+  }
+
+  #bar {
+    margin: 20px 0 20px 0;
+  }
+
+
+
   </style>
 
 </head>
 <body>
 
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-lg-8">
-        <div class="card card-nav-tabs">
-          <h3 class="card-header card-header-primary" id="head">
-            {{collectibleName}}
-          </h3>
-          <div class="card-body">
-            <div class="form-group">
-             <label for="exampleInput1">Title</label>
-             <input ng-model="collectibleName" class="form-control" id="collectibleName" disabled>
-           </div>
-           <div class="form-group">
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-lg-8">
+      <div class="card card-nav-tabs">
+        <h3 class="card-header card-header-primary" id="head">
+          {{collectibleName}}
+        </h3>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="exampleInput1">Title</label>
+            <input ng-model="collectibleName" class="form-control" id="collectibleName" disabled>
+          </div>
+          <div class="form-group">
             <label for="exampleFormControlTextarea1">Description</label>
             <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3" disabled></textarea>
           </div>
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users'" class="form-group">
-             <label for="exampleInput1">{{key}}</label>
-             <input ng-model="value" class="form-control" disabled>
-           </div>
-         <div class="form-group">
-             <label for="exampleInput1">Count</label>
-             <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
-           </div>
-       </div>
-       <div class="text-center">
-		<button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
-        <button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+
+          <!--This is the field you can copy for past edits-->
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Past Description</label>
+            <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3" disabled></textarea>
+          </div>
+
+          <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users'" class="form-group">
+            <label for="exampleInput1">{{key}}</label>
+            <input ng-model="value" class="form-control" disabled>
+          </div>
+          <div class="form-group">
+            <label for="exampleInput1">Count</label>
+            <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
+          </div>
+        </div>
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-3">
+              <button type="button" id="upload" class="btn btn-secondary">Upload Image</button>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <!--This is the approve and disapprove part-->
+        <div class="text-center">
+          <h4>Vote for the edit</h4>
+          <div class="container-fluid" id="bar">
+            <div class="row">
+              <div class="col-6">
+                <div class="progress">
+                  <!--The width changes the bar length-->
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="progress">
+                  <!--The width changes the bar length-->
+                  <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="edit" class="btn btn-success">Approve</button>
+          <button type="button" id="edit" class="btn btn-danger">Disapprove</button>
+        </div>
+        <hr />
+        <div class="text-center">
+          <button type="button" id="edit" class="btn btn-dark">Edit</button>
+          <button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
+          <button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+        </div>
       </div>
     </div>
-  </div>
 
-</div>
+  </div>
 </div>
 
 </body>
