@@ -49,16 +49,15 @@
   </head>
   <body>
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
-    </nav>
-	<div class="row justify-content-center">
-      <select ng-show="collections" ng-model="currentFolder" class="btn">
+      <span ng-show="currentFolder" class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
+	  <span ng-hide="currentFolder" class=" mb-0 h2 mx-auto">Collection</span>
+	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
 		<option ng-repeat="(key, value) in collections">{{key}}</option>
 	  </select>
 	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
 	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
 	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
-    </div>
+    </nav>
     <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
@@ -66,7 +65,7 @@
             <div class="row justify-content-center justify-content-md-start">
               <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 id="title">{{key}}</h5>
+                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
                     <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
                 </div>
               </div>

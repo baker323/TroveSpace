@@ -59,13 +59,14 @@
             <div class="row">
               <div ng-repeat="(key, value) in troveCollectibles" class="col-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 id="title">{{key}}</h5>
+                    <h5 ng-click="viewCollectible(key)" href="" id="title">{{key}}</h5>
                     <div class="dropdown">
                       <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Add
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
+                        <a ng-show="collections" ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
+						<a ng-hide="collections" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
                         <a ng-click="addToWishlist(key)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>

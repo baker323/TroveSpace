@@ -29,11 +29,14 @@
           <div class="card-body">
             <div class="form-group">
              <label for="exampleInput1" class="bmd-label-floating">Title</label>
-             <input class="form-control" id="exampleInput1">
+             <input ng-model="troveName" class="form-control" id="troveName">
            </div>
            <div class="form-group">
             <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <textarea ng-model="troveDescription" class="form-control" id="troveDescription" rows="3"></textarea>
+          </div>
+		  <div class="form-group">
+            <label class="bmd-label-floating">Click "Add Field" to enter additional details to track for this category of collectible.</label>
           </div>
           <div class="form-group" data-ng-repeat="choice in choices">
            <input class="form-control" type="text" ng-model="choice.name" name="" placeholder="Enter field title">
@@ -42,7 +45,7 @@
 
          <div class="text-right">
           <button class="addfields btn btn-primary" ng-click="addNewChoice()">Add field</button>
-          <button type="button" class="btn btn-success">Submit</button>
+          <button ng-click="createTrove(troveName, troveDescription, choices)" type="button" class="btn btn-success">Submit</button>
         </div>
         <div id="choicesDisplay">
           <!--{{ choices }}-->

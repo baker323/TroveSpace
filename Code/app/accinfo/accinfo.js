@@ -20,13 +20,14 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 		console.log("Fetch user info");
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('/users/' + user.uid).once('value').then(function(snapshot) {
 					$scope.userInfo = snapshot.toJSON();
 					$scope.$apply();
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -34,17 +35,18 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 		console.log("Update user info");
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
-				firebase.database().ref('users/' + user.uid).set({
+				firebase.database().ref('users/' + user.uid).update({
 					username: username,
 					email: email,
 					firstName: firstName,
 					lastName: lastName
 				});
-				$rootScope.error("Information saved.");
 			}
+			$rootScope.unsubscribe();
 		});
+		$rootScope.error("Information saved.");
 	}
 	
 	$scope.deleteAccount = function(password) {
@@ -63,8 +65,8 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 			  $rootScope.error("Account successfully deleted.");
 			  $rootScope.loggedIn = false;
 			  $cookieStore.put('loggedIn', false);
-			  firebase.database().goOffline();
 			  window.location.href = '#!/login';
+			  $rootScope.unsubscribe();
 			}).catch(function(error) {
 			  console.log(error.message);
 			  $rootScope.error(error.message);

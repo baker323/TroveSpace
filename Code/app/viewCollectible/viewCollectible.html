@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+  <title>TroveSpace</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+
+
+  <style>
+
+  #head {
+    font-weight: 500;
+  }
+
+  </style>
+
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-lg-8">
+        <div class="card card-nav-tabs">
+          <h3 class="card-header card-header-primary" id="head">
+            {{collectibleName}}
+          </h3>
+          <div class="card-body">
+            <div class="form-group">
+             <label for="exampleInput1">Title</label>
+             <input ng-model="collectibleName" class="form-control" id="collectibleName" disabled>
+           </div>
+           <div class="form-group">
+            <label for="exampleFormControlTextarea1">Description</label>
+            <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3" disabled></textarea>
+          </div>
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users'" class="form-group">
+             <label for="exampleInput1">{{key}}</label>
+             <input ng-model="value" class="form-control" disabled>
+           </div>
+         <div class="form-group">
+             <label for="exampleInput1">Count</label>
+             <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
+           </div>
+       </div>
+       <div class="text-center">
+		<button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
+        <button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
