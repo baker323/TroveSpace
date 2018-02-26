@@ -15,6 +15,7 @@ var app = angular.module('myApp', [
   'myApp.troves',
   'myApp.accinfo',
   'myApp.createCollectible',
+  'myApp.viewCollectible',
   'myApp.createTrove',
   'myApp.viewTrove',
   'myApp.version'
@@ -32,7 +33,7 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 			$cookieStore.put('loggedIn', false);
 			console.log("User logged out.");
 			window.location.href = '#!/login';
-			firebase.database().goOffline();
+			$rootScope.unsubscribe();
 		}).catch(function(error) {
 			console.log(error.message);
 		});

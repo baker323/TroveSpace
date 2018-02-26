@@ -20,20 +20,24 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		console.log("Fetch wishlist");
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/' + user.uid + '/wishlist/').once('value').then(function(snapshot) {
+					if (snapshot.val() == null) {
+						$rootScope.error("There are currently no collectibles on your wishlist.");
+					}
 					$scope.wishlist = snapshot.toJSON();
 					$scope.$apply();
 				});
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
 	$scope.removeFromWishlist = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.auth().onAuthStateChanged(function(user){
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/' + user.uid + '/wishlist').child(collectibleName).remove()
 				.then(function() {
@@ -44,7 +48,12 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 					console.log("Remove failed: " + error.message);
 				});
 			}
+			$rootScope.unsubscribe();
 		});
+	}
+	
+	$scope.viewCollectible = function(troveName) {
+		window.location.href = '#!/viewCollectible?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {

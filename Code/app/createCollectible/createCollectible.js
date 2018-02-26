@@ -22,11 +22,12 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 
 		firebase.database().ref('/troves/' + troveName).once('value').then(function(snapshot) {
 			$scope.trove = snapshot.toJSON();
+			$scope.$apply();
 		});
 	}
 
-	$scope.createCollectible = function(collectibleName, description, troveName, customFields, fieldValues) {
-		console.log(troveName,collectibleName, description);
+	$scope.createCollectible = function(collectibleName, description, troveName, fieldValues) {
+		
 		var user = firebase.auth().currentUser;
 
 		firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
@@ -38,8 +39,10 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 				});
 
 				// set custom fields
-				for (var i=0; i < customFields.length; i++) {
-					firebase.database().ref('collectibles/' + collectibleName).child(customFields[i]).set(fieldValues[i]);
+				for (var i in fieldValues) {
+					if (fieldValues.hasOwnProperty(i)) {
+						firebase.database().ref('collectibles/' + collectibleName).child(i).set(fieldValues[i]);
+					}
 				}
 
 				// add to trove
@@ -51,10 +54,20 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 			window.location.href = '#!/viewTrove?'+troveName;
 		});
 	}
+	
+	$scope.cancel = function() {
+		window.location.href = '#!/viewTrove?'+$scope.troveName;
+	}
 
 	$scope.$on('$viewContentLoaded', function() {
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
+		$scope.fieldValues = [];
 		$scope.troveName = decodeURIComponent(b);
+		if (a.indexOf("?") == -1) {
+			window.location.href = '#!/troves';
+		} else {
+			$scope.fetchTrove($scope.troveName);
+		}
 	});
 });

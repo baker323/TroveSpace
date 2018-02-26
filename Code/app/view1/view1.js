@@ -28,7 +28,7 @@ angular.module('myApp.view1', ['ngRoute'])
 		  }
 		});
 		
-		firebase.auth().onAuthStateChanged(function(user) {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
 		  if (user && !user.emailVerified) {
 			  
 			user.sendEmailVerification().then(function() {
@@ -42,6 +42,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			  console.log(error.message);
 			});
 		  }
+		  $rootScope.unsubscribe();
 		});
 	}
 
@@ -52,10 +53,11 @@ angular.module('myApp.view1', ['ngRoute'])
 		  console.log(errorCode + ": " + errorMessage);
 		});
 		
-		firebase.auth().onAuthStateChanged(function(user) {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				console.log("User logged in.");
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -191,7 +193,6 @@ angular.module('myApp.view1', ['ngRoute'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		
 		firebase.database().ref('troves').once('value').then(function(snapshot) {
 			$scope.troves = snapshot.toJSON();
 		});
