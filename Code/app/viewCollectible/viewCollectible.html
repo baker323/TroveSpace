@@ -15,6 +15,10 @@
   #head {
     font-weight: 500;
   }
+	  
+  .card {
+    padding-bottom: 100px;
+  }
 
   </style>
 
@@ -28,6 +32,32 @@
           <h3 class="card-header card-header-primary" id="head">
             {{collectibleName}}
           </h3>
+
+        <!--This is the approve and disapprove part-->
+        <div ng-show="pending" class="text-center">
+          <h4>Vote for the edit</h4>
+          <div class="container-fluid" id="bar">
+            <div class="row">
+			  <div class="col-6">
+				<div class="progress">
+                  <!--The width changes the bar length-->
+                  <div class="progress-bar bg-success" role="progressbar" ng-style="{width : (voteKeepEdit*10)+'%'}" aria-valuenow="{{voteKeepEdit}}%" aria-valuemin="0" aria-valuemax="10">{{voteKeepEdit}}</div>
+                </div>
+				<div class="progress">
+                  <!--The width changes the bar length-->
+                  <div class="progress-bar bg-danger" role="progressbar" ng-style="{width : (voteRevertEdit*10)+'%'}" aria-valuenow="{{voteRevertEdit}}%" aria-valuemin="0" aria-valuemax="10">{{voteRevertEdit}}</div>
+                </div>
+			  </div>
+              <div class="col-6">
+                <button ng-click="incrementKeepVotes(collectibleName)" type="button" id="edit" class="btn btn-success">Approve</button>
+		  		<button ng-click="incrementRevertVotes(collectibleName)" type="button" id="edit" class="btn btn-danger">Disapprove</button>
+              </div>
+            </div>
+          </div>
+			<hr />
+        </div>
+        
+			
           <div class="card-body">
             <div class="form-group">
              <label for="exampleInput1">Title</label>
@@ -35,20 +65,43 @@
            </div>
            <div class="form-group">
             <label for="exampleFormControlTextarea1">Description</label>
-            <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3" disabled></textarea>
+            <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3"></textarea>
+			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users'" class="form-group">
+			  
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && !key.includes('pending') && key!='lastEditedBy'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
-             <input ng-model="value" class="form-control" disabled>
-           </div>
-         <div class="form-group">
-             <label for="exampleInput1">Count</label>
-             <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
+             <input ng-model="collectible[key]" class="form-control">
+			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
+          </div>
+			  
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && !key.includes('pending') && key=='lastEditedBy'" class="form-group">
+             <label for="exampleInput1">{{key}}</label>
+             <input ng-model="collectible[key]" class="form-control" disabled>
+			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
+          </div>
+			  
+           <div class="form-group">
+			   <label for="exampleInput1">Count</label>
+               <div class="input-group">
+			   	   <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
+				   <span class="input-group-btn">
+				   		<button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+				   </span>
+			   </div>
            </div>
        </div>
+	           <div class="container-fluid">
+          <div class="row">
+            <div class="col-3">
+              <button type="button" id="upload" class="btn btn-secondary">Upload Image</button>
+            </div>
+          </div>
+        </div>
+		
        <div class="text-center">
 		<button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
-        <button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+		<button ng-click="editCollectible(collectibleName)" type="button" class="btn btn-warning">Submit Edit</button>
       </div>
     </div>
   </div>

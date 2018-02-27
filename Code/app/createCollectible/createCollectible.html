@@ -37,7 +37,7 @@
                 <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
                 <textarea ng-model="collectibleDescription" class="form-control" id="collectibleDescription" rows="3"></textarea>
               </div>
-              <div id="customFields" ng-repeat="(key, value) in trove" ng-if="key!='description' && key!='collectibles'">
+              <div id="customFields" ng-repeat="(key, value) in trove" ng-if="key!='description' && key!='collectibles' && !key.includes('pending')">
                 <label class="bmd-label-floating">{{key}}</label>
                  <input ng-model="fieldValues[key]" class="form-control">
               </div>
