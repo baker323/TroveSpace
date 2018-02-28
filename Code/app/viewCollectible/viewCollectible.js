@@ -93,10 +93,11 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				}
 			}
 		}
-		if (noChange == total) {
+		if (noChange == total && $scope.file == document.getElementById('collectibleImage').files[0]) {
 			$rootScope.error("No changes were made.");
 		} else {
 			$rootScope.error("Your edit has been submitted for approval.");
+			$scope.uploadImage(collectibleName);
 		}
 		$scope.updateView();
 	}
@@ -285,6 +286,19 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		$scope.getUserRevertVote($scope.collectibleName);
 		$scope.getKeepVotes($scope.collectibleName);
 		$scope.getRevertVotes($scope.collectibleName);
+	}
+	
+	$scope.uploadImage = function(collectibleName) {
+		var file = document.getElementById('collectibleImage').files[0];
+		console.log(file);
+		if (file != null) {
+			firebase.storage().ref('collectibles/' + collectibleName + '/image').put(file).then(function(snapshot) {
+				console.log("Uploaded file.");
+				$scope.file = file;
+			}).catch(function(error) {
+				console.log(error.message);
+			});
+		}
 	}
 
 	$scope.$on('$viewContentLoaded', function() {

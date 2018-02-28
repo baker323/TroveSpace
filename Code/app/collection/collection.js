@@ -121,9 +121,24 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 				} else {
 					$scope.collection = snapshot.toJSON();
 					$scope.$apply();
+					snapshot.forEach(function(childSnapshot) {
+						$scope.getCollectibleImage(childSnapshot.key);
+					});
 				}
 			});
 		}
+	}
+	
+	$scope.getCollectibleImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
+			$scope.images[collectibleName] = url;
+			$scope.$apply();
+			console.log($scope.images[collectibleName]);
+		}).catch(function(error) {
+			$scope.images[collectibleName] = "no_image.jpg";
+			$scope.$apply();
+		});
 	}
 	
 	$scope.fetchAllTroves = function() {
@@ -156,6 +171,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
+		$scope.images = [];
 		$scope.fetchAllTroves();
 		$scope.fetchAllCollections();
 	});

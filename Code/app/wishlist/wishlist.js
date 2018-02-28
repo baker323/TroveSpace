@@ -28,6 +28,9 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 					}
 					$scope.wishlist = snapshot.toJSON();
 					$scope.$apply();
+					snapshot.forEach(function(childSnapshot) {
+						$scope.getCollectibleImage(childSnapshot.key);
+					});
 				});
 			}
 			$rootScope.unsubscribe();
@@ -52,11 +55,24 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
+	$scope.getCollectibleImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
+			$scope.images[collectibleName] = url;
+			$scope.$apply();
+			console.log($scope.images[collectibleName]);
+		}).catch(function(error) {
+			$scope.images[collectibleName] = "no_image.jpg";
+			$scope.$apply();
+		});
+	}
+	
 	$scope.viewCollectible = function(troveName) {
 		window.location.href = '#!/viewCollectible?'+troveName;
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
+		$scope.images = [];
 		$scope.fetchWishlist();
 	});
 });

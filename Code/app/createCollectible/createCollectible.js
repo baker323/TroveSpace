@@ -32,6 +32,7 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 		firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 			if (snapshot.val() == null) {
 				firebase.database().ref('collectibles').child(collectibleName).set({
+					name: collectibleName,
 					description: description,
 					category: troveName,
 					lastEditedBy: user.displayName
@@ -46,12 +47,29 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 
 				// add to trove
 				firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set(true);
+				
+				$scope.uploadImage(collectibleName);
 
 			} else {
 				$rootScope.error("Collectible with that name already exists.");
 			}
-			window.location.href = '#!/viewTrove?'+troveName;
 		});
+	}
+	
+	$scope.uploadImage = function(collectibleName) {
+		var file = document.getElementById('collectibleImage').files[0];
+		console.log(file);
+		if (file != null) {
+			firebase.storage().ref('collectibles/' + collectibleName + '/image').put(file).then(function(snapshot) {
+				console.log("Uploaded file.");
+				$scope.file = file;
+				window.location.href = '#!/viewTrove?'+$scope.troveName;
+			}).catch(function(error) {
+				console.log(error.message);
+			});
+		} else {
+			window.location.href = '#!/viewTrove?'+$scope.troveName;
+		}
 	}
 	
 	$scope.cancel = function() {

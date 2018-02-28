@@ -12,7 +12,45 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
-
+  <style>
+	  	.aa-input-container {
+		  display: inline-block;
+		  position: relative; }
+		.aa-input-search {
+		  width: 300px;
+		  border: 1px solid rgba(228, 228, 228, 0.6);
+		  padding: 12px 28px 12px 12px;
+		  box-sizing: border-box;
+		  -webkit-appearance: none;
+		  -moz-appearance: none;
+		  appearance: none; }
+		  .aa-input-search::-webkit-search-decoration, .aa-input-search::-webkit-search-cancel-button, .aa-input-search::-webkit-search-results-button, .aa-input-search::-webkit-search-results-decoration {
+			display: none; }
+		.aa-input-icon {
+		  height: 16px;
+		  width: 16px;
+		  position: absolute;
+		  top: 50%;
+		  right: 16px;
+		  -webkit-transform: translateY(-50%);
+				  transform: translateY(-50%);
+		  fill: #e4e4e4; }
+		.aa-dropdown-menu {
+		  background-color: #fff;
+		  border: 1px solid rgba(228, 228, 228, 0.6);
+		  min-width: 200px;
+		  margin-top: 0px;
+		  box-sizing: border-box; }
+		.aa-suggestion {
+		  padding: 12px;
+		  cursor: pointer;
+		}
+		.aa-suggestion + .aa-suggestion {
+			border-top: 1px solid rgba(228, 228, 228, 0.6);
+		}
+		  .aa-suggestion:hover, .aa-suggestion.aa-cursor {
+			background-color: rgba(241, 241, 241, 0.35); }
+  </style>
   <!-- Material Kit CSS -->
   <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
 </head>
@@ -53,10 +91,10 @@
         </div>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" disabled>
-      <button class="btn btn-outline my-2 my-sm-0" type="submit" disabled>Search</button>
-    </form>
+	<div class="form-inline my-2 my-lg-0" id="aa-input-container">
+		<input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control mr-sm-2" placeholder="Search" name="search" autocomplete="off" />
+		<button ng-click="searchTroves(searchQuery)" class="btn btn-outline my-2 my-sm-0" type="submit">Search</button>
+	</div>
   </div>
 </nav>
 
@@ -107,21 +145,28 @@
   <![endif]-->
 
   <div ng-view></div>
+  
+  <br />
+  <div class="row justify-content-center">
+	  <img class="center" height="20" src="search-by-algolia.png">
+  </div>
 
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB9GVkxpxfF14GKNeB3Nu7jee-hZK9aEnY",
+		authDomain: "trovespace-9a699.firebaseapp.com",
+		databaseURL: "https://trovespace-9a699.firebaseio.com",
+		projectId: "trovespace-9a699",
+		storageBucket: "trovespace-9a699.appspot.com",
+		messagingSenderId: "192635977131"
+	  };
+	  firebase.initializeApp(config);
+  </script>
 
-<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyB9GVkxpxfF14GKNeB3Nu7jee-hZK9aEnY",
-    authDomain: "trovespace-9a699.firebaseapp.com",
-    databaseURL: "https://trovespace-9a699.firebaseio.com",
-    projectId: "trovespace-9a699",
-    storageBucket: "trovespace-9a699.appspot.com",
-    messagingSenderId: "192635977131"
-  };
-  firebase.initializeApp(config);
-</script>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-route.min.js"></script>

@@ -30,10 +30,25 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					} else {
 						$scope.troveCollectibles = snapshot.toJSON();
 						$scope.$apply();
+						snapshot.forEach(function(childSnapshot) {
+							$scope.getCollectibleImage(childSnapshot.key);
+						});
 					}
 				});
 			}
 			$rootScope.unsubscribe();
+		});
+	}
+	
+	$scope.getCollectibleImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
+			$scope.images[collectibleName] = url;
+			$scope.$apply();
+			console.log($scope.images[collectibleName]);
+		}).catch(function(error) {
+			$scope.images[collectibleName] = "no_image.jpg";
+			$scope.$apply();
 		});
 	}
 	
@@ -100,6 +115,8 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		if (a.indexOf("?") == -1) {
 			window.location.href = '#';
 		} else {
+			$scope.images = [];
+			$scope.getCollectibleImage('Collectible1');
 			$scope.fetchAllCollections(troveName);
 			$scope.fetchCollectibles(troveName);
 		}
