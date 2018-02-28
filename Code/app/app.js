@@ -107,7 +107,6 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 				templates: {
 					//'suggestion' templating function used to render a single suggestion
 					suggestion: function(suggestion) {
-					  console.log(suggestion);
 					  return '<span>' +
 						suggestion._highlightResult.name.value + '</span>';
 					}

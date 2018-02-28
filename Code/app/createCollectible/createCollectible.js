@@ -58,7 +58,6 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.uploadImage = function(collectibleName) {
 		var file = document.getElementById('collectibleImage').files[0];
-		console.log(file);
 		if (file != null) {
 			firebase.storage().ref('collectibles/' + collectibleName + '/image').put(file).then(function(snapshot) {
 				console.log("Uploaded file.");

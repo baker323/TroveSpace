@@ -91,7 +91,7 @@
         </div>
       </li>
     </ul>
-	<div class="form-inline my-2 my-lg-0" id="aa-input-container">
+	<div ng-show="loggedIn" class="form-inline my-2 my-lg-0" id="aa-input-container">
 		<input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control mr-sm-2" placeholder="Search" name="search" autocomplete="off" />
 		<button ng-click="searchTroves(searchQuery)" class="btn btn-outline my-2 my-sm-0" type="submit">Search</button>
 	</div>
