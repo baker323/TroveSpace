@@ -47,6 +47,15 @@
 	  border-radius: 5px;
 	}
 
+	.select {
+	  background-color: #dddddd;
+	  border: 1px solid #dddddd;
+	  height: 100%;
+	}
+		
+	.option {
+	  background-color: #ffffff;
+	}
 
     </style>
   </head>
@@ -54,13 +63,17 @@
     <nav class="navbar navbar-light bg-light" justify-content-center>
       <span ng-show="currentFolder" class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
 	  <span ng-hide="currentFolder" class=" mb-0 h2 mx-auto">Collection</span>
-	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
-		<option ng-repeat="(key, value) in collections">{{key}}</option>
-	  </select>
-	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
-	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
-	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
     </nav>
+	<div class="row justify-content-center">
+	  <div class="form-inline my-2 my-lg-0">
+		  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn select mr-sm-2">
+		  <option class="option" ng-repeat="(key, value) in collections">{{key}}</option>
+		  </select>
+		  <button class="btn mr-sm-2" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
+		  <button ng-show="currentFolder" class="btn mr-sm-2" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+		  <button ng-show="currentFolder" class="btn btn-outline mr-sm-2" ng-click="deleteFolder(currentFolder)">Delete</button>
+	  </div>
+    </div>
     <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
