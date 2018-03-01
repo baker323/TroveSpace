@@ -105,7 +105,7 @@
         </div>
       </li>
     </ul>
-	<div class="nav navbar-nav navbar-right navbar-form">
+	<div ng-show="loggedIn" class="nav navbar-nav navbar-right navbar-form">
 		<div id="aa-input-container" class="input-group my-2 my-lg-0">
 		  <div class="input-group-prepend">
 			  <select ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select first-of-type" id="option">

@@ -407,12 +407,14 @@ app.run(function($rootScope, $cookieStore, $timeout) {
     };
 	
 	$rootScope.$on('$viewContentLoaded', function() {
-		$rootScope.searchCategory = "troves";
-		$rootScope.searchIn = "Troves";
-		if ($rootScope.autoCompleteSearch) {
-			$rootScope.initialized = false;
-			$rootScope.autoCompleteSearch.autocomplete.destroy();
+		if ($rootScope.loggedIn) {
+			$rootScope.searchCategory = "troves";
+			$rootScope.searchIn = "Troves";
+			if ($rootScope.autoCompleteSearch) {
+				$rootScope.initialized = false;
+				$rootScope.autoCompleteSearch.autocomplete.destroy();
+			}
+			$rootScope.searchComplete("troves");
 		}
-		$rootScope.searchComplete("troves");
 	});
 });
