@@ -55,7 +55,10 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	$scope.addToWishlist = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set(true);
+		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName
+		});
 		$rootScope.error("Item successfully added.");
 	}
 	
@@ -65,7 +68,14 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 			multipleCount: 1
 		});
-		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set(true);
+		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName
+		});
+		firebase.database().ref('users/' + user.uid + '/collection/').child(collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName
+		});
 		$rootScope.error("Item successfully added.");
 	}
 	
@@ -116,10 +126,15 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 			window.location.href = '#';
 		} else {
 			$scope.images = [];
-			$scope.getCollectibleImage('Collectible1');
 			$scope.fetchAllCollections(troveName);
 			$scope.fetchCollectibles(troveName);
+			$rootScope.onTrovePage = true;
+			$rootScope.searchTroveName = troveName;
 		}
+	});
+	
+	$scope.$on('$locationChangeStart', function() {
+    	$rootScope.onTrovePage = false;
 	});
 	
 });

@@ -78,28 +78,32 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.editCollectible = function(collectibleName) {
 		console.log("Edit collectible");
-		var noChange = 0;
-		var total = 0;
-		for (var i in $scope.collectible) {
-			if ($scope.collectible.hasOwnProperty(i)) {
-				if (!i.includes('pending') && i!='users' && i!='votes') {
-					total++;
-					if ($scope.originalCollectible[i] == $scope.collectible[i]) {
-						noChange++;
-					} else {
-						firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.collectible[i]);
+		if (!$scope.pending) {
+			var noChange = 0;
+			var total = 0;
+			for (var i in $scope.collectible) {
+				if ($scope.collectible.hasOwnProperty(i)) {
+					if (!i.includes('pending') && i!='users' && i!='votes') {
+						total++;
+						if ($scope.originalCollectible[i] == $scope.collectible[i]) {
+							noChange++;
+						} else {
+							firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.collectible[i]);
+						}
+
 					}
-					
 				}
 			}
-		}
-		if (noChange == total && $scope.file == document.getElementById('collectibleImage').files[0]) {
-			$rootScope.error("No changes were made.");
+			if (noChange == total && $scope.file == document.getElementById('collectibleImage').files[0]) {
+				$rootScope.error("No changes were made.");
+			} else {
+				$rootScope.error("Your edit has been submitted for approval.");
+				$scope.uploadImage(collectibleName);
+			}
+			$scope.updateView();
 		} else {
-			$rootScope.error("Your edit has been submitted for approval.");
-			$scope.uploadImage(collectibleName);
+			$rootScope.error("Current edit is still pending.");
 		}
-		$scope.updateView();
 	}
 	
 	$scope.incrementKeepVotes = function(collectibleName) {

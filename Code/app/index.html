@@ -4,6 +4,7 @@
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TroveSpace</title>
@@ -48,8 +49,21 @@
 		.aa-suggestion + .aa-suggestion {
 			border-top: 1px solid rgba(228, 228, 228, 0.6);
 		}
-		  .aa-suggestion:hover, .aa-suggestion.aa-cursor {
-			background-color: rgba(241, 241, 241, 0.35); }
+		.aa-suggestion:hover, .aa-suggestion.aa-cursor {
+			background-color: rgba(241, 241, 241, 0.35);
+	    }
+	    .select {
+		  background-color: #dddddd;
+		  border-top-right-radius: 0px;
+		  border-bottom-right-radius: 0px;
+		  height: 100%;
+		}
+		.option {
+		  background-color: #ffffff;
+		}
+	    .squareEdge {
+		  border-radius: 0px;
+		}
   </style>
   <!-- Material Kit CSS -->
   <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
@@ -91,9 +105,21 @@
         </div>
       </li>
     </ul>
-	<div ng-show="loggedIn" class="form-inline my-2 my-lg-0" id="aa-input-container">
-		<input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control mr-sm-2" placeholder="Search" name="search" autocomplete="off" />
-		<button ng-click="searchTroves(searchQuery)" class="btn btn-outline my-2 my-sm-0" type="submit">Search</button>
+	<div class="nav navbar-nav navbar-right navbar-form">
+		<div id="aa-input-container" class="input-group my-2 my-lg-0">
+		  <div class="input-group-prepend">
+			  <select ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select first-of-type" id="option">
+				<option class="option">Troves</option>
+				<option class="option">Collectibles</option>
+				<option class="option">My Collection</option>
+				<option ng-show="onTrovePage" class="option">Current Trove</option>
+			  </select>
+		  </div>
+		  <input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
+		  <div class="input-group-append">
+			<button ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
+		  </div>
+		</div>
 	</div>
   </div>
 </nav>

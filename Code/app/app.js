@@ -40,7 +40,6 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 	}
 	
 	$rootScope.changePassword = function(oldPassword, newPassword) {
-		var user = firebase.auth().currentUser;
 
 		var user = firebase.auth().currentUser;
 		var credential = firebase.auth.EmailAuthProvider.credential(
@@ -66,14 +65,73 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 		$rootScope.newPassword = null;
 	}
 	
-	$rootScope.searchComplete = function() {
+	$rootScope.searchComplete = function(indexToSearch) {
+		if (indexToSearch.includes("users")) {
+			$rootScope.searchUserCollection(indexToSearch);
+		} else if (indexToSearch.includes("troves/")) {
+			$rootScope.searchSpecificTrove(indexToSearch);
+		} else {
+			var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
+			var index = client.initIndex(indexToSearch);
+			index.clearIndex(function(err, content) {
+				if (err) console.log(err);
+			});
+
+			firebase.database().ref('/'+indexToSearch).once('value', contacts => {
+			  // Build an array of all records to push to Algolia
+			  const records = [];
+			  contacts.forEach(contact => {
+				// get the key and data from the snapshot
+				const childKey = contact.key;
+				const childData = contact.val();
+				// We set the Algolia objectID as the Firebase .key
+				childData.objectID = childKey;
+				// Add object for indexing
+				records.push(childData);
+			  });
+			  // Add or update new objects
+			  index
+				.saveObjects(records)
+				.then(() => {
+				  console.log(indexToSearch+' imported into Algolia');
+				  	//initialize autocomplete on search input (ID selector must match)
+					if (!$rootScope.initialized) {
+						$rootScope.autoCompleteSearch = autocomplete('#aa-search-input',
+						{ hint: false }, {
+							source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+							//value to be displayed in input control after user's suggestion selection
+							displayKey: 'name',
+							//hash of templates used when rendering dataset
+							templates: {
+								//'suggestion' templating function used to render a single suggestion
+								suggestion: function(suggestion) {
+								  return '<span>' +
+									suggestion._highlightResult.name.value + '</span>';
+								}
+							}
+						});
+						$rootScope.initialized = true;
+					}
+				})
+				.catch(error => {
+				  console.error('Error when importing '+indexToSearch+' into Algolia', error);
+				});
+			}).catch(function(error) {
+				console.log(error.message);
+			});
+		}
+	}
+	
+	$rootScope.searchUserCollection = function(indexToSearch) {
+		var newIndex = indexToSearch;
+		indexToSearch = "collection";
 		var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
-		var index = client.initIndex('troves');
+		var index = client.initIndex(indexToSearch);
 		index.clearIndex(function(err, content) {
 			if (err) console.log(err);
 		});
 
-		firebase.database().ref('/troves').once('value', contacts => {
+		firebase.database().ref('/'+newIndex).once('value', contacts => {
 		  // Build an array of all records to push to Algolia
 		  const records = [];
 		  contacts.forEach(contact => {
@@ -89,39 +147,143 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 		  index
 			.saveObjects(records)
 			.then(() => {
-			  console.log('Troves imported into Algolia');
+			  console.log(indexToSearch+' imported into Algolia');
+			  	//initialize autocomplete on search input (ID selector must match)
+				if (!$rootScope.initialized) {
+					$rootScope.autoCompleteSearch = autocomplete('#aa-search-input',
+					{ hint: false }, {
+						source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+						//value to be displayed in input control after user's suggestion selection
+						displayKey: 'name',
+						//hash of templates used when rendering dataset
+						templates: {
+							//'suggestion' templating function used to render a single suggestion
+							suggestion: function(suggestion) {
+							  return '<span>' +
+								suggestion._highlightResult.name.value + '</span>';
+							}
+						}
+					});
+					$rootScope.initialized = true;
+				}
 			})
 			.catch(error => {
-			  console.error('Error when importing Troves into Algolia', error);
+			  console.error('Error when importing '+indexToSearch+' into Algolia', error);
 			});
+		}).catch(function(error) {
+			console.log(error.message);
+		});
+	}
+	
+	$rootScope.searchSpecificTrove = function(indexToSearch) {
+		var newIndex = indexToSearch;
+		indexToSearch = "trove";
+		var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
+		var index = client.initIndex(indexToSearch);
+		index.clearIndex(function(err, content) {
+			if (err) console.log(err);
 		});
 
-		//initialize autocomplete on search input (ID selector must match)
-		if (!$rootScope.initialized) {
-			autocomplete('#aa-search-input',
-			{ hint: false }, {
-				source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
-				//value to be displayed in input control after user's suggestion selection
-				displayKey: 'name',
-				//hash of templates used when rendering dataset
-				templates: {
-					//'suggestion' templating function used to render a single suggestion
-					suggestion: function(suggestion) {
-					  return '<span>' +
-						suggestion._highlightResult.name.value + '</span>';
-					}
+		firebase.database().ref('/'+newIndex).once('value', contacts => {
+		  // Build an array of all records to push to Algolia
+		  const records = [];
+		  contacts.forEach(contact => {
+			// get the key and data from the snapshot
+			const childKey = contact.key;
+			const childData = contact.val();
+			// We set the Algolia objectID as the Firebase .key
+			childData.objectID = childKey;
+			// Add object for indexing
+			records.push(childData);
+		  });
+		  // Add or update new objects
+		  index
+			.saveObjects(records)
+			.then(() => {
+			  console.log(indexToSearch+' imported into Algolia');
+			  	//initialize autocomplete on search input (ID selector must match)
+				if (!$rootScope.initialized) {
+					$rootScope.autoCompleteSearch = autocomplete('#aa-search-input',
+					{ hint: false }, {
+						source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+						//value to be displayed in input control after user's suggestion selection
+						displayKey: 'name',
+						//hash of templates used when rendering dataset
+						templates: {
+							//'suggestion' templating function used to render a single suggestion
+							suggestion: function(suggestion) {
+							  return '<span>' +
+								suggestion._highlightResult.name.value + '</span>';
+							}
+						}
+					});
+					$rootScope.initialized = true;
 				}
+			})
+			.catch(error => {
+			  console.error('Error when importing '+indexToSearch+' into Algolia', error);
 			});
-			$rootScope.initialized = true;
+		}).catch(function(error) {
+			console.log(error.message);
+		});
+	}
+	
+	$rootScope.searchIndex = function(query, indexToSearch) {
+		if (indexToSearch.includes("users")) {
+			$rootScope.searchCollection(query, indexToSearch);
+		} else if (indexToSearch.includes("troves/")) {
+			$rootScope.searchCurrentTrove(query, indexToSearch);
+		} else {
+			var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
+			var index = client.initIndex(indexToSearch);
+
+			// Get all contacts from Firebase
+			firebase.database().ref('/'+indexToSearch).once('value', contacts => {
+			  // Build an array of all records to push to Algolia
+			  const records = [];
+			  contacts.forEach(contact => {
+				// get the key and data from the snapshot
+				const childKey = contact.key;
+				const childData = contact.val();
+				// We set the Algolia objectID as the Firebase .key
+				childData.objectID = childKey;
+				// Add object for indexing
+				records.push(childData);
+			  });
+
+			  // Add or update new objects
+			  index
+				.saveObjects(records)
+				.then(() => {
+				  console.log(indexToSearch+' imported into Algolia');
+				  index.search({ query: query }, function searchDone(err, content) {
+					  if (err) {
+						console.error(err);
+						return;
+					  }
+
+					  for (var h in content.hits) {
+						console.log(content.hits[h].objectID);
+					  }
+					  $rootScope.troveResults = content.hits;
+					});
+				})
+				.catch(error => {
+				  console.error('Error when importing '+indexToSearch+' into Algolia', error);
+				});
+			});
+			$rootScope.searchQuery = null;
 		}
 	}
 	
-	$rootScope.searchTroves = function(query) {
+	$rootScope.searchCollection = function(query, indexToSearch) {
+		var newIndex = indexToSearch;
+		indexToSearch = "collection";
 		var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
-		var index = client.initIndex('troves');
+		var index = client.initIndex(indexToSearch);
 		
 		// Get all contacts from Firebase
-		firebase.database().ref('/troves').once('value', contacts => {
+		firebase.database().ref('/'+newIndex).once('value', contacts => {
 		  // Build an array of all records to push to Algolia
 		  const records = [];
 		  contacts.forEach(contact => {
@@ -138,7 +300,7 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 		  index
 			.saveObjects(records)
 			.then(() => {
-			  console.log('Troves imported into Algolia');
+			  console.log(indexToSearch+' imported into Algolia');
 			  index.search({ query: query }, function searchDone(err, content) {
 				  if (err) {
 					console.error(err);
@@ -152,10 +314,89 @@ app.run(function($rootScope, $cookieStore, $timeout) {
 				});
 			})
 			.catch(error => {
-			  console.error('Error when importing Troves into Algolia', error);
+			  console.error('Error when importing '+indexToSearch+' into Algolia', error);
 			});
 		});
 		$rootScope.searchQuery = null;
+	}
+	
+	$rootScope.searchCurrentTrove = function(query, indexToSearch) {
+		var newIndex = indexToSearch;
+		indexToSearch = "trove";
+		var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
+		var index = client.initIndex(indexToSearch);
+		
+		// Get all contacts from Firebase
+		firebase.database().ref('/'+newIndex).once('value', contacts => {
+		  // Build an array of all records to push to Algolia
+		  const records = [];
+		  contacts.forEach(contact => {
+			// get the key and data from the snapshot
+			const childKey = contact.key;
+			const childData = contact.val();
+			// We set the Algolia objectID as the Firebase .key
+			childData.objectID = childKey;
+			// Add object for indexing
+			records.push(childData);
+		  });
+
+		  // Add or update new objects
+		  index
+			.saveObjects(records)
+			.then(() => {
+			  console.log(indexToSearch+' imported into Algolia');
+			  index.search({ query: query }, function searchDone(err, content) {
+				  if (err) {
+					console.error(err);
+					return;
+				  }
+
+				  for (var h in content.hits) {
+					console.log(content.hits[h].objectID);
+				  }
+				  $rootScope.troveResults = content.hits;
+				});
+			})
+			.catch(error => {
+			  console.error('Error when importing '+indexToSearch+' into Algolia', error);
+			});
+		});
+		$rootScope.searchQuery = null;
+	}
+	
+	$rootScope.searchSelection = function(searchIn) {
+		var user = firebase.auth().currentUser;
+		
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				if (searchIn == "Troves") {
+					console.log("troves");
+					$rootScope.searchCategory = "troves";
+					$rootScope.initialized = false;
+					$rootScope.autoCompleteSearch.autocomplete.destroy();
+					$rootScope.searchComplete("troves");
+				} else if (searchIn == "Collectibles") {
+					console.log("collectibles");
+					$rootScope.searchCategory = "collectibles";
+					$rootScope.initialized = false;
+					$rootScope.autoCompleteSearch.autocomplete.destroy();
+					$rootScope.searchComplete("collectibles");
+				} else if (searchIn == "My Collection") {
+					console.log("collection");
+					$rootScope.searchCategory = "users/"+user.uid+"/collection";
+					$rootScope.initialized = false;
+					$rootScope.autoCompleteSearch.autocomplete.destroy();
+					$rootScope.searchComplete("users/"+user.uid+"/collection");
+				} else if (searchIn == "Current Trove") {
+					console.log($rootScope.searchTroveName);
+					$rootScope.searchCategory = "troves/"+$rootScope.searchTroveName+"/collectibles";
+					$rootScope.initialized = false;
+					$rootScope.autoCompleteSearch.autocomplete.destroy();
+					$rootScope.searchComplete("troves/"+$rootScope.searchTroveName+"/collectibles");
+				}
+			}
+			$rootScope.unsubscribe();
+		});
 	}
 	
 	$rootScope.error = function(errorMessage) {
@@ -166,6 +407,12 @@ app.run(function($rootScope, $cookieStore, $timeout) {
     };
 	
 	$rootScope.$on('$viewContentLoaded', function() {
-		$rootScope.searchComplete();
+		$rootScope.searchCategory = "troves";
+		$rootScope.searchIn = "Troves";
+		if ($rootScope.autoCompleteSearch) {
+			$rootScope.initialized = false;
+			$rootScope.autoCompleteSearch.autocomplete.destroy();
+		}
+		$rootScope.searchComplete("troves");
 	});
 });
