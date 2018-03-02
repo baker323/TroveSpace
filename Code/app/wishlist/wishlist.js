@@ -60,9 +60,8 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
 			$scope.images[collectibleName] = url;
 			$scope.$apply();
-			console.log($scope.images[collectibleName]);
 		}).catch(function(error) {
-			$scope.images[collectibleName] = "no_image.jpg";
+			$scope.images[collectibleName] = "no_image_available.jpg";
 			$scope.$apply();
 		});
 	}

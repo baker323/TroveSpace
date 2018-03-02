@@ -103,6 +103,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			$scope.updateView();
 		} else {
 			$rootScope.error("Current edit is still pending.");
+			$scope.updateView();
 		}
 	}
 	
@@ -175,6 +176,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						}
 					});
 				});
+				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete();
+				$scope.pending = false;
 			}
 			$rootScope.unsubscribe();
 		});
@@ -190,9 +193,36 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					snapshot.forEach(function(childSnapshot) {
 						if (childSnapshot.key.includes('pending')) {
 							firebase.database().ref('collectibles/' + collectibleName + '/' + childSnapshot.key.slice(7)).set(childSnapshot.val());
+							$scope.pending = false;
 							$scope.updateView();
 						}
 					});
+				});
+				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').getDownloadURL().then(function(url) {
+					// get url of pending image
+					$scope.pendingimage = url;
+					var xhr = new XMLHttpRequest();
+					xhr.responseType = 'blob';
+					xhr.onload = function(event) {
+						var blob = xhr.response;
+						// store pending image in image
+						firebase.storage().ref('collectibles/' + collectibleName + '/image').put(blob).then(function(snapshot) {
+							console.log("Uploaded file.");
+							$scope.getCollectibleImage($scope.collectibleName);
+
+							$scope.pending = false;
+							$scope.$apply();
+						}).catch(function(error) {
+							console.log(error.message);
+						});
+					};
+					xhr.open('GET', url);
+					xhr.send();
+					
+					
+				}).catch(function(error) {
+					console.log(error.message);
+					$rootScope.error(error.message);
 				});
 			}
 			$rootScope.unsubscribe();
@@ -282,9 +312,65 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		window.location.href = '#!/viewTrove?'+$scope.collectible.category;
 	}
 	
+	$scope.getDateAddedToCollection = function(collectibleName) {
+		var user = firebase.auth().currentUser;
+		
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('users/' + user.uid + '/collection/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
+					$scope.dateAddedToCollection = snapshot.val();
+					$scope.$apply();
+				});
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
+	$scope.getDateAddedToWishlist = function(collectibleName) {
+		var user = firebase.auth().currentUser;
+		
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
+					$scope.dateAddedToWishlist = snapshot.val();
+					$scope.$apply();
+				});
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
+	$scope.getCollectibleImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
+			$scope.image = url;
+			$scope.$apply();
+		}).catch(function(error) {
+			$scope.image = "no_image_available.jpg";
+			$scope.$apply();
+		});
+	}
+	
+	$scope.getPendingImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').getDownloadURL().then(function(url) {
+			$scope.pendingimage = url;
+			$scope.pending = true;
+			$scope.$apply();
+		}).catch(function(error) {
+			$scope.pendingimage = "no_image_available.jpg";
+			$scope.pending = false;
+			$scope.$apply();
+		});
+	}
+	
 	$scope.updateView = function() {
 		$scope.fetchCollectible($scope.collectibleName);
+		$scope.getCollectibleImage($scope.collectibleName);
+		$scope.getPendingImage($scope.collectibleName);
 		$scope.getMultipleCount($scope.collectibleName);
+		$scope.getDateAddedToCollection($scope.collectibleName);
+		$scope.getDateAddedToWishlist($scope.collectibleName);
 			
 		$scope.getUserKeepVote($scope.collectibleName);
 		$scope.getUserRevertVote($scope.collectibleName);
@@ -296,8 +382,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		var file = document.getElementById('collectibleImage').files[0];
 		console.log(file);
 		if (file != null) {
-			firebase.storage().ref('collectibles/' + collectibleName + '/image').put(file).then(function(snapshot) {
+			firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').put(file).then(function(snapshot) {
 				console.log("Uploaded file.");
+				$scope.getPendingImage($scope.collectibleName);
 				$scope.file = file;
 			}).catch(function(error) {
 				console.log(error.message);

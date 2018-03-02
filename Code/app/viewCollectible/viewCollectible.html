@@ -19,6 +19,10 @@
   .card {
     padding-bottom: 100px;
   }
+	  
+  .cover {
+	border-radius: 5px;
+  }
 
   </style>
 
@@ -59,9 +63,19 @@
         
 			
           <div class="card-body">
+			<div class="form-group row">
+			  <div class="col-6">
+				<label for="exampleInput1">Current Image</label>
+			    <img width="100%" class="img-responsive cover" ng-src="{{image}}">
+			  </div>
+			  <div ng-show="pending" class="col-6">
+				<label for="exampleInput1">Pending Image</label>
+			    <img width="100%" class="img-responsive cover" ng-src="{{pendingimage}}">
+			  </div>
+		    </div>
             <div class="form-group">
              <label for="exampleInput1">Title</label>
-             <input ng-model="collectibleName" class="form-control" id="collectibleName" disabled>
+             <input ng-model="collectibleName" class="form-control cover" id="collectibleName" disabled>
            </div>
            <div class="form-group">
             <label for="exampleFormControlTextarea1">Description</label>
@@ -81,6 +95,16 @@
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
+		  <div ng-show="dateAddedToCollection" class="form-group">
+             <label for="exampleInput1">Added to Collection</label>
+             <input value="{{dateAddedToCollection | date: 'medium'}}" class="form-control" disabled>
+          </div>
+			  
+		  <div ng-show="dateAddedToWishlist" class="form-group">
+             <label for="exampleInput1">Added to Wishlist</label>
+             <input value="{{dateAddedToWishlist | date: 'medium'}}" class="form-control" disabled>
+          </div>
+			  
            <div class="form-group">
 			   <label for="exampleInput1">Count</label>
                <div class="input-group">
@@ -90,7 +114,7 @@
 				   </span>
 			   </div>
            </div>
-		   <div class="form-group">
+		   <div ng-hide="pending" class="form-group">
 			   <label for="exampleInput1">Upload Image:</label>
 			   <input id="collectibleImage" ng-model="collectibleImage" type="file" accept="image/*">
 		   </div>

@@ -48,7 +48,8 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 				// add to trove
 				firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set({
 					dateAdded: (new Date).getTime(),
-					name: collectibleName
+					name: collectibleName,
+					category: troveName
 				});
 				
 				$scope.uploadImage(collectibleName);

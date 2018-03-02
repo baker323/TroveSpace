@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
 
-    #postCheck {
+	#postCheck {
       margin: 30px 0 30px 0;
       border-radius: 7px;
       box-shadow: none;
@@ -49,31 +49,31 @@
     </style>
   </head>
   <body>
+    <!--Remove this header later-->
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">{{troveName}}</span>
+      <span class=" mb-0 h2 mx-auto">Search Results</span>
     </nav>
-	<div class="row justify-content-center">
-      <button class="btn" ng-click="createNewCollectible(troveName)">New Collectible</button>
-    </div>
+    <!--Header ending-->
+
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
-            <div class="row">
-              <div ng-repeat="(key, value) in troveCollectibles" class="col-4" id="postCol">
+            <div class="row justify-content-center justify-content-md-start">
+              <div ng-repeat="collectible in searchResults" class="col-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 ng-click="viewCollectible(key)" href="" id="title">{{key}}</h5>
-                    <div class="dropdown">
+                    <h5 ng-click="viewCollectible(collectible.name)" id="title">{{collectible.name}}</h5>
+					<div class="dropdown">
                       <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Add
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a ng-show="collections" ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
-						<a ng-hide="collections" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
-                        <a ng-click="addToWishlist(key, troveName)" class="dropdown-item" href="">Add to Wishlist</a>
+                        <a ng-show="collections[collectible.category]" ng-click="addToFolder(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Collection</a>
+						<a ng-hide="collections[collectible.category]" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
+                        <a ng-click="addToWishlist(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
-					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
+					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[collectible.name]}}">
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@
       </div>
     </div>
 	  
-	<!-- Modal -->
+		<!-- Modal -->
 	<div class="modal fade" id="addToCollectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -96,19 +96,18 @@
 			<div class="row">
 			  <div name="message" class="col col-lg-9">
 				Please select a folder: 
-				<select ng-model="addToFolderName" class="form-control">
-					<option ng-repeat="(key, value) in collections">{{key}}</option>
+				<select ng-model="addToFolderName[addToFolderTrove]" class="form-control">
+					<option ng-repeat="(key, value) in collections[addToFolderTrove]">{{key}}</option>
 				</select>
 			  </div>
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="addToCollection(collectibleName, addToFolderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+			<button ng-click="addToCollection(collectibleName, addToFolderName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

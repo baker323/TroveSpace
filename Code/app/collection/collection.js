@@ -134,9 +134,8 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
 			$scope.images[collectibleName] = url;
 			$scope.$apply();
-			console.log($scope.images[collectibleName]);
 		}).catch(function(error) {
-			$scope.images[collectibleName] = "no_image.jpg";
+			$scope.images[collectibleName] = "no_image_available.jpg";
 			$scope.$apply();
 		});
 	}
@@ -174,5 +173,23 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		$scope.images = [];
 		$scope.fetchAllTroves();
 		$scope.fetchAllCollections();
+		if ($rootScope.loggedIn) {
+			var user = firebase.auth().currentUser;
+		
+			$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+				if (user) {
+					console.log("collection");
+					$rootScope.searchCategory = "users/"+user.uid+"/collection";
+					$rootScope.searchIn = "My Collection";
+					if ($rootScope.autoCompleteSearch) {
+						$rootScope.initialized = false;
+						$rootScope.autoCompleteSearch.autocomplete.destroy();
+						$rootScope.autoCompleteSearch = null;
+					}
+					$rootScope.searchComplete("users/"+user.uid+"/collection");
+				}
+				$rootScope.unsubscribe();
+			});
+		}
 	});
 });
