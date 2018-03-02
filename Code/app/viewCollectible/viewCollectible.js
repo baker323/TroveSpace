@@ -117,11 +117,25 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			if (noChange == total && $scope.file == document.getElementById('collectibleImage').files[0]) {
 				$rootScope.error("No changes were made.");
 			} else {
-				firebase.database().ref('collectibles/' + collectibleName + '/votes').set({
-					voteStartDate: (new Date).getTime()
-				});
-				$rootScope.error("Your edit has been submitted for approval.");
-				$scope.uploadImage(collectibleName);
+				var file = document.getElementById('collectibleImage').files[0];
+				var fileExtension = null;
+				var fileSize = null;
+				if (file != null) {
+					fileSize = file.size;
+					fileExtension = file.name.split('.')[file.name.split('.').length-1].toLowerCase();
+				}
+				
+				if (fileSize != null && file.size > 100 * 1024 * 1024) {
+					$rootScope.error("File size must be less than 100MB.");
+				} else if (fileExtension != null && fileExtension != "png" && fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "jpe" && fileExtension != "jfif" && fileExtension != "tif" && fileExtension != "tiff" && fileExtension != "gif" && fileExtension != "bmp" && fileExtension != "dib") {
+					$rootScope.error("File type must be an image.");
+				} else {
+					firebase.database().ref('collectibles/' + collectibleName + '/votes').set({
+						voteStartDate: (new Date).getTime()
+					});
+					$rootScope.error("Your edit has been submitted for approval.");
+					$scope.uploadImage(collectibleName);
+				}
 			}
 			$scope.updateView();
 		} else {
@@ -403,6 +417,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.uploadImage = function(collectibleName) {
 		var file = document.getElementById('collectibleImage').files[0];
 		if (file != null) {
+			console.log(file);
 			firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').put(file).then(function(snapshot) {
 				console.log("Uploaded file.");
 				$scope.getPendingImage($scope.collectibleName);

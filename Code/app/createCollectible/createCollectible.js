@@ -26,38 +26,57 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 	}
 
 	$scope.createCollectible = function(collectibleName, description, troveName, fieldValues) {
-		
-		var user = firebase.auth().currentUser;
+		if (collectibleName == null) {
+			$rootScope.error("Title is required.");
+		} else if (description == undefined) {
+			description = null;
+		} else {
+			var user = firebase.auth().currentUser;
 
-		firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
-			if (snapshot.val() == null) {
-				firebase.database().ref('collectibles').child(collectibleName).set({
-					name: collectibleName,
-					description: description,
-					category: troveName,
-					lastEditedBy: user.displayName
-				});
-
-				// set custom fields
-				for (var i in fieldValues) {
-					if (fieldValues.hasOwnProperty(i)) {
-						firebase.database().ref('collectibles/' + collectibleName).child(i).set(fieldValues[i]);
+			firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
+				if (snapshot.val() == null) {
+					var file = document.getElementById('collectibleImage').files[0];
+					var fileExtension = null;
+					var fileSize = null;
+					if (file != null) {
+						fileSize = file.size;
+						fileExtension = file.name.split('.')[file.name.split('.').length-1].toLowerCase();
 					}
+
+					if (fileSize != null && file.size > 100 * 1024 * 1024) {
+						$rootScope.error("File size must be less than 100MB.");
+					} else if (fileExtension != null && fileExtension != "png" && fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "jpe" && fileExtension != "jfif" && fileExtension != "tif" && fileExtension != "tiff" && fileExtension != "gif" && fileExtension != "bmp" && fileExtension != "dib") {
+						$rootScope.error("File type must be an image.");
+					} else {
+						firebase.database().ref('collectibles').child(collectibleName).set({
+							name: collectibleName,
+							description: description,
+							category: troveName,
+							lastEditedBy: user.displayName
+						});
+
+						// set custom fields
+						for (var i in fieldValues) {
+							if (fieldValues.hasOwnProperty(i)) {
+								firebase.database().ref('collectibles/' + collectibleName).child(i).set(fieldValues[i]);
+							}
+						}
+
+						// add to trove
+						firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set({
+							dateAdded: (new Date).getTime(),
+							name: collectibleName,
+							category: troveName
+						});
+
+						$scope.uploadImage(collectibleName);
+					}
+
+				} else {
+					$rootScope.error("Collectible with that name already exists.");
 				}
-
-				// add to trove
-				firebase.database().ref('troves/' + troveName + '/collectibles/' + collectibleName).set({
-					dateAdded: (new Date).getTime(),
-					name: collectibleName,
-					category: troveName
-				});
-				
-				$scope.uploadImage(collectibleName);
-
-			} else {
-				$rootScope.error("Collectible with that name already exists.");
-			}
-		});
+			});
+		}
 	}
 	
 	$scope.uploadImage = function(collectibleName) {
@@ -83,6 +102,7 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		$scope.fieldValues = [];
+		$scope.description = null;
 		$scope.troveName = decodeURIComponent(b);
 		if (a.indexOf("?") == -1) {
 			window.location.href = '#!/troves';

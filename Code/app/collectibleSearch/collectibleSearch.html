@@ -73,7 +73,7 @@
                         <a ng-click="addToWishlist(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
-					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[collectible.name]}}">
+					<img ng-click="viewCollectible(collectible.name)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[collectible.name]}}">
                 </div>
               </div>
             </div>
