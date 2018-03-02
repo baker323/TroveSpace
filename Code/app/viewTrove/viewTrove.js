@@ -124,6 +124,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		var troveName = decodeURIComponent(b);
+		$rootScope.currentTrove = troveName;
 		if (a.indexOf("?") == -1) {
 			window.location.href = '#';
 		} else {
@@ -149,7 +150,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	
 	$scope.$on('$locationChangeStart', function(event, next, current) {
     	$rootScope.onTrovePage = false;
-		if (!next.includes('collection')) {
+		if (!next.includes('collection') && !next.includes('collectibleSearch')) {
 			$rootScope.searchIn = "Troves";
 		}
 	});

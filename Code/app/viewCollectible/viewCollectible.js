@@ -69,11 +69,31 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
-					multipleCount: multipleValue});
+					multipleCount: multipleValue
+				});
 			}
 			$rootScope.unsubscribe();
 		});
 		$rootScope.error("Information saved.");
+	}
+	
+	$scope.getVoteStartDate = function(collectibleName) {
+		firebase.database().ref('/collectibles/' + collectibleName + '/votes/voteStartDate').once('value').then(function(snapshot) {
+			$scope.voteStartDate = snapshot.toJSON();
+			if (snapshot.val() != null) {
+				var today = (new Date).getTime();
+				// 1000*60*60*24 milliseconds in one day
+				if (today-$scope.voteStartDate > 1000*60*60*24) {
+					$scope.switchPendingFields($scope.collectibleName);
+					// make the pending fields blank
+					$scope.blankPendingFields($scope.collectibleName);
+					// reset the votes
+					$scope.resetVotes($scope.collectibleName);
+					$scope.pending = false;
+				}
+				$scope.$apply();
+			}
+		});
 	}
 	
 	$scope.editCollectible = function(collectibleName) {
@@ -97,6 +117,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			if (noChange == total && $scope.file == document.getElementById('collectibleImage').files[0]) {
 				$rootScope.error("No changes were made.");
 			} else {
+				firebase.database().ref('collectibles/' + collectibleName + '/votes').set({
+					voteStartDate: (new Date).getTime()
+				});
 				$rootScope.error("Your edit has been submitted for approval.");
 				$scope.uploadImage(collectibleName);
 			}
@@ -118,14 +141,14 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				} else {
 					firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/count').transaction(function(votes) {
 						var newVotes = (votes || 0) + 1;
-						if (newVotes >= 10) {
+						if (newVotes >= 5) {
 							// make the pending fields the actual fields
 							$scope.switchPendingFields(collectibleName);
 							// make the pending fields blank
 							$scope.blankPendingFields(collectibleName);
 							// reset the votes
 							$scope.resetVotes(collectibleName);
-							$rootScope.error("Edit has reached the required amount of votes for approval.");
+							$rootScope.error("Edit has been approved.");
 							$scope.pending = false;
 							return;
 						} else {
@@ -143,6 +166,40 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
+	$scope.incrementRevertVotes = function(collectibleName) {
+		var user = firebase.auth().currentUser;
+		console.log("Increment revert votes.");
+		
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				if ($scope.keepVote == true || $scope.revertVote == true) {
+						$rootScope.error("You have already voted.");
+				} else {
+					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/count').transaction(function(votes) {
+						var newVotes = (votes || 0) + 1;
+						if (newVotes >= 5) {
+							// make the pending fields blank
+							$scope.blankPendingFields(collectibleName);
+							// reset the votes
+							$scope.resetVotes(collectibleName);
+							$rootScope.error("Edit has been removed.");
+							$scope.pending = false;
+							return;
+						} else {
+							$rootScope.error("Vote recorded.");
+						}
+						return newVotes;
+					});
+					
+					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).set(true);
+					
+					$scope.updateView();
+				}
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
 	$scope.resetVotes = function(collectibleName) {
 		var user = firebase.auth().currentUser;
 		
@@ -151,6 +208,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				firebase.database().ref('collectibles/' + collectibleName + '/votes/').remove()
 				.then(function() {
 					console.log("Votes reset.");
+					$scope.pending = false;
 					$scope.updateView();
 				})
 				.catch(function(error) {
@@ -176,8 +234,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						}
 					});
 				});
-				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete();
-				$scope.pending = false;
+				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete().then(function(snapshot) {
+					$scope.pending = false;
+				});
 			}
 			$rootScope.unsubscribe();
 		});
@@ -198,65 +257,31 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						}
 					});
 				});
-				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').getDownloadURL().then(function(url) {
-					// get url of pending image
-					$scope.pendingimage = url;
-					var xhr = new XMLHttpRequest();
-					xhr.responseType = 'blob';
-					xhr.onload = function(event) {
-						var blob = xhr.response;
-						// store pending image in image
-						firebase.storage().ref('collectibles/' + collectibleName + '/image').put(blob).then(function(snapshot) {
-							console.log("Uploaded file.");
-							$scope.getCollectibleImage($scope.collectibleName);
+				if ($scope.pendingimage) {
+					firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').getDownloadURL().then(function(url) {
+						// get url of pending image
+						var xhr = new XMLHttpRequest();
+						xhr.responseType = 'blob';
+						xhr.onload = function(event) {
+							var blob = xhr.response;
+							// store pending image in image
+							firebase.storage().ref('collectibles/' + collectibleName + '/image').put(blob).then(function(snapshot) {
+								console.log("Uploaded file.");
+								$scope.getCollectibleImage($scope.collectibleName);
 
-							$scope.pending = false;
-							$scope.$apply();
-						}).catch(function(error) {
-							console.log(error.message);
-						});
-					};
-					xhr.open('GET', url);
-					xhr.send();
-					
-					
-				}).catch(function(error) {
-					console.log(error.message);
-					$rootScope.error(error.message);
-				});
-			}
-			$rootScope.unsubscribe();
-		});
-	}
-	
-	$scope.incrementRevertVotes = function(collectibleName) {
-		var user = firebase.auth().currentUser;
-		console.log("Increment revert votes.");
-		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				if ($scope.keepVote == true || $scope.revertVote == true) {
-						$rootScope.error("You have already voted.");
-				} else {
-					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/count').transaction(function(votes) {
-						var newVotes = (votes || 0) + 1;
-						if (newVotes >= 10) {
-							// make the pending fields blank
-							$scope.blankPendingFields(collectibleName);
-							// reset the votes
-							$scope.resetVotes(collectibleName);
-							$rootScope.error("Edit has reached the required amount of votes for removal.");
-							$scope.pending = false;
-							return;
-						} else {
-							$rootScope.error("Vote recorded.");
-						}
-						return newVotes;
+								$scope.pending = false;
+								$scope.$apply();
+							}).catch(function(error) {
+								console.log(error.message);
+							});
+						};
+						xhr.open('GET', url);
+						xhr.send();
+
+
+					}).catch(function(error) {
+						console.log(error.message);
 					});
-					
-					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).set(true);
-					
-					$scope.updateView();
 				}
 			}
 			$rootScope.unsubscribe();
@@ -284,7 +309,6 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).once('value').then(function(snapshot) {
 					$scope.keepVote = snapshot.val();
-					console.log("Keep vote: "+$scope.keepVote);
 					$scope.$apply();
 				});
 			}
@@ -299,7 +323,6 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).once('value').then(function(snapshot) {
 					$scope.revertVote = snapshot.val();
-					console.log("Revert vote: "+$scope.revertVote);
 					$scope.$apply();
 				});
 			}
@@ -358,8 +381,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			$scope.pending = true;
 			$scope.$apply();
 		}).catch(function(error) {
-			$scope.pendingimage = "no_image_available.jpg";
-			$scope.pending = false;
+			$scope.pendingimage = null;
 			$scope.$apply();
 		});
 	}
@@ -380,7 +402,6 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.uploadImage = function(collectibleName) {
 		var file = document.getElementById('collectibleImage').files[0];
-		console.log(file);
 		if (file != null) {
 			firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').put(file).then(function(snapshot) {
 				console.log("Uploaded file.");
@@ -400,6 +421,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			window.location.href = '#';
 		} else {
 			$scope.updateView();
+			$scope.getVoteStartDate($scope.collectibleName);
 		}
 	});
 });

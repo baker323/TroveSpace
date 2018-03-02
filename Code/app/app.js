@@ -444,6 +444,9 @@ app.run(function($rootScope, $cookieStore, $timeout, $route) {
 					$rootScope.searchComplete("users/"+user.uid+"/collection");
 				} else if (searchIn == "Current Trove") {
 					console.log($rootScope.searchTroveName);
+					if ($rootScope.searchTroveName == null) {
+						$rootScope.searchTroveName = $rootScope.currentTrove;
+					}
 					$rootScope.searchCategory = "troves/"+$rootScope.searchTroveName+"/collectibles";
 					if ($rootScope.autoCompleteSearch) {
 						$rootScope.initialized = false;

@@ -45,11 +45,11 @@
 			  <div class="col-6">
 				<div class="progress">
                   <!--The width changes the bar length-->
-                  <div class="progress-bar bg-success" role="progressbar" ng-style="{width : (voteKeepEdit*10)+'%'}" aria-valuenow="{{voteKeepEdit}}%" aria-valuemin="0" aria-valuemax="10">{{voteKeepEdit}}</div>
+                  <div class="progress-bar bg-success" role="progressbar" ng-style="{width : (voteKeepEdit*20)+'%'}" aria-valuenow="{{voteKeepEdit}}%" aria-valuemin="0" aria-valuemax="5">{{voteKeepEdit}}</div>
                 </div>
 				<div class="progress">
                   <!--The width changes the bar length-->
-                  <div class="progress-bar bg-danger" role="progressbar" ng-style="{width : (voteRevertEdit*10)+'%'}" aria-valuenow="{{voteRevertEdit}}%" aria-valuemin="0" aria-valuemax="10">{{voteRevertEdit}}</div>
+                  <div class="progress-bar bg-danger" role="progressbar" ng-style="{width : (voteRevertEdit*20)+'%'}" aria-valuenow="{{voteRevertEdit}}%" aria-valuemin="0" aria-valuemax="5">{{voteRevertEdit}}</div>
                 </div>
 			  </div>
               <div class="col-6">
@@ -68,7 +68,7 @@
 				<label for="exampleInput1">Current Image</label>
 			    <img width="100%" class="img-responsive cover" ng-src="{{image}}">
 			  </div>
-			  <div ng-show="pending" class="col-6">
+			  <div ng-show="pendingimage" class="col-6">
 				<label for="exampleInput1">Pending Image</label>
 			    <img width="100%" class="img-responsive cover" ng-src="{{pendingimage}}">
 			  </div>
