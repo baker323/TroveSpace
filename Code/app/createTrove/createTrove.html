@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
   <title>Hello, world!</title>
   <!-- Required meta tags -->
@@ -25,56 +26,37 @@
           <h3 class="card-header card-header-primary" id="head">
             Add Trove
           </h3>
+	<form name="createTroveForm">
           <div class="card-body">
             <div class="form-group">
              <label for="exampleInput1" class="bmd-label-floating">Title</label>
-             <input ng-model="troveName" class="form-control" id="troveName">
+             <input ng-model="troveName" class="form-control" id="troveName" required>
            </div>
            <div class="form-group">
             <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
-            <textarea ng-model="troveDescription" class="form-control" id="troveDescription" rows="3"></textarea>
+            <textarea ng-model="troveDescription" class="form-control" id="troveDescription" rows="3" required></textarea>
           </div>
 		  <div class="form-group">
             <label class="bmd-label-floating">Click "Add Field" to enter additional details to track for this category of collectible.</label>
           </div>
           <div class="form-group" data-ng-repeat="choice in choices">
-           <input class="form-control" type="text" ng-model="choice.name" name="" placeholder="Enter field title">
-           <button class="remove btn btn-warning" ng-show="$last" ng-click="removeChoice()">Remove Field</button>
+           <input class="form-control" type="text" ng-model="choice.name" name="" placeholder="Enter field title" required>
+           <button type="button" class="remove btn btn-warning" ng-show="$last" ng-click="removeChoice()">Remove Field</button>
          </div>
 
          <div class="text-right">
-          <button class="addfields btn btn-primary" ng-click="addNewChoice()">Add field</button>
-          <button ng-click="createTrove(troveName, troveDescription, choices)" type="button" class="btn btn-success">Submit</button>
+          <button type="button" class="addfields btn btn-primary" ng-click="addNewChoice()">Add field</button>
+          <button ng-disabled="createTroveForm.$invalid" ng-click="createTrove(troveName, troveDescription, choices)" type="submit" class="btn btn-success">Submit</button>
         </div>
         <div id="choicesDisplay">
           <!--{{ choices }}-->
         </div>
       </div>
-
-            <!--div class="card-body">
-              <div class="form-group">
-                 <label for="exampleInput1" class="bmd-label-floating">Title</label>
-                 <input type="email" class="form-control" id="exampleInput1">
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlTextarea1" class="bmd-label-floating">Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-              </div>
-
-              <a href="#" class="btn btn-primary">Add Fields</a>
-              <hr>
-              <div class="text-center">
-                <button type="button" class="btn btn-success">Submit</button>
-              </div>
-
-            </div-->
-          </div>
-        </div>
-      </div>
-    </div>
+	</form>
+   </div>
+  </div>
+ </div>
+</div>
 
   </body>
   </html>
-
-  </body>
-</html>

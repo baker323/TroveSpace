@@ -16,7 +16,6 @@
       width: 100%;
       height: 200px;
       background-color: #ffffff;
-      background-image: url('nike.jpeg');
       background-repeat: no-repeat;
       background-size: 150px 150px;
       background-position: center;
@@ -43,7 +42,19 @@
       position: absolute;
       right: 0;
     }
+		
+	.cover {
+	  border-radius: 5px;
+	}
 
+	.select {
+	  background-color: #dddddd;
+	  height: 100%;
+	}
+		
+	.option {
+	  background-color: #ffffff;
+	}
 
     </style>
   </head>
@@ -51,13 +62,17 @@
     <nav class="navbar navbar-light bg-light" justify-content-center>
       <span ng-show="currentFolder" class=" mb-0 h2 mx-auto">{{currentFolder}}</span>
 	  <span ng-hide="currentFolder" class=" mb-0 h2 mx-auto">Collection</span>
-	  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn">
-		<option ng-repeat="(key, value) in collections">{{key}}</option>
-	  </select>
-	  <button class="btn" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
-	  <button ng-show="currentFolder" class="btn" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
-	  <button ng-show="currentFolder" class="btn" ng-click="deleteFolder(currentFolder)">Delete</button>
     </nav>
+	<div class="row justify-content-center">
+	  <div class="form-inline my-2 my-lg-0">
+		  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn select mr-sm-2">
+		  <option class="option" ng-repeat="(key, value) in collections">{{key}}</option>
+		  </select>
+		  <button class="btn mr-sm-2" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
+		  <button ng-show="currentFolder" class="btn mr-sm-2" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+		  <button ng-show="currentFolder" class="btn btn-outline mr-sm-2" ng-click="deleteFolder(currentFolder)">Delete</button>
+	  </div>
+    </div>
     <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
@@ -67,6 +82,7 @@
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
                     <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
+					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>
             </div>
