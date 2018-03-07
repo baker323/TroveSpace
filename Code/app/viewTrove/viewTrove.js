@@ -30,6 +30,9 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					} else {
 						$scope.troveCollectibles = snapshot.toJSON();
 						$scope.$apply();
+						snapshot.forEach(function(childSnapshot) {
+							$scope.getCollectibleImage(childSnapshot.key);
+						});
 					}
 				});
 			}
@@ -37,20 +40,44 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
-	$scope.addToWishlist = function(collectibleName) {
+	$scope.getCollectibleImage = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
+			$scope.images[collectibleName] = url;
+			$scope.$apply();
+		}).catch(function(error) {
+			$scope.images[collectibleName] = "no_image_available.jpg";
+			$scope.$apply();
+		});
+	}
+	
+	$scope.addToWishlist = function(collectibleName, troveName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set(true);
+		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName,
+			category: troveName
+		});
 		$rootScope.error("Item successfully added.");
 	}
 	
-	$scope.addToCollection = function(collectibleName, folderName) {
+	$scope.addToCollection = function(collectibleName, folderName, troveName) {
 		var user = firebase.auth().currentUser;
 		
 		firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 			multipleCount: 1
 		});
-		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set(true);
+		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName,
+			category: troveName
+		});
+		firebase.database().ref('users/' + user.uid + '/collection/').child(collectibleName).set({
+			dateAdded: (new Date).getTime(),
+			name: collectibleName,
+			category: troveName
+		});
 		$rootScope.error("Item successfully added.");
 	}
 	
@@ -97,11 +124,34 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		var a = window.location.href;
 		var b = a.substring(a.indexOf("?")+1);
 		var troveName = decodeURIComponent(b);
+		$rootScope.currentTrove = troveName;
 		if (a.indexOf("?") == -1) {
 			window.location.href = '#';
 		} else {
+			$scope.images = [];
 			$scope.fetchAllCollections(troveName);
 			$scope.fetchCollectibles(troveName);
+			$rootScope.onTrovePage = true;
+			$rootScope.searchTroveName = troveName;
+			
+			if ($rootScope.loggedIn) {				
+				console.log($rootScope.searchTroveName);
+				$rootScope.searchCategory = "troves/"+$rootScope.searchTroveName+"/collectibles";
+				$rootScope.searchIn = "Current Trove";
+				if ($rootScope.autoCompleteSearch) {
+					$rootScope.initialized = false;
+					$rootScope.autoCompleteSearch.autocomplete.destroy();
+					$rootScope.autoCompleteSearch = null;
+				}
+				$rootScope.searchComplete("troves/"+$rootScope.searchTroveName+"/collectibles");
+			}
+		}
+	});
+	
+	$scope.$on('$locationChangeStart', function(event, next, current) {
+    	$rootScope.onTrovePage = false;
+		if (!next.includes('collection') && !next.includes('collectibleSearch')) {
+			$rootScope.searchIn = "Troves";
 		}
 	});
 	

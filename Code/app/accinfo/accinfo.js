@@ -67,6 +67,12 @@ angular.module('myApp.accinfo', ['ngRoute', 'ngCookies'])
 			  $cookieStore.put('loggedIn', false);
 			  window.location.href = '#!/login';
 			  $rootScope.unsubscribe();
+			  if($rootScope.autoCompleteSearch) {
+				$rootScope.initialized = false;
+				
+				$rootScope.autoCompleteSearch.autocomplete.destroy();
+				$rootScope.autoCompleteSearch = null;
+			  }
 			}).catch(function(error) {
 			  console.log(error.message);
 			  $rootScope.error(error.message);

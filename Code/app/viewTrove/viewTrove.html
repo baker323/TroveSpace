@@ -16,7 +16,6 @@
       width: 100%;
       height: 200px;
       background-color: #ffffff;
-      background-image: url('nike.jpeg');
       background-repeat: no-repeat;
       background-size: 150px 150px;
       background-position: center;
@@ -41,6 +40,10 @@
       position: absolute;
       right: 0;
     }
+		
+	.cover {
+	  border-radius: 5px;
+	}
 
 
     </style>
@@ -67,9 +70,10 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a ng-show="collections" ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
 						<a ng-hide="collections" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
-                        <a ng-click="addToWishlist(key)" class="dropdown-item" href="">Add to Wishlist</a>
+                        <a ng-click="addToWishlist(key, troveName)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
+					<img ng-click="viewCollectible(key)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>
             </div>
@@ -99,7 +103,7 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="addToCollection(collectibleName, addToFolderName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+			<button ng-click="addToCollection(collectibleName, addToFolderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
 		  </div>
 		</div>
 	  </div>

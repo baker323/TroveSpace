@@ -4,27 +4,89 @@
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TroveSpace</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="/app.css">
-
-
-
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  <style>
+	  	.aa-input-container {
+		  display: inline-block;
+		  position: relative; }
+		.aa-input-search {
+		  width: 300px;
+		  border: 1px solid rgba(228, 228, 228, 0.6);
+		  padding: 12px 28px 12px 12px;
+		  box-sizing: border-box;
+		  -webkit-appearance: none;
+		  -moz-appearance: none;
+		  appearance: none; }
+		  .aa-input-search::-webkit-search-decoration, .aa-input-search::-webkit-search-cancel-button, .aa-input-search::-webkit-search-results-button, .aa-input-search::-webkit-search-results-decoration {
+			display: none; }
+		.aa-input-icon {
+		  height: 16px;
+		  width: 16px;
+		  position: absolute;
+		  top: 50%;
+		  right: 16px;
+		  -webkit-transform: translateY(-50%);
+				  transform: translateY(-50%);
+		  fill: #e4e4e4; }
+		.aa-dropdown-menu {
+		  background-color: #fff;
+		  border: 1px solid rgba(228, 228, 228, 0.6);
+		  min-width: 200px;
+		  margin-top: 0px;
+		  box-sizing: border-box; }
+		.aa-suggestion {
+		  padding: 12px;
+		  cursor: pointer;
+		}
+		.aa-suggestion + .aa-suggestion {
+			border-top: 1px solid rgba(228, 228, 228, 0.6);
+		}
+		.aa-suggestion:hover, .aa-suggestion.aa-cursor {
+			background-color: rgba(241, 241, 241, 0.35);
+	    }
+	    .select {
+		  background-color: #dddddd;
+		  border-top-right-radius: 0px;
+		  border-bottom-right-radius: 0px;
+		  height: 100%;
+		}
+		.option {
+		  background-color: #ffffff;
+		}
+	    .squareEdge {
+		  border-radius: 0px;
+		}
+	    .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+  </style>
+  <!-- Material Kit CSS -->
+  <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
 </head>
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+	  
   <a class="navbar-brand" href="#!/troves">TroveSpace</a>
+	  
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	  
     <ul class="navbar-nav mr-auto">
+	  
+	  <li ng-show="loggedIn" class="nav-item">
+        <a class="nav-link" href="#!/troves"><i class="material-icons md-dark">notifications_none</i></a>
+      </li>
 	  <li ng-show="loggedIn" class="nav-item">
         <a class="nav-link" href="#!/troves">View Troves</a>
       </li>
@@ -52,6 +114,7 @@
         </div>
       </li>
     </ul>
+<<<<<<< HEAD
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" disabled>
       <button class="btn btn-outline my-2 my-sm-0" type="submit" disabled>Search</button>
@@ -61,6 +124,24 @@
         <option>My Collection</option>
       </select>
     </form>
+=======
+	<div ng-show="loggedIn" class="nav navbar-nav navbar-right navbar-form">
+		<div id="aa-input-container" class="input-group my-2 my-lg-0">
+		  <div class="input-group-prepend">
+			  <select ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select" id="option">
+				<option class="option">Troves</option>
+				<option class="option">Collectibles</option>
+				<option class="option">My Collection</option>
+				<option ng-show="onTrovePage" class="option">Current Trove</option>
+			  </select>
+		  </div>
+		  <input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
+		  <div class="input-group-append">
+			<button ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
+		  </div>
+		</div>
+	</div>
+>>>>>>> a5ee52f2629dc6ccb16e376395559e8d5ad719b4
   </div>
 </nav>
 
@@ -111,21 +192,28 @@
   <![endif]-->
 
   <div ng-view></div>
+  
+  <br />
+  <div class="row justify-content-center">
+	  <img class="center" height="20" src="search-by-algolia.png">
+  </div>
 
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB9GVkxpxfF14GKNeB3Nu7jee-hZK9aEnY",
+		authDomain: "trovespace-9a699.firebaseapp.com",
+		databaseURL: "https://trovespace-9a699.firebaseio.com",
+		projectId: "trovespace-9a699",
+		storageBucket: "trovespace-9a699.appspot.com",
+		messagingSenderId: "192635977131"
+	  };
+	  firebase.initializeApp(config);
+  </script>
 
-<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyB9GVkxpxfF14GKNeB3Nu7jee-hZK9aEnY",
-    authDomain: "trovespace-9a699.firebaseapp.com",
-    databaseURL: "https://trovespace-9a699.firebaseio.com",
-    projectId: "trovespace-9a699",
-    storageBucket: "trovespace-9a699.appspot.com",
-    messagingSenderId: "192635977131"
-  };
-  firebase.initializeApp(config);
-</script>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-route.min.js"></script>
@@ -147,16 +235,19 @@
   <script src="createTrove/createTrove.js"></script>
   <script src="viewTrove/viewTrove.js"></script>
   <script src="viewCollectible/viewCollectible.js"></script>
+  <script src="troveSearch/troveSearch.js"></script>
+  <script src="collectibleSearch/collectibleSearch.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<<<<<<< HEAD
-=======
+  <!--script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/bootstrap-material-design.min.js"></script>
 
+  <script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/plugins/nouislider.min.js"></script>
 
->>>>>>> master
+  <script src="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/js/material-kit.min.js"></script-->
+
 </body>
 </html>
