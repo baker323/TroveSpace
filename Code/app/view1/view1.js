@@ -28,7 +28,7 @@ angular.module('myApp.view1', ['ngRoute'])
 		  }
 		});
 		
-		firebase.auth().onAuthStateChanged(function(user) {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
 		  if (user && !user.emailVerified) {
 			  
 			user.sendEmailVerification().then(function() {
@@ -42,6 +42,7 @@ angular.module('myApp.view1', ['ngRoute'])
 			  console.log(error.message);
 			});
 		  }
+		  $rootScope.unsubscribe();
 		});
 	}
 
@@ -52,10 +53,11 @@ angular.module('myApp.view1', ['ngRoute'])
 		  console.log(errorCode + ": " + errorMessage);
 		});
 		
-		firebase.auth().onAuthStateChanged(function(user) {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				console.log("User logged in.");
 			}
+			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -273,6 +275,46 @@ angular.module('myApp.view1', ['ngRoute'])
 		
 		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/').child(collectibleName).set({
 			multipleCount: multipleValue});
+	}
+	
+	$scope.searchTroves = function(query) {
+		var client = algoliasearch('03WT83UTVG', 'f17eb4043a0173ea0f172f57b2636b6e');
+		var index = client.initIndex('troves');
+		
+		// Get all contacts from Firebase
+		firebase.database().ref('/troves').once('value', contacts => {
+		  // Build an array of all records to push to Algolia
+		  const records = [];
+		  contacts.forEach(contact => {
+			// get the key and data from the snapshot
+			const childKey = contact.key;
+			const childData = contact.val();
+			// We set the Algolia objectID as the Firebase .key
+			childData.objectID = childKey;
+			// Add object for indexing
+			records.push(childData);
+		  });
+
+		  // Add or update new objects
+		  index
+			.saveObjects(records)
+			.then(() => {
+			  console.log('Troves imported into Algolia');
+			  index.search({ query: query }, function searchDone(err, content) {
+				  if (err) {
+					console.error(err);
+					return;
+				  }
+
+				  for (var h in content.hits) {
+					console.log(content.hits[h].objectID);
+				  }
+				});
+			})
+			.catch(error => {
+			  console.error('Error when importing contact into Algolia', error);
+			});
+		});
 	}
 	
 });

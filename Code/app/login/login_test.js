@@ -1,8 +1,10 @@
 describe('TroveSpace Login', function() {
 
+    // const URL = 'https://baker323.github.io/#!/login';
+    const URL = 'http://127.0.0.1:60788/#!/login';
 
     it('should deny incorrect password', function() {
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('testtest');
@@ -16,7 +18,7 @@ describe('TroveSpace Login', function() {
     });
 
     it('should deny user does not exist', function() {
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('testtest@test.com');
         element.all(by.model('password')).first().sendKeys('blahblahblah');
@@ -30,7 +32,7 @@ describe('TroveSpace Login', function() {
 
     // logout checking too
     it('should successfully login', function() {
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -51,6 +53,7 @@ describe('TroveSpace Login', function() {
         element(by.name('settings')).click();
         browser.sleep(2000);
         element(by.name('logout')).click();
+        browser.sleep(2000);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('TEST18');
@@ -77,7 +80,7 @@ describe('TroveSpace Login', function() {
 
     // change Account Information
     it('should successfully change the account information', function() {
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
         element(by.name('login')).click();
@@ -89,7 +92,7 @@ describe('TroveSpace Login', function() {
         element.all(by.model('userInfo.firstName')).first().sendKeys('test');
         element.all(by.model('userInfo.lastName')).first().sendKeys('test');
         element(by.name('updateUserInfo')).click();
-        browser.sleep(2000);
+        browser.sleep(10000);
 
     });
 

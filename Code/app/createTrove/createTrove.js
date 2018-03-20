@@ -28,6 +28,7 @@ angular.module('myApp.createTrove', ['ngRoute', 'ngCookies'])
 
 		firebase.database().ref('troves').child(troveName)
 		.set({
+			name: troveName,
 			description: description
 		});
 		for (var i=0; i < customFields.length; i++) {

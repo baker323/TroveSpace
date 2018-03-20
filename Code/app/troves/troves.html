@@ -16,7 +16,6 @@
       width: 100%;
       height: 200px;
       background-color: #ffffff;
-      background-image: url('nike.jpeg');
       background-repeat: no-repeat;
       background-size: 150px 150px;
       background-position: center;
@@ -42,6 +41,10 @@
       right: 0;
     }
 
+	.cover {
+	  border-radius: 5px;
+	}
+
 
     </style>
   </head>
@@ -63,6 +66,7 @@
               <div ng-repeat="(key, value) in troves" class="col-4" id="postCol">
                 <div ng-click="fetchCollectiblesInTrove(key)" class="card" id="postCheck">
                     <h5 id="title">{{key}}</h5>
+					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>
             </div>

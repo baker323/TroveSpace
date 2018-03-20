@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
+angular.module('myApp.troveSearch', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/troves', {
-    templateUrl: 'troves/troves.html',
-    controller: 'TroveCtrl'
+  $routeProvider.when('/troveSearch', {
+    templateUrl: 'troveSearch/troveSearch.html',
+    controller: 'TroveSearchCtrl'
   });
 }])
 
-.controller('TroveCtrl', function($rootScope, $scope, $cookieStore, $timeout) {
+.controller('TroveSearchCtrl', function($rootScope, $scope, $cookieStore, $timeout) {
 	$rootScope.loggedIn = $cookieStore.get('loggedIn');
 	$rootScope.loggedInUser = $cookieStore.get('loggedInUser');
 	if (!$rootScope.loggedIn) {
@@ -57,6 +57,7 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 		
 				$scope.troveName = troveName;
 				firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).limitToFirst(1).once('value').then(function(snapshot) {
+					console.log(snapshot.val());
 					if (snapshot.val() == null) {
 						$scope.getCollectibleImage(snapshot.val(), troveName);
 					} else {
@@ -76,6 +77,7 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 		firebase.storage().ref('collectibles/' + collectibleName + '/image').getDownloadURL().then(function(url) {
 			$scope.images[troveName] = url;
 			$scope.$apply();
+			console.log($scope.images[troveName]);
 		}).catch(function(error) {
 			$scope.images[troveName] = "no_image_available.jpg";
 			$scope.$apply();
@@ -83,18 +85,23 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
-		if ($rootScope.loggedIn) {
+		var a = window.location.href;
+		var b = a.substring(a.indexOf("?")+1);
+		var query = decodeURIComponent(b);
+		if (a.indexOf("?") == -1) {
+			window.location.href = '#';
+		} else {
 			$scope.images = [];
-			$scope.fetchAllTroves();
-			
-			$rootScope.searchCategory = "troves";
-			$rootScope.searchIn = "Troves";
-			if ($rootScope.autoCompleteSearch) {
-				$rootScope.initialized = false;
-				$rootScope.autoCompleteSearch.autocomplete.destroy();
-				$rootScope.autoCompleteSearch = null;
+			if($rootScope.searchResults == null) {
+				window.location.href = '#';
 			}
-			$rootScope.searchComplete("troves");
+			for (var i in $rootScope.searchResults) {
+				console.log($rootScope.searchResults[i].collectibles);
+				var collectibles = $rootScope.searchResults[i].collectibles;
+				for (var j in collectibles) {
+					$scope.getCollectibleImage(collectibles[j].name, $rootScope.searchResults[i].name);
+				}
+			}
 		}
 	});
 });

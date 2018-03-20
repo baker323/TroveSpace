@@ -36,9 +36,7 @@
       padding: 0 0 0px 10px;
     }
 
-    #btn {
-      width: 90px;
-      box-shadow: none;
+    #dropdownMenuButton {
       position: absolute;
       right: 0;
     }
@@ -53,7 +51,7 @@
   <body>
     <!--Remove this header later-->
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">Wishlist</span>
+      <span class=" mb-0 h2 mx-auto">Search Results</span>
     </nav>
     <!--Header ending-->
 
@@ -61,12 +59,11 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
-            <div class="row justify-content-center justify-content-md-start">
-              <div ng-repeat="(key, value) in wishlist" class="col-10 col-md-6 col-lg-4" id="postCol">
-                <div class="card" id="postCheck">
-                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
-                    <button ng-click="removeFromWishlist(key)" type="button" id="btn" class="btn btn-light">Remove</button>
-					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
+            <div class="row">
+              <div ng-repeat="trove in searchResults" class="col-4" id="postCol">
+                <div ng-click="fetchCollectiblesInTrove(trove.name)" class="card" id="postCheck">
+                    <h5 id="title">{{trove.name}}</h5>
+					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[trove.name]}}">
                 </div>
               </div>
             </div>
@@ -74,6 +71,7 @@
         </div>
       </div>
     </div>
+	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -1,8 +1,11 @@
 describe('troves module', function() {
 
+    // const URL = 'https://baker323.github.io/#!/login';
+    const URL = 'http://127.0.0.1:60788/#!/login';
+
     it('should successfully added to wishlist', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -43,7 +46,7 @@ describe('troves module', function() {
 
     it('should successfully remove all wishlist', function() {
 
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -73,7 +76,7 @@ describe('troves module', function() {
 
     it('should deny for adding to collection', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -101,7 +104,7 @@ describe('troves module', function() {
 
     it('should successfully make folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -128,7 +131,7 @@ describe('troves module', function() {
 
     it('should rename the folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -153,7 +156,7 @@ describe('troves module', function() {
 
     it('should add new collectives', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -181,7 +184,7 @@ describe('troves module', function() {
 
     it('should create another folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -204,9 +207,10 @@ describe('troves module', function() {
         //browser.sleep(2000);
     });
 
+
     it('should deny creating the same folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -229,9 +233,10 @@ describe('troves module', function() {
         //browser.sleep(2000);
     });
 
+
     it('should delete the folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -251,7 +256,7 @@ describe('troves module', function() {
 
     it('should delete another folder', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -273,7 +278,7 @@ describe('troves module', function() {
     // testing create new collectibles
     it('should create new collectible', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -291,16 +296,23 @@ describe('troves module', function() {
         browser.sleep(2000);
         element.all(by.model('collectibleTitle')).first().sendKeys('test');
         element.all(by.model('collectibleDescription')).first().sendKeys('test');
-        //element.all(by.repeater('(key, value) in trove')).first().sendKeys('test');
+
+        element.all(by.repeater('(key, value) in trove')).then(function(arr) {
+            var test = arr[0].evaluate('value.key');
+            console.log(test);
+            element.all(by.model('fieldValues[key]')).first().sendKeys('test');
+        });
+
         element.all(by.model('fieldValues[key]')).first().sendKeys('test');
         browser.sleep(5000);
         //element.all(by.model('email')).first().sendKeys('test');
     });
 */
 
+
     it('should cancel the create Trove', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');
@@ -323,7 +335,7 @@ describe('troves module', function() {
     // testing create new Troves
     it('should create new Trove', function() {
         // login
-        browser.get('http://127.0.0.1:60788/#!/login');
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('test18');

@@ -1,6 +1,8 @@
 describe('TroveSpace Signup', function() {
+    // const URL = 'https://baker323.github.io/#!/register';
+    const URL = 'http://127.0.0.1:60788/#!/register';
     it('should successfully sign up', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         // register
         element.all(by.model('username')).sendKeys('test0');
@@ -35,7 +37,7 @@ describe('TroveSpace Signup', function() {
     });
 
     it('should deny email already exists', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         element.all(by.model('username')).sendKeys('test1');
         element.all(by.model('email')).sendKeys('test@test.com');
@@ -50,7 +52,7 @@ describe('TroveSpace Signup', function() {
     });
 
     it('should deny invalid email', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         element.all(by.model('username')).sendKeys('test2');
         element.all(by.model('email')).sendKeys('hello');
@@ -65,7 +67,7 @@ describe('TroveSpace Signup', function() {
     });
 
     it('should deny too short email', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         element.all(by.model('username')).sendKeys('test3');
         element.all(by.model('email')).sendKeys('@.');
@@ -80,7 +82,7 @@ describe('TroveSpace Signup', function() {
     });
 
     it('should deny too short password', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         element.all(by.model('username')).sendKeys('test4');
         element.all(by.model('email')).sendKeys('blahblahblah3@test.com');
@@ -95,7 +97,7 @@ describe('TroveSpace Signup', function() {
     });
 
     it('should deny passwords do not match', function() {
-        browser.get('http://127.0.0.1:60788/#!/register');
+        browser.get(URL);
 
         element.all(by.model('username')).sendKeys('test5');
         element.all(by.model('email')).sendKeys('blahblahblah4@test.com');
