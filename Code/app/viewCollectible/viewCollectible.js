@@ -18,10 +18,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchCollectible = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 					$scope.collectible = snapshot.toJSON();
 					$scope.originalCollectible = snapshot.toJSON();
@@ -38,16 +36,11 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					
 					$scope.$apply();
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.getMultipleCount = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('/collectibles/' + collectibleName + '/users/' + user.uid + '/multipleCount').once('value').then(function(snapshot) {
 					if (snapshot.val() == null) {
 						$scope.multipleCount = 0;
@@ -57,23 +50,15 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						$scope.$apply();
 					}
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.setMultipleCount = function(collectibleName, multipleValue) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		console.log("Set multiple count.");
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
 					multipleCount: multipleValue
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 		$rootScope.error("Information saved.");
 	}
 	
@@ -86,8 +71,6 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				if (today-$scope.voteStartDate > 1000*60*60*24) {
 					if ($scope.voteKeepEdit > $scope.voteRevertEdit) {
 						$scope.switchPendingFields(collectibleName);
-						// make the pending fields blank
-						$scope.blankPendingFields(collectibleName);
 						// reset the votes
 						$scope.resetVotes(collectibleName);
 						$scope.pending = false;
@@ -111,9 +94,14 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			var total = 0;
 			for (var i in $scope.collectible) {
 				if ($scope.collectible.hasOwnProperty(i)) {
+					console.log(i);
 					if (!i.includes('pending') && i!='users' && i!='votes') {
 						total++;
-						if ($scope.originalCollectible[i] == $scope.collectible[i]) {
+						if (i == 'lastEditedBy') {
+							firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.currentUser.displayName);
+							noChange++;
+						}
+						else if ($scope.originalCollectible[i] == $scope.collectible[i]) {
 							noChange++;
 						} else {
 							firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.collectible[i]);
@@ -153,11 +141,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.incrementKeepVotes = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		console.log("Increment keep votes.");
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				if ($scope.keepVote == true || $scope.revertVote == true) {
 						$rootScope.error("You have already voted.");
 				} else {
@@ -166,34 +152,28 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						if (newVotes >= 5) {
 							// make the pending fields the actual fields
 							$scope.switchPendingFields(collectibleName);
-							// make the pending fields blank
-							$scope.blankPendingFields(collectibleName);
 							// reset the votes
 							$scope.resetVotes(collectibleName);
 							$rootScope.error("Edit has been approved.");
 							$scope.pending = false;
+							$scope.updateView();
 							return;
 						} else {
 							$rootScope.error("Vote recorded.");
+							firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).set(true);
+							console.log(newVotes);
+					
+							$scope.voteKeepEdit = newVotes;
 						}
 						return newVotes;
 					});
-					
-					firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).set(true);
-					
-					$scope.updateView();
 				}
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.incrementRevertVotes = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		console.log("Increment revert votes.");
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				if ($scope.keepVote == true || $scope.revertVote == true) {
 						$rootScope.error("You have already voted.");
 				} else {
@@ -206,27 +186,22 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 							$scope.resetVotes(collectibleName);
 							$rootScope.error("Edit has been removed.");
 							$scope.pending = false;
+							$scope.updateView();
 							return;
 						} else {
 							$rootScope.error("Vote recorded.");
+							firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).set(true);
+							console.log(newVotes);
+							$scope.voteRevertEdit = newVotes;
 						}
 						return newVotes;
 					});
-					
-					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).set(true);
-					
-					$scope.updateView();
 				}
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.resetVotes = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName + '/votes/').remove()
 				.then(function() {
 					console.log("Votes reset.");
@@ -236,17 +211,12 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				.catch(function(error) {
 					console.log("Vote reset failed: " + error.message);
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.blankPendingFields = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		console.log("Increment keep votes.");
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
 						if (childSnapshot.key.includes('pending')) {
@@ -259,17 +229,12 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete().then(function(snapshot) {
 					$scope.pending = false;
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.switchPendingFields = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		console.log("Increment keep votes.");
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
 						if (childSnapshot.key.includes('pending')) {
@@ -290,6 +255,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 							firebase.storage().ref('collectibles/' + collectibleName + '/image').put(blob).then(function(snapshot) {
 								console.log("Uploaded file.");
 								$scope.getCollectibleImage($scope.collectibleName);
+								// make the pending fields blank
+								$scope.blankPendingFields(collectibleName);
 
 								$scope.pending = false;
 								$scope.$apply();
@@ -305,9 +272,6 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						console.log(error.message);
 					});
 				}
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.getKeepVotes = function(collectibleName) {
@@ -325,30 +289,20 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	}
 		
 	$scope.getUserKeepVote = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).once('value').then(function(snapshot) {
-					$scope.keepVote = snapshot.val();
-					$scope.$apply();
-				});
-			}
-			$rootScope.unsubscribe();
+		firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).once('value').then(function(snapshot) {
+			$scope.keepVote = snapshot.val();
+			$scope.$apply();
 		});
 	}
 	
 	$scope.getUserRevertVote = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).once('value').then(function(snapshot) {
-					$scope.revertVote = snapshot.val();
-					$scope.$apply();
-				});
-			}
-			$rootScope.unsubscribe();
+		firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).once('value').then(function(snapshot) {
+			$scope.revertVote = snapshot.val();
+			$scope.$apply();
 		});
 	}
 	
@@ -358,30 +312,20 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.getDateAddedToCollection = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				firebase.database().ref('users/' + user.uid + '/collection/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
-					$scope.dateAddedToCollection = snapshot.val();
-					$scope.$apply();
-				});
-			}
-			$rootScope.unsubscribe();
+		firebase.database().ref('users/' + user.uid + '/collection/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
+			$scope.dateAddedToCollection = snapshot.val();
+			$scope.$apply();
 		});
 	}
 	
 	$scope.getDateAddedToWishlist = function(collectibleName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
-					$scope.dateAddedToWishlist = snapshot.val();
-					$scope.$apply();
-				});
-			}
-			$rootScope.unsubscribe();
+		firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName + '/dateAdded').once('value').then(function(snapshot) {
+			$scope.dateAddedToWishlist = snapshot.val();
+			$scope.$apply();
 		});
 	}
 	
@@ -422,6 +366,16 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		$scope.getRevertVotes($scope.collectibleName);
 	}
 	
+	$scope.getCurrentUser = function() {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				$scope.currentUser = user;
+				$scope.updateView();
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
 	$scope.uploadImage = function(collectibleName) {
 		var file = document.getElementById('collectibleImage').files[0];
 		if (file != null) {
@@ -443,7 +397,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		if (a.indexOf("?") == -1) {
 			window.location.href = '#';
 		} else {
-			$scope.updateView();
+			$scope.getCurrentUser();
 			$scope.getVoteStartDate($scope.collectibleName);
 		}
 	});
