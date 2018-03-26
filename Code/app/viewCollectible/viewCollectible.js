@@ -85,11 +85,11 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				// 1000*60*60*24 milliseconds in one day
 				if (today-$scope.voteStartDate > 1000*60*60*24) {
 					if ($scope.voteKeepEdit > $scope.voteRevertEdit) {
-						$scope.switchPendingFields($scope.collectibleName);
+						$scope.switchPendingFields(collectibleName);
 						// make the pending fields blank
-						$scope.blankPendingFields($scope.collectibleName);
+						$scope.blankPendingFields(collectibleName);
 						// reset the votes
-						$scope.resetVotes($scope.collectibleName);
+						$scope.resetVotes(collectibleName);
 						$scope.pending = false;
 					} else if ($scope.voteKeepEdit <= $scope.voteRevertEdit) {
 						// make the pending fields blank
