@@ -89,7 +89,9 @@ describe('TroveSpace Login', function() {
         browser.sleep(2000);
         element(by.name('account')).click();
         browser.sleep(2000);
+        element.all(by.model('userInfo.firstName')).clear();
         element.all(by.model('userInfo.firstName')).first().sendKeys('test');
+        element.all(by.model('userInfo.lastName')).clear();
         element.all(by.model('userInfo.lastName')).first().sendKeys('test');
         element(by.name('updateUserInfo')).click();
         browser.sleep(10000);
