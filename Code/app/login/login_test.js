@@ -14,7 +14,7 @@ describe('TroveSpace Login', function() {
         browser.sleep(2000);
         expect(element(by.name('errorMessage')).getText()).toEqual("The password is invalid or the user does not have a password.");
         element(by.name('confirm')).click();
-
+        browser.sleep(2000);
     });
 
     it('should deny user does not exist', function() {
@@ -28,6 +28,7 @@ describe('TroveSpace Login', function() {
         browser.sleep(2000);
         expect(element(by.name('errorMessage')).getText()).toEqual("There is no user record corresponding to this identifier. The user may have been deleted.");
         element(by.name('confirm')).click();
+        browser.sleep(2000);
     });
 
     // logout checking too
@@ -75,6 +76,7 @@ describe('TroveSpace Login', function() {
         element(by.name('settings')).click();
         browser.sleep(2000);
         element(by.name('logout')).click();
+        browser.sleep(2000);
     });
 
 
@@ -94,7 +96,7 @@ describe('TroveSpace Login', function() {
         element.all(by.model('userInfo.lastName')).clear();
         element.all(by.model('userInfo.lastName')).first().sendKeys('test');
         element(by.name('updateUserInfo')).click();
-        browser.sleep(10000);
+        browser.sleep(2000);
 
     });
 
