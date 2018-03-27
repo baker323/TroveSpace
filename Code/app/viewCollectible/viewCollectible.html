@@ -15,11 +15,11 @@
   #head {
     font-weight: 500;
   }
-	  
+
   .card {
     padding-bottom: 100px;
   }
-	  
+
   .cover {
 	border-radius: 5px;
   }
@@ -60,8 +60,8 @@
           </div>
 			<hr />
         </div>
-        
-			
+
+
           <div class="card-body">
 			<div class="form-group row">
 			  <div class="col-6">
@@ -79,32 +79,32 @@
            </div>
            <div class="form-group">
             <label for="exampleFormControlTextarea1">Description</label>
-            <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3"></textarea>
+            <textarea name="" ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3"></textarea>
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
-			  
+
 		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && key!='lastEditedBy'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
-			  
+
 		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && key=='lastEditedBy'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
-			  
+
 		  <div ng-show="dateAddedToCollection" class="form-group">
              <label for="exampleInput1">Added to Collection</label>
              <input value="{{dateAddedToCollection | date: 'medium'}}" class="form-control" disabled>
           </div>
-			  
+
 		  <div ng-show="dateAddedToWishlist" class="form-group">
              <label for="exampleInput1">Added to Wishlist</label>
              <input value="{{dateAddedToWishlist | date: 'medium'}}" class="form-control" disabled>
           </div>
-			  
+
            <div class="form-group">
 			   <label for="exampleInput1">Count</label>
                <div class="input-group">
@@ -119,7 +119,7 @@
 			   <input id="collectibleImage" ng-model="collectibleImage" type="file" accept="image/*">
 		   </div>
        </div>
-		
+
        <div class="text-center">
 		<button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
 		<button ng-click="editCollectible(collectibleName)" type="button" class="btn btn-warning">Submit Edit</button>

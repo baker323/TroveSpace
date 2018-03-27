@@ -20,6 +20,8 @@ describe('troves module', function() {
         element(by.repeater('(key, value) in troves').row(0)).click();
         browser.sleep(2000);
 
+        //element(by.repeater('(key, value) in troveCollectibles').row(1).element(by.name('addButton')).click());
+        //browser.sleep(12000);
         element(by.name('addButton')).click();
         browser.sleep(2000);
         element(by.name('addToWishlist')).click();
@@ -113,6 +115,9 @@ describe('troves module', function() {
         // myCollection
         browser.sleep(2000);
         element(by.name('myCollection')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("You currently don't have any folders.");
+        element(by.name('confirm')).click();
         browser.sleep(2000);
         element(by.name('newFolder')).click();
         browser.sleep(2000);
@@ -269,7 +274,7 @@ describe('troves module', function() {
         browser.sleep(2000);
         element(by.name('deleteFolder')).click();
         browser.sleep(2000);
-        expect(element(by.name('errorMessage')).getText()).toEqual("There are currently no collectibles in this folder.");
+        expect(element(by.name('errorMessage')).getText()).toEqual("You currently don't have any folders.");
         element(by.name('confirm')).click();
         browser.sleep(2000);
     });
