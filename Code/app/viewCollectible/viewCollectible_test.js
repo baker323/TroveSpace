@@ -148,4 +148,72 @@ describe('TroveSpace Edit Item', function() {
         browser.sleep(2000);
     });
 
+    it('should add timestamp for wishlist', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(0)).click();
+        browser.sleep(2000);
+
+        element(by.name('addButton')).click();
+        browser.sleep(2000);
+        element(by.name('addToWishlist')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Item successfully added.");
+        element(by.name('confirm')).click();
+
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(0)).click();
+        browser.sleep(2000);
+
+        // editCollectibleButton
+        element(by.name('editCollectibleButton')).click();
+        browser.sleep(2000);
+    });
+
+    it('should add timestamp for collection', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(0)).click();
+        browser.sleep(2000);
+
+        element(by.name('addButton')).click();
+        browser.sleep(2000);
+        element(by.name('addToWishlist')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Item successfully added.");
+        element(by.name('confirm')).click();
+
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(0)).click();
+        browser.sleep(2000);
+
+        // editCollectibleButton
+        element(by.name('editCollectibleButton')).click();
+        browser.sleep(2000);
+    });
+
 });

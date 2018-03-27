@@ -279,7 +279,7 @@ describe('troves module', function() {
         browser.sleep(2000);
     });
 
-/*
+
     // testing create new collectibles
     it('should create new collectible', function() {
         // login
@@ -301,18 +301,49 @@ describe('troves module', function() {
         browser.sleep(2000);
         element.all(by.model('collectibleTitle')).first().sendKeys('test');
         element.all(by.model('collectibleDescription')).first().sendKeys('test');
+        // newCollectibleInfo
+        element.all(by.name('newCollectibleInfo')).get(0).sendKeys('Hello World');
+        element.all(by.name('newCollectibleInfo')).get(1).sendKeys('Hello World');
+        element.all(by.name('newCollectibleInfo')).get(2).sendKeys('Hello World');
+        browser.sleep(2000);
 
-        element.all(by.repeater('(key, value) in trove')).then(function(arr) {
-            var test = arr[0].evaluate('value.key');
-            console.log(test);
-            element.all(by.model('fieldValues[key]')).first().sendKeys('test');
-        });
-
-        element.all(by.model('fieldValues[key]')).first().sendKeys('test');
-        browser.sleep(5000);
-        //element.all(by.model('email')).first().sendKeys('test');
+        //newCollectibleInfoSubmit
+        element(by.name('newCollectibleInfoSubmit')).click();
+        browser.sleep(2000);
     });
-*/
+
+    it('should deny creating new collectible', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+
+        // add to wishlist
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(0)).click();
+        browser.sleep(2000);
+        element(by.name('newCollectible')).click();
+        browser.sleep(2000);
+        element.all(by.model('collectibleTitle')).first().sendKeys('test');
+        element.all(by.model('collectibleDescription')).first().sendKeys('test');
+        // newCollectibleInfo
+        element.all(by.name('newCollectibleInfo')).get(0).sendKeys('Hello World');
+        element.all(by.name('newCollectibleInfo')).get(1).sendKeys('Hello World');
+        element.all(by.name('newCollectibleInfo')).get(2).sendKeys('Hello World');
+        browser.sleep(2000);
+
+        //newCollectibleInfoSubmit
+        element(by.name('newCollectibleInfoSubmit')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Collectible with that name already exists.");
+        element(by.name('confirm')).click();
+        browser.sleep(2000);
+    });
 
 
     it('should cancel the create Trove', function() {
