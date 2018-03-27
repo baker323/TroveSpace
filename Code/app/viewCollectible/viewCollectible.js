@@ -77,6 +77,10 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					} else if ($scope.voteKeepEdit <= $scope.voteRevertEdit) {
 						// make the pending fields blank
 						$scope.blankPendingFields(collectibleName);
+						// make the pending fields blank
+						if ($scope.pendingimage != null) {
+							$scope.blankPendingImage(collectibleName);
+						}
 						// reset the votes
 						$scope.resetVotes(collectibleName);
 						$scope.pending = false;
@@ -97,14 +101,11 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					console.log(i);
 					if (!i.includes('pending') && i!='users' && i!='votes') {
 						total++;
-						if (i == 'lastEditedBy') {
-							firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.currentUser.displayName);
-							noChange++;
-						}
-						else if ($scope.originalCollectible[i] == $scope.collectible[i]) {
+						if ($scope.originalCollectible[i] == $scope.collectible[i]) {
 							noChange++;
 						} else {
 							firebase.database().ref('collectibles/' + collectibleName).child('pending'+i).set($scope.collectible[i]);
+							firebase.database().ref('collectibles/' + collectibleName).child('pendinglastEditedBy').set($scope.currentUser.displayName);
 						}
 
 					}
@@ -131,6 +132,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					});
 					$rootScope.error("Your edit has been submitted for approval.");
 					$scope.uploadImage(collectibleName);
+					firebase.database().ref('collectibles/' + collectibleName).child('pendinglastEditedBy').set($scope.currentUser.displayName);
 				}
 			}
 			$scope.updateView();
@@ -149,24 +151,31 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				} else {
 					firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/count').transaction(function(votes) {
 						var newVotes = (votes || 0) + 1;
+						return newVotes;
+					}, function(error, committed, snapshot) {
+						var newVotes = snapshot.val();
+						$scope.getUserKeepVote($scope.collectibleName);
+						$scope.getUserRevertVote($scope.collectibleName);
+						
+						console.log(newVotes);
 						if (newVotes >= 5) {
 							// make the pending fields the actual fields
+							$scope.pending = false;
+							$scope.$apply();
 							$scope.switchPendingFields(collectibleName);
 							// reset the votes
 							$scope.resetVotes(collectibleName);
 							$rootScope.error("Edit has been approved.");
 							$scope.pending = false;
-							$scope.updateView();
+							$scope.$apply();
 							return;
 						} else {
 							$rootScope.error("Vote recorded.");
 							firebase.database().ref('collectibles/' + collectibleName + '/votes/keep/users/' + user.uid).set(true);
-							console.log(newVotes);
-					
 							$scope.voteKeepEdit = newVotes;
 						}
-						return newVotes;
 					});
+					$scope.updateView();
 				}
 	}
 	
@@ -179,9 +188,20 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				} else {
 					firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/count').transaction(function(votes) {
 						var newVotes = (votes || 0) + 1;
+						return newVotes;
+					}, function(error, committed, snapshot) {
+						var newVotes = snapshot.val();
+						$scope.getUserKeepVote($scope.collectibleName);
+						$scope.getUserRevertVote($scope.collectibleName);
+						
+						console.log(newVotes);
 						if (newVotes >= 5) {
-							// make the pending fields blank
+							//make the pending fields blank
 							$scope.blankPendingFields(collectibleName);
+							// make the pending fields blank
+							if ($scope.pendingimage != null) {
+								$scope.blankPendingImage(collectibleName);
+							}
 							// reset the votes
 							$scope.resetVotes(collectibleName);
 							$rootScope.error("Edit has been removed.");
@@ -191,10 +211,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						} else {
 							$rootScope.error("Vote recorded.");
 							firebase.database().ref('collectibles/' + collectibleName + '/votes/revert/users/' + user.uid).set(true);
-							console.log(newVotes);
 							$scope.voteRevertEdit = newVotes;
 						}
-						return newVotes;
 					});
 				}
 	}
@@ -215,7 +233,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.blankPendingFields = function(collectibleName) {
 		var user = $scope.currentUser;
-		console.log("Increment keep votes.");
+		console.log("Blank pending fields.");
 		
 				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
@@ -226,25 +244,23 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						}
 					});
 				});
-				firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete().then(function(snapshot) {
-					$scope.pending = false;
-				});
+	}
+	
+	$scope.blankPendingImage = function(collectibleName) {
+		console.log("Blank pending image.");
+		// make the pending image blank
+		firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').delete().then(function(snapshot) {
+			$scope.pending = false;
+			$scope.pendingimage = false;
+			$scope.updateView();
+		});
 	}
 	
 	$scope.switchPendingFields = function(collectibleName) {
 		var user = $scope.currentUser;
-		console.log("Increment keep votes.");
-		
-				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
-					snapshot.forEach(function(childSnapshot) {
-						if (childSnapshot.key.includes('pending')) {
-							firebase.database().ref('collectibles/' + collectibleName + '/' + childSnapshot.key.slice(7)).set(childSnapshot.val());
-							$scope.pending = false;
-							$scope.updateView();
-						}
-					});
-				});
-				if ($scope.pendingimage) {
+		console.log("Switch pending fields.");
+				console.log($scope.pendingimage);
+				if ($scope.pendingimage != null) {
 					firebase.storage().ref('collectibles/' + collectibleName + '/pendingimage').getDownloadURL().then(function(url) {
 						// get url of pending image
 						var xhr = new XMLHttpRequest();
@@ -255,8 +271,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 							firebase.storage().ref('collectibles/' + collectibleName + '/image').put(blob).then(function(snapshot) {
 								console.log("Uploaded file.");
 								$scope.getCollectibleImage($scope.collectibleName);
-								// make the pending fields blank
-								$scope.blankPendingFields(collectibleName);
+								$scope.blankPendingImage($scope.collectibleName);
 
 								$scope.pending = false;
 								$scope.$apply();
@@ -272,6 +287,17 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 						console.log(error.message);
 					});
 				}
+				
+				firebase.database().ref('collectibles/' + collectibleName).once('value').then(function(snapshot) {
+					snapshot.forEach(function(childSnapshot) {
+						if (childSnapshot.key.includes('pending')) {
+							firebase.database().ref('collectibles/' + collectibleName + '/' + childSnapshot.key.slice(7)).set(childSnapshot.val());
+						}
+					});
+					$scope.blankPendingFields(collectibleName);
+					$scope.pending = false;
+					$scope.updateView();
+				});
 	}
 	
 	$scope.getKeepVotes = function(collectibleName) {
