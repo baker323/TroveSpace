@@ -17,7 +17,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.createFolder = function(folderName, troveName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
 		firebase.database().ref('users/' + user.uid + '/folders').child(folderName).once('value').then(function(snapshot) {
 			if (snapshot.val() == null) {
@@ -39,7 +39,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	
 	$scope.renameFolder = function(oldName, newName) {
 		console.log(oldName, newName);
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
 		firebase.database().ref('users/' + user.uid + '/folders').child(newName).once('value').then(function(snapshot) {
 			if (snapshot.val() == null) {
@@ -62,27 +62,52 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.deleteFolder = function(folderName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		firebase.database().ref('users/' + user.uid + '/folders').child(folderName).remove()
-		  .then(function() {
-			console.log("Remove succeeded.");
-			$rootScope.error("Folder successfully deleted.");
-			$scope.fetchAllTroves();
-			$scope.fetchAllCollections();
-		  })
-		  .catch(function(error) {
-			console.log("Remove failed: " + error.message);
-			$rootScope.error(error.message);
-		  });
+		$scope.removingFolder = folderName;
+		console.log("Setting to true");
+		
+		var removeFolder = function() {
+			firebase.database().ref('users/' + user.uid + '/folders').child(folderName).remove()
+			.then(function() {
+				console.log("Remove succeeded.");
+				$rootScope.error("Folder successfully deleted.");
+				$scope.fetchAllTroves();
+				$scope.fetchAllCollections();
+			})
+			.catch(function(error) {
+				console.log("Remove failed: " + error.message);
+				$rootScope.error(error.message);
+			});
+		}
+		
+		firebase.database().ref('/users/' + user.uid + '/folders/' + folderName + '/collectibles').once('value').then(function(snapshot) {
+			var promises = [];
+			snapshot.forEach(function(childSnapshot) {
+				console.log(childSnapshot.key + " removed");
+				promises.push($scope.removeFromCollection(childSnapshot.key, folderName));
+			});
+			Promise.all(promises).then(function() {
+				console.log("Remove folder!");
+				firebase.database().ref('users/' + user.uid + '/folders').child(folderName).remove()
+				.then(function() {
+					console.log("Remove succeeded.");
+					$rootScope.error("Folder successfully deleted.");
+					$scope.fetchAllTroves();
+					$scope.fetchAllCollections();
+				})
+				.catch(function(error) {
+					console.log("Remove failed: " + error.message);
+					$rootScope.error(error.message);
+				});
+			});
+		});
 	}
 	
 	$scope.fetchAllCollections = function() {
 		console.log("Fetch all collections.");
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				firebase.database().ref('/users/' + user.uid + '/folders').once('value').then(function(snapshot) {
 					if (snapshot.val() == null) {
 						$rootScope.error("You currently don't have any folders.");
@@ -103,15 +128,12 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 						});
 					}
 				});
-			}
-			$rootScope.unsubscribe();
-		});
 	}
 	
 	$scope.fetchCollectiblesInCollection = function(folderName) {
 		console.log(folderName);
-		if (folderName != null) {
-			var user = firebase.auth().currentUser;
+		if (folderName != null && folderName != $scope.removingFolder) {
+			var user = $scope.currentUser;
 		
 			firebase.database().ref('/users/' + user.uid + '/folders/' + folderName + '/collectibles').once('value').then(function(snapshot) {
 				if (snapshot.val() == null) {
@@ -127,6 +149,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 				}
 			});
 		}
+		$scope.removingFolder = null;
 	}
 	
 	$scope.getCollectibleImage = function(collectibleName) {
@@ -148,13 +171,13 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.removeFromCollection = function(collectibleName, folderName) {
-		var user = firebase.auth().currentUser;
+		console.log("Remove from collection.");
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
 				var found = 0;
-				firebase.database().ref('users/' + user.uid + '/folders').once('value').then(function(snapshot) {
+				return firebase.database().ref('users/' + user.uid + '/folders').once('value').then(function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
+						console.log(childSnapshot.val());
 						var childCollectibles = childSnapshot.val();
 						if (childCollectibles.collectibles != null) {
 							for (var i in childSnapshot.val()) {
@@ -165,6 +188,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 							}
 						}
 					});
+					console.log(found);
 					if (found == 1) {
 						firebase.database().ref('users/' + user.uid + '/collection').child(collectibleName).remove()
 						.then(function() {
@@ -181,22 +205,38 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 								$rootScope.autoCompleteSearch = null;
 							}
 							$rootScope.searchComplete("users/"+user.uid+"/collection");
+							
+							firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
+							.then(function() {
+								console.log("Remove succeeded.");					$scope.fetchCollectiblesInCollection(folderName);
+							})
+							.catch(function(error) {
+								console.log("Remove failed: " + error.message);
+							});
+						})
+						.catch(function(error) {
+							console.log("Remove failed: " + error.message);
+						});
+					} else {
+						firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
+						.then(function() {
+							console.log("Remove succeeded.");					$scope.fetchCollectiblesInCollection(folderName);
 						})
 						.catch(function(error) {
 							console.log("Remove failed: " + error.message);
 						});
 					}
-					
-					firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
-					.then(function() {
-						console.log("Remove succeeded.");						$scope.fetchCollectiblesInCollection(folderName);
-					})
-					.catch(function(error) {
-						console.log("Remove failed: " + error.message);
-					});
 				}).catch(function(error) {
 					console.log(error.message);
-				})
+				});
+	}
+	
+	$scope.getCurrentUser = function() {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				$scope.currentUser = user;
+				$scope.fetchAllTroves();
+				$scope.fetchAllCollections();
 			}
 			$rootScope.unsubscribe();
 		});
@@ -208,8 +248,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	
 	$scope.$on('$viewContentLoaded', function() {
 		$scope.images = [];
-		$scope.fetchAllTroves();
-		$scope.fetchAllCollections();
+		$scope.getCurrentUser();
 		if ($rootScope.loggedIn) {
 			var user = firebase.auth().currentUser;
 		
