@@ -80,8 +80,8 @@
             <div class="row justify-content-center justify-content-md-start">
               <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
-                    <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
+                    <h5 name="editCollectibleInCollection" ng-click="viewCollectible(key)" id="title">{{key}}</h5>
+                    <button name="removeFromCollection" ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
 					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>

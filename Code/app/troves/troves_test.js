@@ -2,7 +2,7 @@ describe('troves module', function() {
 
     // const URL = 'https://baker323.github.io/#!/login';
     const URL = 'http://127.0.0.1:60788/#!/login';
-
+/*
     it('should successfully added to wishlist', function() {
         // login
         browser.get(URL);
@@ -278,7 +278,7 @@ describe('troves module', function() {
         element(by.name('confirm')).click();
         browser.sleep(2000);
     });
-
+*/
 
     // testing create new collectibles
     it('should create new collectible', function() {
@@ -320,7 +320,7 @@ describe('troves module', function() {
 
         element(by.name('login')).click();
 
-        // add to wishlist
+        // add to collectible
         browser.sleep(2000);
         element(by.name('viewTroves')).click();
         browser.sleep(2000);
@@ -345,7 +345,7 @@ describe('troves module', function() {
         browser.sleep(2000);
     });
 
-
+/*
     it('should cancel the create Trove', function() {
         // login
         browser.get(URL);
@@ -396,6 +396,6 @@ describe('troves module', function() {
         element(by.name('submitNewTrove')).click();
         browser.sleep(2000);
     });
-
+*/
 
 });

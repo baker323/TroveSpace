@@ -5,6 +5,7 @@ exports.config = {
         //'register/register_test.js',
         //'login/login_test.js',
         //'troves/troves_test.js',
-        'viewCollectible/viewCollectible_test.js'
+        'viewCollectible/viewCollectible_test.js',
+        //'troveSearch/troveSearch_test.js'
     ]
 }
