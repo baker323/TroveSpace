@@ -3,7 +3,7 @@ describe('TroveSpace Edit Item', function() {
 
     // const URL = 'https://baker323.github.io/#!/login';
     const URL = 'http://127.0.0.1:60788/#!/login';
-/*
+
     it('edit collection', function() {
         browser.get(URL);
 
@@ -147,7 +147,7 @@ describe('TroveSpace Edit Item', function() {
         element(by.name('confirm')).click();
         browser.sleep(2000);
     });
-*/
+
     it('should add timestamp for wishlist', function() {
         browser.get(URL);
 
@@ -240,25 +240,6 @@ describe('TroveSpace Edit Item', function() {
 
         element(by.name('login')).click();
         browser.sleep(2000);
-        /*
-        // add folder
-        browser.sleep(2000);
-        element(by.name('myCollection')).click();
-        browser.sleep(2000);
-        expect(element(by.name('errorMessage')).getText()).toEqual("You currently don't have any folders.");
-        element(by.name('confirm')).click();
-        browser.sleep(2000);
-        element(by.name('newFolder')).click();
-        browser.sleep(2000);
-
-        element.all(by.model('folderName')).first().sendKeys('test');
-        element(by.repeater('(key, value) in troves').row(0)).click();
-        browser.sleep(2000);
-        element(by.name('confirmFolder')).click();
-        browser.sleep(2000);
-        expect(element(by.name('errorMessage')).getText()).toEqual("There are currently no collectibles in this folder.");
-        element(by.name('confirm')).click();
-        browser.sleep(2000);*/
 
         // add collectible
         element(by.name('viewTroves')).click();

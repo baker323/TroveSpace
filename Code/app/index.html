@@ -113,16 +113,16 @@
 	<div ng-show="loggedIn" class="nav navbar-nav navbar-right navbar-form">
 		<div id="aa-input-container" class="input-group my-2 my-lg-0">
 		  <div class="input-group-prepend">
-			  <select ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select" id="option">
-				<option class="option">Troves</option>
-				<option class="option">Collectibles</option>
-				<option class="option">My Collection</option>
+			  <select name="searchCategorySelector" ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select" id="option">
+				<option name="searchForTroves" class="option">Troves</option>
+				<option name="searchForCollectibles" class="option">Collectibles</option>
+				<option name="searchForMyCollection" class="option">My Collection</option>
 				<option ng-show="onTrovePage" class="option">Current Trove</option>
 			  </select>
 		  </div>
-		  <input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
+		  <input name="searchTextInput" ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
 		  <div class="input-group-append">
-			<button ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
+			<button name="searchButton" ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
 		  </div>
 		</div>
 	</div>
