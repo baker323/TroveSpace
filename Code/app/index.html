@@ -65,7 +65,8 @@
 	    .squareEdge {
 		  border-radius: 0px;
 		}
-	    .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+	  .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+    .material-icons.red { color: red; }
   </style>
   <!-- Material Kit CSS -->
   <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
@@ -83,10 +84,34 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
     <ul class="navbar-nav mr-auto">
-
-	  <li ng-show="loggedIn" class="nav-item">
-        <a class="nav-link" href="#!/troves"><i class="material-icons md-dark">notifications_none</i></a>
+      <!--Here you can ng-show when there is no notification-->
+      <li ng-show="loggedIn" class="nav-item dropdown">
+        <a class="nav-link " href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons md-dark">notifications_none</i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+		      <p class="text-center mb-0">
+            No Notifications
+          </p>
+        </div>
       </li>
+      <!--Here you can ng-show only when there is notification-->
+      <li ng-show="loggedIn" class="nav-item dropdown">
+        <a class="nav-link " href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons red">notifications_active</i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div class="text-center">
+            <p>
+              Notification 1
+            </p>
+            <p>
+              Notification 2
+            </p>
+          </div>
+        </div>
+      </li>
+
 	  <li ng-show="loggedIn" class="nav-item">
         <a class="nav-link" href="#!/troves">View Troves</a>
       </li>
