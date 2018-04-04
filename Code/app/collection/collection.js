@@ -233,27 +233,13 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	
 	$scope.getCurrentUser = function() {
 		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
+			if (user && window.location.href.includes('collection')) {
 				$scope.currentUser = user;
 				$scope.fetchAllTroves();
 				$scope.fetchAllCollections();
-			}
-			$rootScope.unsubscribe();
-		});
-	}
-	
-	$scope.viewCollectible = function(troveName) {
-		window.location.href = '#!/viewCollectible?'+troveName;
-	}
-	
-	$scope.$on('$viewContentLoaded', function() {
-		$scope.images = [];
-		$scope.getCurrentUser();
-		if ($rootScope.loggedIn) {
-			var user = firebase.auth().currentUser;
-		
-			$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-				if (user) {
+				
+				if ($rootScope.loggedIn) {
+
 					console.log("collection");
 					$rootScope.searchCategory = "users/"+user.uid+"/collection";
 					$rootScope.searchIn = "My Collection";
@@ -264,8 +250,19 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 					}
 					$rootScope.searchComplete("users/"+user.uid+"/collection");
 				}
-				$rootScope.unsubscribe();
-			});
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
+	$scope.viewCollectible = function(troveName) {
+		window.location.href = '#!/viewCollectible?'+troveName;
+	}
+	
+	$scope.$on('$viewContentLoaded', function() {
+		if (window.location.href.includes('collection')) {
+			$scope.images = [];
+			$scope.getCurrentUser();
 		}
 	});
 });

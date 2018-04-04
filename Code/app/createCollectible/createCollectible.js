@@ -28,6 +28,8 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 	$scope.createCollectible = function(collectibleName, description, troveName, fieldValues) {
 		if (collectibleName == null) {
 			$rootScope.error("Title is required.");
+		} else if (collectibleName.includes('.') || collectibleName.includes('#') || collectibleName.includes('$') || collectibleName.includes('[') || collectibleName.includes(']')) {
+			$rootScope.error("Title cannot contain special characters.");
 		} else if (description == undefined) {
 			description = null;
 		} else {

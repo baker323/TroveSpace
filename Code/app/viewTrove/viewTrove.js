@@ -93,7 +93,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 		var user = firebase.auth().currentUser;
 		
 		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
+			if (user && window.location.href.includes('viewTrove')) {
 				firebase.database().ref('/users/' + user.uid + '/folders').orderByChild('category').equalTo(troveName).once('value').then(function(snapshot) {
 					$scope.collections = snapshot.toJSON();
 					$scope.$apply();
@@ -121,29 +121,31 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.$on('$viewContentLoaded', function() {
-		var a = window.location.href;
-		var b = a.substring(a.indexOf("?")+1);
-		var troveName = decodeURIComponent(b);
-		$rootScope.currentTrove = troveName;
-		if (a.indexOf("?") == -1) {
-			window.location.href = '#';
-		} else {
-			$scope.images = [];
-			$scope.fetchAllCollections(troveName);
-			$scope.fetchCollectibles(troveName);
-			$rootScope.onTrovePage = true;
-			$rootScope.searchTroveName = troveName;
-			
-			if ($rootScope.loggedIn) {				
-				console.log($rootScope.searchTroveName);
-				$rootScope.searchCategory = "troves/"+$rootScope.searchTroveName+"/collectibles";
-				$rootScope.searchIn = "Current Trove";
-				if ($rootScope.autoCompleteSearch) {
-					$rootScope.initialized = false;
-					$rootScope.autoCompleteSearch.autocomplete.destroy();
-					$rootScope.autoCompleteSearch = null;
+		if (window.location.href.includes('viewTrove')) {
+			var a = window.location.href;
+			var b = a.substring(a.indexOf("?")+1);
+			var troveName = decodeURIComponent(b);
+			$rootScope.currentTrove = troveName;
+			if (a.indexOf("?") == -1) {
+				window.location.href = '#';
+			} else {
+				$scope.images = [];
+				$scope.fetchAllCollections(troveName);
+				$scope.fetchCollectibles(troveName);
+				$rootScope.onTrovePage = true;
+				$rootScope.searchTroveName = troveName;
+
+				if ($rootScope.loggedIn) {				
+					console.log($rootScope.searchTroveName);
+					$rootScope.searchCategory = "troves/"+$rootScope.searchTroveName+"/collectibles";
+					$rootScope.searchIn = "Current Trove";
+					if ($rootScope.autoCompleteSearch) {
+						$rootScope.initialized = false;
+						$rootScope.autoCompleteSearch.autocomplete.destroy();
+						$rootScope.autoCompleteSearch = null;
+					}
+					$rootScope.searchComplete("troves/"+$rootScope.searchTroveName+"/collectibles");
 				}
-				$rootScope.searchComplete("troves/"+$rootScope.searchTroveName+"/collectibles");
 			}
 		}
 	});

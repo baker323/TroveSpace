@@ -11,6 +11,7 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
   <style>
@@ -64,6 +65,19 @@
 	    .squareEdge {
 		  border-radius: 0px;
 		}
+	    .material-icons.md-dark { 
+			color: rgba(0, 0, 0, 0.54);
+	  		vertical-align: middle;
+			cursor: pointer;
+	  	}
+    	.material-icons.red { color: red; }
+	    .material-icons.md-18 { font-size: 18px; }
+	    .hover {
+			cursor: pointer;
+	    }
+	    .default {
+			cursor: default;
+	    }
   </style>
   <!-- Material Kit CSS -->
   <!--link rel="stylesheet" href="https://cdn.rawgit.com/creativetimofficial/material-kit/6d5e7389/assets/css/material-kit.min.css"-->
@@ -78,6 +92,31 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+	  <!--Here you can ng-show when there is no notification-->
+      <li ng-show="loggedIn" class="nav-item dropdown">
+        <a ng-hide="notifications" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons md-dark hover">notifications_none</i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+		      <p class="text-center hover mb-0">
+            No Notifications
+          </p>
+        </div>
+      </li>
+      <!--Here you can ng-show only when there is notification-->
+      <li ng-show="loggedIn" class="nav-item dropdown">
+        <a ng-show="notifications" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons red hover">notifications_active</i>
+        </a>
+        <div class="dropdown-menu" style="width:300px" aria-labelledby="navbarDropdown">
+          <div class="text-center">
+            <p class="default text-left dropdown-item" ng-repeat="(key, value) in notifications">
+              <a class="hover" ng-click="viewNotification(key)">{{key}} has been edited.</a>
+			  <i class="material-icons md-dark md-18 float-right" ng-click="removeNotification(key)">clear</i>
+            </p>
+          </div>
+        </div>
+      </li>
 	  <li ng-show="loggedIn" class="nav-item">
         <a class="nav-link" href="#!/troves">View Troves</a>
       </li>

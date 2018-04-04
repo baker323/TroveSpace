@@ -29,7 +29,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 }]);
 
 app.run(function($rootScope, $cookieStore, $timeout, $route) {
-    $rootScope.logout = function() {
+	$rootScope.logout = function() {
 		firebase.auth().signOut().then(function() {
 			$rootScope.loggedIn = false;
 			$cookieStore.put('loggedIn', false);
@@ -462,6 +462,38 @@ app.run(function($rootScope, $cookieStore, $timeout, $route) {
 		});
 	}
 	
+	$rootScope.getNotifications = function() {
+		console.log("Get notifications.");
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			$rootScope.currentUser = user;
+			if (user) {
+				firebase.database().ref('users/' + $rootScope.currentUser.uid + '/notifications').once('value').then(function(snapshot) {
+					$rootScope.notifications = snapshot.toJSON();
+					$rootScope.$apply();
+				});
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
+	$rootScope.viewNotification = function(collectibleName) {
+		console.log(collectibleName);
+		$rootScope.removeNotification(collectibleName);
+		window.location.href = '#!/viewCollectible?'+collectibleName;
+	}
+	
+	$rootScope.removeNotification = function(collectibleName) {
+		console.log(collectibleName);
+		firebase.database().ref('users/' + $rootScope.currentUser.uid + '/notifications').child(collectibleName).remove()
+		.then(function() {
+			console.log("Notification removed.");
+			$rootScope.getNotifications();
+		})
+		.catch(function(error) {
+			console.log("Remove failed: " + error.message);
+		});
+	}
+	
 	$rootScope.error = function(errorMessage) {
     	$rootScope.errorMessage = errorMessage;
 		$timeout(function() {
@@ -470,6 +502,7 @@ app.run(function($rootScope, $cookieStore, $timeout, $route) {
     };
 	
 	$rootScope.$on('$viewContentLoaded', function() {
+		$rootScope.getNotifications();
 		if (!window.location.href.includes('troves') && 
 			!window.location.href.includes('collection') &&
 			!window.location.href.includes('viewTrove') &&

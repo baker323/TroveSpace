@@ -17,23 +17,17 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchAllTroves = function() {
-		var user = firebase.auth().currentUser;
-		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-				firebase.database().ref('troves').once('value').then(function(snapshot) {
-					if (snapshot.val() == null) {
-						$rootScope.error("There are not currently any troves.");
-					} else {
-						$scope.troves = snapshot.toJSON();
-						$scope.$apply();
-						snapshot.forEach(function(childSnapshot) {
-							$scope.fetchCollectibles(childSnapshot.key);
-						});
-					}
+		var user = $scope.currentUser;
+		firebase.database().ref('troves').once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				$rootScope.error("There are not currently any troves.");
+			} else {
+				$scope.troves = snapshot.toJSON();
+				$scope.$apply();
+				snapshot.forEach(function(childSnapshot) {
+					$scope.fetchCollectibles(childSnapshot.key);
 				});
 			}
-			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -50,25 +44,19 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchCollectibles = function(troveName) {
-		var user = firebase.auth().currentUser;
+		var user = $scope.currentUser;
 		
-		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
-		
-				$scope.troveName = troveName;
-				firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).limitToFirst(1).once('value').then(function(snapshot) {
-					if (snapshot.val() == null) {
-						$scope.getCollectibleImage(snapshot.val(), troveName);
-					} else {
-						$scope.troveCollectibles = snapshot.toJSON();
-						$scope.$apply();
-						snapshot.forEach(function(childSnapshot) {
-							$scope.getCollectibleImage(childSnapshot.key, troveName);
-						});
-					}
+		$scope.troveName = troveName;
+		firebase.database().ref('/collectibles').orderByChild('category').equalTo(troveName).limitToFirst(1).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				$scope.getCollectibleImage(snapshot.val(), troveName);
+			} else {
+				$scope.troveCollectibles = snapshot.toJSON();
+				$scope.$apply();
+				snapshot.forEach(function(childSnapshot) {
+					$scope.getCollectibleImage(childSnapshot.key, troveName);
 				});
 			}
-			$rootScope.unsubscribe();
 		});
 	}
 	
@@ -82,10 +70,20 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
+	$scope.getCurrentUser = function() {
+		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
+			if (user) {
+				$scope.currentUser = user;
+				$scope.fetchAllTroves();
+			}
+			$rootScope.unsubscribe();
+		});
+	}
+	
 	$scope.$on('$viewContentLoaded', function() {
 		if ($rootScope.loggedIn) {
 			$scope.images = [];
-			$scope.fetchAllTroves();
+			$scope.getCurrentUser();
 			
 			$rootScope.searchCategory = "troves";
 			$rootScope.searchIn = "Troves";

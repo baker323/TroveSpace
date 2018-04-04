@@ -23,6 +23,21 @@
   .cover {
 	border-radius: 5px;
   }
+	  
+  .material-icons.md-36 { font-size: 36px; }
+	  
+  .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+	  
+  .hover {
+	cursor: pointer;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+  }
+  .unbold {
+	font-weight: normal;
+  }
 
   </style>
 
@@ -35,6 +50,14 @@
         <div class="card card-nav-tabs">
           <h3 class="card-header card-header-primary" id="head">
             {{collectibleName}}
+				<a class="float-right" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  <i class="material-icons md-36 float-right hover">expand_more</i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+				  <p class="dropdown-item text-center unbold hover mb-0" href="" ng-click="voteForDuplicate()">
+					Mark as Duplicate
+				  </p>
+			  </div>
           </h3>
 
         <!--This is the approve and disapprove part-->
@@ -105,7 +128,7 @@
              <input value="{{dateAddedToWishlist | date: 'medium'}}" class="form-control" disabled>
           </div>
 			  
-           <div class="form-group">
+           <div ng-show="dateAddedToCollection" class="form-group">
 			   <label for="exampleInput1">Count</label>
                <div class="input-group">
 			   	   <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
@@ -129,6 +152,38 @@
 
 </div>
 </div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="duplicateCollectibleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Duplicate Collectible</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="row">
+			  <div ng-hide="collectible.duplicateName" name="message" class="col col-lg-9">
+				Please select the duplicate collectible: 
+				<select ng-model="duplicateCollectibleName" class="form-control">
+					<option ng-repeat="(key, value) in collectibles" ng-if="key!=collectibleName">{{key}}</option>
+				</select>
+			  </div>
+			  <div ng-show="collectible.duplicateName" name="message" class="col col-lg-9">
+				{{collectible.duplicateYes}} user(s) marked this as a duplicate of {{collectible.duplicateName}}. Do you agree?
+			  </div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button ng-show="collectible.duplicateName" ng-click="voteDuplicateCollectible(collectible.duplicateName)" name="confirm" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+			<button ng-show="collectible.duplicateName" ng-click="voteNotDuplicateCollectible(duplicateCollectibleName)" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">No</button>
+			<button ng-hide="collectible.duplicateName" ng-click="voteDuplicateCollectible(duplicateCollectibleName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 
 </body>
 </html>

@@ -18,23 +18,27 @@ angular.module('myApp.createTrove', ['ngRoute', 'ngCookies'])
 	}
 
 	$scope.createTrove = function(troveName, description, customFields) {
-		console.log(customFields);
-		var array = [];
-		for (var i=0; i<customFields.length; i++) {
-			array.push(customFields[i].name);
-		}
-		customFields = array;
-		var user = firebase.auth().currentUser;
+		if (troveName.includes('.') || troveName.includes('#') || troveName.includes('$') || troveName.includes('[') || troveName.includes(']')) {
+			$rootScope.error("Title cannot contain special characters.");
+		} else {
+			console.log(customFields);
+			var array = [];
+			for (var i=0; i<customFields.length; i++) {
+				array.push(customFields[i].name);
+			}
+			customFields = array;
+			var user = firebase.auth().currentUser;
 
-		firebase.database().ref('troves').child(troveName)
-		.set({
-			name: troveName,
-			description: description
-		});
-		for (var i=0; i < customFields.length; i++) {
-			firebase.database().ref('troves/' + troveName).child(customFields[i]).set(true);
+			firebase.database().ref('troves').child(troveName)
+			.set({
+				name: troveName,
+				description: description
+			});
+			for (var i=0; i < customFields.length; i++) {
+				firebase.database().ref('troves/' + troveName).child(customFields[i]).set(true);
+			}
+			window.location.href = '#!/viewTrove?'+troveName;
 		}
-		window.location.href = '#!/viewTrove?'+troveName;
 	}
 	
 	$scope.choices = [];

@@ -63,8 +63,8 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
-            <div class="row">
-              <div ng-repeat="(key, value) in troves" class="col-4" id="postCol">
+            <div class="row row justify-content-center justify-content-md-start">
+              <div ng-repeat="(key, value) in troves" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div ng-click="fetchCollectiblesInTrove(key)" class="card" id="postCheck">
                     <h5 id="title">{{key}}</h5>
 					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">

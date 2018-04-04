@@ -10,7 +10,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('ViewCollectibleCtrl', function($rootScope, $scope, $cookieStore) {
+.controller('ViewCollectibleCtrl', function($rootScope, $scope, $cookieStore, $timeout) {
 	$rootScope.loggedIn = $cookieStore.get('loggedIn');
 	$rootScope.loggedInUser = $cookieStore.get('loggedInUser');
 	if (!$rootScope.loggedIn) {
@@ -133,6 +133,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 					$rootScope.error("Your edit has been submitted for approval.");
 					$scope.uploadImage(collectibleName);
 					firebase.database().ref('collectibles/' + collectibleName).child('pendinglastEditedBy').set($scope.currentUser.displayName);
+					
+					$scope.sendNotification(collectibleName);
 				}
 			}
 			$scope.updateView();
@@ -140,6 +142,19 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			$rootScope.error("Current edit is still pending.");
 			$scope.updateView();
 		}
+	}
+	
+	$scope.sendNotification = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/users').once('value').then(function(snapshot) {
+			snapshot.forEach(function(childSnapshot) {
+				if (childSnapshot.key != $scope.currentUser.uid) {
+					firebase.database().ref('users/' + childSnapshot.key + '/notifications').child(collectibleName).set({
+						name: collectibleName,
+						lastEditedBy: $scope.currentUser.displayName
+					});
+				}
+			});
+		});
 	}
 	
 	$scope.incrementKeepVotes = function(collectibleName) {
@@ -394,11 +409,123 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.getCurrentUser = function() {
 		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-			if (user) {
+			if (user && window.location.href.includes('viewCollectible')) {
 				$scope.currentUser = user;
 				$scope.updateView();
 			}
 			$rootScope.unsubscribe();
+		});
+	}
+	
+	$scope.fetchAllCollectibles = function() {
+		var user = $scope.currentUser;
+		firebase.database().ref('collectibles').once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				$rootScope.error("There are not currently any collectibles.");
+			} else {
+				$scope.collectibles = snapshot.toJSON();
+				$scope.$apply();
+				snapshot.forEach(function(childSnapshot) {
+					if (childSnapshot.key != $scope.collectibleName) {
+						$scope.duplicateCollectibleName = childSnapshot.key;
+						return true;
+					}
+				});
+			}
+		});
+	}
+	
+	$scope.voteForDuplicate = function() {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				$timeout(function() {
+					$('#duplicateCollectibleModal').modal('show');
+				});
+			} else {
+				$rootScope.error("You have already voted.");
+			}
+		});
+	}
+	
+	$scope.voteDuplicateCollectible = function(collectibleName) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateYes').transaction(function(votes) {
+			var newVotes = (votes || 0) + 1;
+			return newVotes;
+		}, function(error, committed, snapshot) {
+			var newVotes = snapshot.val();
+						
+			console.log(newVotes);
+			if (newVotes >= 5) {
+				//remove the collectible
+				firebase.database().ref('collectibles/' + $scope.collectibleName).remove()
+				.then(function() {					
+					firebase.database().ref('troves/' + $scope.collectible.category + '/collectibles/' + $scope.collectibleName).remove();
+					firebase.database().ref('users').once('value').then(function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							
+							firebase.database().ref('users/' + childSnapshot.key + '/collection/' + $scope.collectibleName).remove();
+							
+							firebase.database().ref('users/' + childSnapshot.key + '/wishlist/' + $scope.collectibleName).remove();
+							
+							firebase.database().ref('users/' + childSnapshot.key + '/folders').once('value').then(function(snapshot2) {
+								snapshot2.forEach(function(childSnapshot2) {									
+									firebase.database().ref('users/' + childSnapshot.key + '/folders/' + childSnapshot2.key + '/collectibles/' + $scope.collectibleName).remove();
+								});
+							});
+						});
+					});
+					
+					firebase.storage().ref('collectibles/' + $scope.collectibleName + '/image').delete();
+					
+					firebase.storage().ref('collectibles/' + $scope.collectibleName + '/pendingimage').delete();
+					
+					$rootScope.error("Collectible has received the required amount of votes for removal.");
+					window.location.href = '#!/viewTrove?'+$scope.collectible.category;
+					
+				}).catch(function(error) {
+					console.log(error.message);
+					$rootScope.error("Collectible has received the required amount of votes for removal.");
+					window.location.href = '#!/viewTrove?'+$scope.collectible.category;
+				});				
+				return;
+			} else {
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateUsers').child($scope.currentUser.uid).set(true);
+			
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateName').set(collectibleName);
+			
+				$rootScope.error("Vote recorded.");
+			}
+		});
+	}
+	
+	$scope.voteNotDuplicateCollectible = function(collectibleName) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateNo').transaction(function(votes) {
+			var newVotes = (votes || 0) + 1;
+			return newVotes;
+		}, function(error, committed, snapshot) {
+			var newVotes = snapshot.val();
+						
+			console.log(newVotes);
+			if (newVotes >= 5) {
+				//reset the vote
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateName').remove();
+				
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateYes').remove();
+				
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateNo').remove();
+				
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateUsers').remove();
+				
+				$rootScope.error("Vote recorded.");
+				
+				return;
+			} else {
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateUsers').child($scope.currentUser.uid).set(true);
+			
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/duplicateName').set(collectibleName);
+			
+				$rootScope.error("Vote recorded.");
+			}
 		});
 	}
 	
@@ -417,14 +544,17 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	}
 
 	$scope.$on('$viewContentLoaded', function() {
-		var a = window.location.href;
-		var b = a.substring(a.indexOf("?")+1);
-		$scope.collectibleName = decodeURIComponent(b);
-		if (a.indexOf("?") == -1) {
-			window.location.href = '#';
-		} else {
-			$scope.getCurrentUser();
-			$scope.getVoteStartDate($scope.collectibleName);
+		if (window.location.href.includes('viewCollectible')) {
+			var a = window.location.href;
+			var b = a.substring(a.indexOf("?")+1);
+			$scope.collectibleName = decodeURIComponent(b);
+			if (a.indexOf("?") == -1) {
+				window.location.href = '#';
+			} else {
+				$scope.getCurrentUser();
+				$scope.fetchAllCollectibles();
+				$scope.getVoteStartDate($scope.collectibleName);
+			}
 		}
 	});
 });
