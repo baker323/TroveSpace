@@ -106,13 +106,13 @@
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && key!='lastEditedBy'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && key=='lastEditedBy'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
