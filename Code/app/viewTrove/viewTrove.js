@@ -54,31 +54,70 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	$scope.addToWishlist = function(collectibleName, troveName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set({
-			dateAdded: (new Date).getTime(),
-			name: collectibleName,
-			category: troveName
+		firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('users/' + user.uid + '/wishlist/').child(collectibleName).set({
+					dateAdded: (new Date).getTime(),
+					name: collectibleName,
+					category: troveName
+				});
+
+				firebase.database().ref('collectibles/' + collectibleName + '/wishlistCount').transaction(function(votes) {
+					var newVotes = (votes || 0) + 1;
+					return newVotes;
+				}, function(error, committed, snapshot) {
+
+				});
+
+				firebase.database().ref('collectibles/' + collectibleName + '/wishlistUsers').child($scope.currentUser.uid).set(user.displayName);
+				
+				$rootScope.error("Item successfully added.");
+			} else {
+				$rootScope.error("This item is already on your wishlist.");
+			}
+			
 		});
-		$rootScope.error("Item successfully added.");
 	}
 	
 	$scope.addToCollection = function(collectibleName, folderName, troveName) {
 		var user = firebase.auth().currentUser;
 		
-		firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
-			multipleCount: 1
+		firebase.database().ref('users/' + user.uid + '/collection/' + collectibleName).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('users/' + user.uid + '/collection/').child(collectibleName).set({
+					dateAdded: (new Date).getTime(),
+					name: collectibleName,
+					category: troveName
+				});
+				
+				firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid).set({
+					multipleCount: 1
+				});
+				
+				firebase.database().ref('collectibles/' + collectibleName + '/collectCount').transaction(function(votes) {
+					var newVotes = (votes || 0) + 1;
+					return newVotes;
+				}, function(error, committed, snapshot) {
+
+				});
+
+				firebase.database().ref('collectibles/' + collectibleName + '/collectUsers').child($scope.currentUser.uid).set(user.displayName);
+			}
 		});
-		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set({
-			dateAdded: (new Date).getTime(),
-			name: collectibleName,
-			category: troveName
+		
+		firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles/' + collectibleName).set({
+					dateAdded: (new Date).getTime(),
+					name: collectibleName,
+					category: troveName
+				});
+
+				$rootScope.error("Item successfully added.");
+			} else {
+				$rootScope.error("This item is already in your "+folderName+" folder.");
+			}
 		});
-		firebase.database().ref('users/' + user.uid + '/collection/').child(collectibleName).set({
-			dateAdded: (new Date).getTime(),
-			name: collectibleName,
-			category: troveName
-		});
-		$rootScope.error("Item successfully added.");
 	}
 	
 	$scope.addToFolder = function(collectibleName) {
@@ -90,7 +129,7 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 	}
 	
 	$scope.fetchAllCollections = function(troveName) {
-		var user = firebase.auth().currentUser;
+		$scope.currentUser = firebase.auth().currentUser;
 		
 		$rootScope.unsubscribe = firebase.auth().onAuthStateChanged(function(user){
 			if (user && window.location.href.includes('viewTrove')) {

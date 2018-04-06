@@ -217,6 +217,18 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 						.catch(function(error) {
 							console.log("Remove failed: " + error.message);
 						});
+						
+						firebase.database().ref('collectibles/' + collectibleName + '/users/' + user.uid + '/multipleCount').remove();
+
+						firebase.database().ref('collectibles/' + collectibleName + '/collectCount').transaction(function(votes) {
+							var newVotes = votes - 1;
+							return newVotes;
+						}, function(error, committed, snapshot) {
+
+						});
+
+						firebase.database().ref('collectibles/' + collectibleName + '/collectUsers').child($scope.currentUser.uid).remove();
+						
 					} else {
 						firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
 						.then(function() {

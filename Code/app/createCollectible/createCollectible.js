@@ -54,7 +54,9 @@ angular.module('myApp.createCollectible', ['ngRoute', 'ngCookies'])
 							name: collectibleName,
 							description: description,
 							category: troveName,
-							lastEditedBy: user.displayName
+							lastEditedBy: user.displayName,
+							collectCount: 0,
+							wishlistCount: 0
 						});
 
 						// set custom fields

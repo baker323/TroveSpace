@@ -50,6 +50,13 @@ angular.module('myApp.wishlist', ['ngRoute', 'ngCookies'])
 				.catch(function(error) {
 					console.log("Remove failed: " + error.message);
 				});
+
+				firebase.database().ref('collectibles/' + collectibleName + '/wishlistCount').transaction(function(votes) {
+					var newVotes = votes - 1;
+					return newVotes;
+				});
+
+				firebase.database().ref('collectibles/' + collectibleName + '/wishlistUsers').child($scope.currentUser.uid).remove();
 			}
 			$rootScope.unsubscribe();
 		});

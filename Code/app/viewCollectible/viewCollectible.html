@@ -106,27 +106,33 @@
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist')" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy'" class="form-group">
-             <label for="exampleInput1">{{key}}</label>
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist')" class="form-group">
+             <label for="exampleInput1">Last Edited By</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-show="dateAddedToCollection" class="form-group">
-             <label for="exampleInput1">Added to Collection</label>
-             <input value="{{dateAddedToCollection | date: 'medium'}}" class="form-control" disabled>
-          </div>
-			  
-		  <div ng-show="dateAddedToWishlist" class="form-group">
-             <label for="exampleInput1">Added to Wishlist</label>
-             <input value="{{dateAddedToWishlist | date: 'medium'}}" class="form-control" disabled>
-          </div>
+		  <div ng-show="collectible.collectCount!=null" class="form-group">
+			<label for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | date: 'medium'}}</label>
+				<div class="input-group">
+					 <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
+					 <input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
+					 <span class="input-group-btn">
+				   		<button data-toggle="modal" data-target="#viewUserListModal" type="button" class="btn btn-primary">View All</button>
+				     </span>
+				</div>
+		  </div>
+		  <div ng-show="collectible.wishlistCount!=null" class="form-group">
+			<label for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons hover">check</i> {{dateAddedToWishlist | date: 'medium'}}</label>
+			<input ng-show="collectible.wishlistCount==1" value="{{collectible.wishlistCount}} Person" class="form-control" disabled>
+			<input ng-show="collectible.wishlistCount>1 || collectible.wishlistCount==0" value="{{collectible.wishlistCount}} People" class="form-control" disabled>
+		  </div>
 			  
            <div ng-show="dateAddedToCollection" class="form-group">
 			   <label for="exampleInput1">Count</label>
@@ -171,8 +177,11 @@
 					<option ng-repeat="(key, value) in collectibles" ng-if="key!=collectibleName">{{key}}</option>
 				</select>
 			  </div>
-			  <div ng-show="collectible.duplicateName" name="message" class="col col-lg-9">
-				{{collectible.duplicateYes}} user(s) marked this as a duplicate of {{collectible.duplicateName}}. Do you agree?
+			  <div ng-show="collectible.duplicateName" ng-if="collectible.duplicateYes==1" name="message" class="col col-lg-9">
+				{{collectible.duplicateYes}} user marked this as a duplicate of {{collectible.duplicateName}}. Do you agree?
+			  </div>
+			  <div ng-show="collectible.duplicateName" ng-if="collectible.duplicateYes>1" name="message" class="col col-lg-9">
+				{{collectible.duplicateYes}} users marked this as a duplicate of {{collectible.duplicateName}}. Do you agree?
 			  </div>
 			</div>
 		  </div>
@@ -180,6 +189,30 @@
 			<button ng-show="collectible.duplicateName" ng-click="voteDuplicateCollectible(collectible.duplicateName)" name="confirm" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
 			<button ng-show="collectible.duplicateName" ng-click="voteNotDuplicateCollectible(duplicateCollectibleName)" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">No</button>
 			<button ng-hide="collectible.duplicateName" ng-click="voteDuplicateCollectible(duplicateCollectibleName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+		<!-- Modal -->
+	<div class="modal fade" id="viewUserListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">Users With Collectible</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="list-group">
+			  <a href="" ng-click="viewCollectUser(key)" ng-repeat="(key, value) in collectUsers" name="message" class="list-group-item">
+				{{value}}
+			  </a>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
