@@ -46,22 +46,29 @@
 	  object-fit: cover;
 	}
 
-
     </style>
   </head>
   <body>
-    <!--Remove this header later-->
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">Search Results</span>
+	  <span ng-hide="wishlist" class=" mb-0 h2 mx-auto">{{otherUser.username}}'s Collection</span>
+	  <span ng-show="wishlist" class=" mb-0 h2 mx-auto">{{otherUser.username}}'s Wishlist</span>
     </nav>
-    <!--Header ending-->
-
-    <div class="container">
+	<div class="row justify-content-center">
+	  <div class="form-inline my-2 my-lg-0">
+		  <select ng-hide="wishlist" ng-change="fetchCollectiblesInCollection(currentFolder)" ng-if="collections!=null" ng-model="currentFolder" class="btn select mr-sm-2">
+		  <option class="option" ng-repeat="(key, value) in collections">{{key}}</option>
+		  </select>
+		  <button ng-hide="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchWishlist()">View Wishlist</button>
+		  <button ng-show="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchCollectiblesInCollection(currentFolder)">View Collection</button>
+	  </div>
+    </div>
+    <div ng-show="currentFolder" class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10">
           <div class="container">
             <div class="row justify-content-center justify-content-md-start">
-              <div ng-repeat="collectible in searchResults" class="col-10 col-md-6 col-lg-4" id="postCol">
+              <div ng-repeat="collectible in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
+				  
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(collectible.name)" id="title">{{collectible.name}}</h5>
 					<div class="dropdown">
@@ -69,8 +76,8 @@
                         Add
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a ng-show="collections[collectible.category]" ng-click="addToFolder(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Collection</a>
-						<a ng-hide="collections[collectible.category]" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
+                        <a ng-show="userCollections[collectible.category]" ng-click="addToFolder(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Collection</a>
+						<a ng-hide="userCollections[collectible.category]" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
                         <a ng-click="addToWishlist(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
@@ -98,17 +105,18 @@
 			  <div name="message" class="col col-lg-9">
 				Please select a folder: 
 				<select ng-model="addToFolderName[addToFolderTrove]" class="form-control">
-					<option ng-repeat="(key, value) in collections[addToFolderTrove]">{{key}}</option>
+					<option ng-repeat="(key, value) in userCollections[addToFolderTrove]">{{key}}</option>
 				</select>
 			  </div>
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="addToCollection(collectibleName, addToFolderName, addToFolderTrove)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button ng-click="addToCollection(collectibleName, addToFolderName[addToFolderTrove], addToFolderTrove)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
+	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

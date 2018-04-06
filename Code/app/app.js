@@ -20,6 +20,7 @@ var app = angular.module('myApp', [
   'myApp.viewTrove',
   'myApp.collectibleSearch',
   'myApp.troveSearch',
+  'myApp.viewProfile',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

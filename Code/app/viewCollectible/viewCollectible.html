@@ -120,13 +120,17 @@
 			  
 		  <div ng-show="collectible.collectCount!=null" class="form-group">
 			<label for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | date: 'medium'}}</label>
-				<div class="input-group">
+				<div ng-hide="collectible.collectCount==0" class="input-group">
 					 <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
 					 <span class="input-group-btn">
 				   		<button data-toggle="modal" data-target="#viewUserListModal" type="button" class="btn btn-primary">View All</button>
 				     </span>
 				</div>
+			  <div ng-show="collectible.collectCount==0">
+			    <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
+				<input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
+			  </div>
 		  </div>
 		  <div ng-show="collectible.wishlistCount!=null" class="form-group">
 			<label for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons hover">check</i> {{dateAddedToWishlist | date: 'medium'}}</label>
@@ -207,7 +211,7 @@
 		  <div class="modal-body">
 			<div class="list-group">
 			  <a href="" ng-click="viewCollectUser(key)" ng-repeat="(key, value) in collectUsers" name="message" class="list-group-item">
-				{{value}}
+				<i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
 			  </a>
 			</div>
 		  </div>

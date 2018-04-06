@@ -555,8 +555,8 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.viewCollectUser = function(userId) {
 		$timeout(function() {
 			$('#viewUserListModal').modal('hide');
+			window.location.href = '#!/viewProfile?'+userId;
 		});
-		console.log(userId);
 	}
 
 	$scope.$on('$viewContentLoaded', function() {
