@@ -407,6 +407,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		$scope.getRevertVotes($scope.collectibleName);
 		
 		$scope.fetchCollectUsers($scope.collectibleName);
+		$scope.fetchWishlistUsers($scope.collectibleName);
 	}
 	
 	$scope.getCurrentUser = function() {
@@ -552,9 +553,23 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
+	$scope.fetchWishlistUsers = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/wishlistUsers').once('value').then(function(snapshot) {
+			$scope.wishlistUsers = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
 	$scope.viewCollectUser = function(userId) {
 		$timeout(function() {
 			$('#viewUserListModal').modal('hide');
+			window.location.href = '#!/viewProfile?'+userId;
+		});
+	}
+	
+	$scope.viewWishlistUser = function(userId) {
+		$timeout(function() {
+			$('#viewWishlistModal').modal('hide');
 			window.location.href = '#!/viewProfile?'+userId;
 		});
 	}
