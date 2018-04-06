@@ -60,6 +60,7 @@
 		  </select>
 		  <button ng-hide="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchWishlist()">View Wishlist</button>
 		  <button ng-show="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchCollectiblesInCollection(currentFolder)">View Collection</button>
+		  <button ng-show="collection" class="btn btn-outline mr-sm-2" data-toggle="modal" data-target="#contactUserModal">Contact Info</button>
 	  </div>
     </div>
     <div ng-show="currentFolder" class="container">
@@ -112,6 +113,29 @@
 		  </div>
 		  <div class="modal-footer">
 			<button ng-click="addToCollection(collectibleName, addToFolderName[addToFolderTrove], addToFolderTrove)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	  
+	<!-- Modal -->
+	<div class="modal fade" id="contactUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">{{otherUser.username}}'s Email:</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="list-group">
+			  <a href="mailto:{{otherUser.email}}" name="message" class="list-group-item"><i style="vertical-align: bottom" class="material-icons">mail</i> {{otherUser.email}}
+			  </a>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
