@@ -595,7 +595,14 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	
 	$scope.fetchComments = function(collectibleName) {
 		firebase.database().ref('collectibles/' + collectibleName + '/comments').once('value').then(function(snapshot) {
-			$scope.comments = snapshot.toJSON();
+			var returnArr = [];
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+				returnArr.push(item);
+			});
+			
+			$scope.comments = returnArr.reverse();
 			$scope.$apply();
 		});
 	}
@@ -634,7 +641,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.upvoteComment = function(comment) {
 		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
 			$scope.upvote = snapshot.val();
-			console.log($scope.upvote);
+			
 			firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvotes').transaction(function(votes) {
 				var newVotes = votes;
 				if ($scope.upvote == true) {
@@ -666,7 +673,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.downvoteComment = function(comment) {
 		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
 			$scope.upvote = snapshot.val();
-			console.log($scope.upvote);
+			
 			firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/downvotes').transaction(function(votes) {
 				var newVotes = votes;
 				if ($scope.upvote == true || $scope.upvote == null) {
