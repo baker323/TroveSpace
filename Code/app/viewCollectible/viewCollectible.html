@@ -106,20 +106,20 @@
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist')" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist')" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments'" class="form-group">
              <label for="exampleInput1">Last Edited By</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
 		  <div ng-show="collectible.collectCount!=null" class="form-group">
-			<label for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | date: 'medium'}}</label>
+			<label for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | amTimeAgo}}</label>
 				<div ng-hide="collectible.collectCount==0" class="input-group">
 					 <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
@@ -134,7 +134,7 @@
 		  </div>
 			  
 		  <div ng-show="collectible.wishlistCount!=null" class="form-group">
-			<label for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToWishlist | date: 'medium'}}</label>
+			<label for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToWishlist | amTimeAgo}}</label>
 				<div ng-hide="collectible.wishlistCount==0" class="input-group">
 					 <input ng-show="collectible.wishlistCount==1" value="{{collectible.wishlistCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.wishlistCount>1 || collectible.wishlistCount==0" value="{{collectible.wishlistCount}} People" class="form-control" disabled>
@@ -168,6 +168,47 @@
 		<button ng-click="editCollectible(collectibleName)" type="button" class="btn btn-warning">Submit Edit</button>
       </div>
     </div>
+    <div class="card card-nav-tabs">
+          <h3 class="card-header card-header-primary" id="head">
+            Comments
+          </h3>
+		  <div class="card-body">
+			<div class="form-group row">
+			  <div class="col-12">
+				  	<label for="exampleFormControlTextarea1">Enter Your Comment</label>
+            		<textarea ng-model="comment" class="form-control" id="comment" rows="3"></textarea>
+				</div>
+			  </div>
+			  <div class="form-group row">
+				  <div class="col-12">
+			  	<button ng-click="sendComment(comment)" type="button" class="btn btn-primary">Submit</button>
+				  </div>
+			  </div>
+			  <div ng-repeat="comment in comments" class="col-12">
+			  		<div class="row">
+						<i class="material-icons md-dark" style="vertical-align: bottom">person</i> {{comment.user}} - 
+						{{comment.dateAdded | amTimeAgo}}
+					</div>
+					<div class="row">
+						<textarea ng-model="comment.text" class="form-control" rows="3" disabled></textarea>
+						<div style="text-align:right; display:block; width:100%">
+							<i ng-show="comment.upvoteUsers[currentUser.uid]==true" class="material-icons hover" style="vertical-align: bottom; color:green" ng-click="upvoteComment(comment.key)">thumb_up</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==true" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="upvoteComment(comment.key)">thumb_up</i> {{comment.upvotes}} <i ng-show="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons hover" style="vertical-align: bottom; color:red">thumb_down</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons md-dark hover" style="vertical-align: bottom">thumb_down</i> {{comment.downvotes}} <i class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="textareashow[comment.key] = !textareashow[comment.key]">chat</i> Reply<span ng-show="currentUser.displayName==comment.user"><i class="material-icons md-dark hover" ng-click="deleteComment(comment.key)" style="vertical-align: bottom">delete</i>Delete</span>
+						</div>
+						<div style="margin-left: 100px;" ng-show="textareashow[comment.key]" class="input-group form-group">
+							<input ng-model="reply[comment.key]" class="form-control" placeholder="Enter Reply">
+							<span class="input-group-btn">
+								<button ng-click="sendReply(reply[comment.key], comment.key)" type="button" class="btn btn-primary"><i class="material-icons" style="vertical-align: bottom">reply</i></button>
+							</span>
+						</div>
+						<div ng-repeat="replyText in comment.replies" style="margin-left: 100px; text-align:left; display:block; width:100%" class="form-group">
+							<i class="material-icons md-dark" style="vertical-align: bottom">person</i>{{replyText.user}} - 
+							{{replyText.dateAdded | amTimeAgo}}<i class="material-icons md-dark hover" style="vertical-align: bottom" ng-show="currentUser.displayName==replyText.user" ng-click="deleteReply(replyText.key, comment.key)">close</i>
+							<input ng-model="replyText.text" class="form-control" disabled>
+						</div>
+					</div>
+			  </div>
+		</div>
+	</div>
   </div>
 
 </div>

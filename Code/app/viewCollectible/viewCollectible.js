@@ -408,6 +408,7 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		
 		$scope.fetchCollectUsers($scope.collectibleName);
 		$scope.fetchWishlistUsers($scope.collectibleName);
+		$scope.fetchComments($scope.collectibleName);
 	}
 	
 	$scope.getCurrentUser = function() {
@@ -573,6 +574,126 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 			window.location.href = '#!/viewProfile?'+userId;
 		});
 	}
+	
+	$scope.sendComment = function(comment) {
+		var newPostKey = firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments').push().key;
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + newPostKey).update({
+			text: comment,
+			dateAdded: (new Date).getTime(),
+			user: $scope.currentUser.displayName,
+			upvotes: 0,
+			downvotes: 0,
+			key: newPostKey
+		}).then(function() {
+			$rootScope.error("Comment sent.");
+			$scope.comment = null;
+			$scope.fetchComments($scope.collectibleName);
+		}).catch(function(error) {
+			$rootScope.error(error.message);
+		});
+	}
+	
+	$scope.fetchComments = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/comments').once('value').then(function(snapshot) {
+			$scope.comments = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
+	$scope.sendReply = function(reply, comment) {
+		var newPostKey = firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/replies').push().key;
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/replies/' + newPostKey).update({
+			text: reply,
+			dateAdded: (new Date).getTime(),
+			user: $scope.currentUser.displayName,
+			key: newPostKey
+		}).then(function() {
+			$rootScope.error("Reply sent.");
+			$scope.textareashow[comment] = false;
+			$scope.reply = null;
+			$scope.fetchComments($scope.collectibleName);
+		}).catch(function(error) {
+			$rootScope.error(error.message);
+		});
+	}
+	
+	$scope.deleteComment = function(comment) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment).remove().then(function() {
+			$rootScope.error("Comment deleted.");
+			$scope.fetchComments($scope.collectibleName);
+		});
+	}
+	
+	$scope.deleteReply = function(reply, comment) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/replies/' + reply).remove().then(function() {
+			$rootScope.error("Reply deleted.");
+			$scope.fetchComments($scope.collectibleName);
+		});
+	}
+	
+	$scope.upvoteComment = function(comment) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			$scope.upvote = snapshot.val();
+			console.log($scope.upvote);
+			firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvotes').transaction(function(votes) {
+				var newVotes = votes;
+				if ($scope.upvote == true) {
+					newVotes = votes-1;
+				} else if ($scope.upvote == false || $scope.upvote == null) {
+					newVotes = votes+1;
+				}
+				return newVotes;
+			}, function(error, committed, snapshot) {
+				var newVotes = snapshot.val();
+				if ($scope.upvote == true) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).remove();
+				} else if ($scope.upvote == null) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).set(true);
+				} else if ($scope.upvote == false) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).set(true);
+					
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/downvotes').transaction(function(votes) {
+						var newVotes = votes-1;
+						return newVotes;
+					});
+				}
+				$scope.fetchComments($scope.collectibleName);
+				$scope.$apply();
+			});
+		});
+	}
+	
+	$scope.downvoteComment = function(comment) {
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			$scope.upvote = snapshot.val();
+			console.log($scope.upvote);
+			firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/downvotes').transaction(function(votes) {
+				var newVotes = votes;
+				if ($scope.upvote == true || $scope.upvote == null) {
+					newVotes = votes+1;
+				} else if ($scope.upvote == false) {
+					newVotes = votes-1;
+				}
+				return newVotes;
+			}, function(error, committed, snapshot) {
+				var newVotes = snapshot.val();
+				if ($scope.upvote == null) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).set(false);
+				} else if ($scope.upvote == false) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).remove();
+				} else if ($scope.upvote == true) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvoteUsers/' + $scope.currentUser.uid).set(false);
+					
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/comments/' + comment + '/upvotes').transaction(function(votes) {
+						var newVotes = votes-1;
+						return newVotes;
+					});
+				}
+				$scope.fetchComments($scope.collectibleName);
+				$scope.$apply();
+			});
+		});
+	}
 
 	$scope.$on('$viewContentLoaded', function() {
 		if (window.location.href.includes('viewCollectible')) {
@@ -583,6 +704,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				window.location.href = '#';
 			} else {
 				$scope.getCurrentUser();
+				$scope.textareashow = [];
+				$scope.collapseReplies = [];
+				$scope.reply = [];
 				$scope.fetchAllCollectibles();
 				$scope.getVoteStartDate($scope.collectibleName);
 			}

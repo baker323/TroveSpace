@@ -4,6 +4,7 @@
 var app = angular.module('myApp', [
   'ngRoute',
   'ngCookies',
+  'angularMoment',
   'myApp.view1',
   'myApp.view2',
   'myApp.login',
