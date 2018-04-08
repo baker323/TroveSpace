@@ -52,11 +52,15 @@
   <body>
     <!--Remove this header later-->
     <nav class="navbar navbar-light bg-light" justify-content-center>
-      <span class=" mb-0 h2 mx-auto">Troves</span>
+      <span ng-hide="followedTroves" class=" mb-0 h2 mx-auto">Troves</span>
+	  <span ng-show="followedTroves" class=" mb-0 h2 mx-auto">Followed Troves</span>
     </nav>
-    <!--Header ending-->
 	<div class="row justify-content-center">
-      <button class="btn" onclick="location.href='#!/createTrove'">New Trove</button>
+	  <div class="form-inline my-2 my-lg-0">
+		  <button ng-hide="followedTroves" class="btn mr-sm-2" onclick="location.href='#!/createTrove'">New Trove</button>
+	  	  <button ng-hide="followedTroves" class="btn mr-sm-2" ng-click="fetchFollowedTroves()">Followed Troves</button>
+		  <button ng-show="followedTroves" class="btn mr-sm-2" ng-click="fetchAllTroves()">All Troves</button>
+	  </div>
     </div>
 
     <div ng-show="troves" class="container">

@@ -408,7 +408,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		
 		$scope.fetchCollectUsers($scope.collectibleName);
 		$scope.fetchWishlistUsers($scope.collectibleName);
+		$scope.fetchForSaleUsers($scope.collectibleName);
 		$scope.fetchComments($scope.collectibleName);
+		$scope.fetchForSaleStatus($scope.collectibleName);
 	}
 	
 	$scope.getCurrentUser = function() {
@@ -561,6 +563,13 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		});
 	}
 	
+	$scope.fetchForSaleUsers = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers').once('value').then(function(snapshot) {
+			$scope.forSaleUsers = snapshot.toJSON();
+			$scope.$apply();
+		});
+	}
+	
 	$scope.viewCollectUser = function(userId) {
 		$timeout(function() {
 			$('#viewUserListModal').modal('hide');
@@ -571,6 +580,13 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 	$scope.viewWishlistUser = function(userId) {
 		$timeout(function() {
 			$('#viewWishlistModal').modal('hide');
+			window.location.href = '#!/viewProfile?'+userId;
+		});
+	}
+	
+	$scope.viewForSaleUser = function(userId) {
+		$timeout(function() {
+			$('#viewForSaleModal').modal('hide');
 			window.location.href = '#!/viewProfile?'+userId;
 		});
 	}
@@ -699,6 +715,54 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				$scope.fetchComments($scope.collectibleName);
 				$scope.$apply();
 			});
+		});
+	}
+	
+	$scope.markAsForSale = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers/' + $scope.currentUser.uid).set({
+			dateAdded: (new Date()).getTime(),
+			username: $scope.currentUser.displayName
+		}).then(function() {
+			firebase.database().ref('users/' + $scope.currentUser.uid + '/shareEmail').transaction(function(votes) {
+				var newVotes = (votes || 0) + 1;
+				return newVotes;
+			});
+			
+			firebase.database().ref('collectibles/' + collectibleName + '/forSaleCount').transaction(function(votes) {
+				var newVotes = (votes || 0) + 1;
+				return newVotes;
+			});
+			
+			$rootScope.error("A listing for this item has been created. Your email will be visible to other users.");
+			$scope.updateView();
+		});
+	}
+	
+	$scope.markAsNotForSale = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers/' + $scope.currentUser.uid).remove().then(function() {
+			firebase.database().ref('users/' + $scope.currentUser.uid + '/shareEmail').transaction(function(votes) {
+				var newVotes = votes - 1;
+				return newVotes;
+			});
+			
+			firebase.database().ref('collectibles/' + collectibleName + '/forSaleCount').transaction(function(votes) {
+				var newVotes = votes - 1;
+				return newVotes;
+			});
+			
+			$rootScope.error("Your listing for this item has been removed.");
+			$scope.updateView();
+		});
+	}
+	
+	$scope.fetchForSaleStatus = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			if (snapshot.val() != null) {
+				$scope.forSale = snapshot.val().dateAdded;
+				$scope.$apply();
+			} else {
+				$scope.forSale = null;
+			}
 		});
 	}
 

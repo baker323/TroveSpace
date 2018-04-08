@@ -132,6 +132,8 @@ angular.module('myApp.collectibleSearch', ['ngRoute', 'ngCookies'])
 					name: collectibleName,
 					category: troveName
 				});
+				
+				firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName).remove();
 
 				$rootScope.error("Item successfully added.");
 			} else {

@@ -23,6 +23,23 @@ angular.module('myApp.troves', ['ngRoute', 'ngCookies'])
 				$rootScope.error("There are not currently any troves.");
 			} else {
 				$scope.troves = snapshot.toJSON();
+				$scope.followedTroves = false;
+				$scope.$apply();
+				snapshot.forEach(function(childSnapshot) {
+					$scope.fetchCollectibles(childSnapshot.key);
+				});
+			}
+		});
+	}
+	
+	$scope.fetchFollowedTroves = function() {
+		var user = $scope.currentUser;
+		firebase.database().ref('users/' + user.uid + '/followedTroves').once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				$rootScope.error("You are currently not following any troves.");
+			} else {
+				$scope.troves = snapshot.toJSON();
+				$scope.followedTroves = true;
 				$scope.$apply();
 				snapshot.forEach(function(childSnapshot) {
 					$scope.fetchCollectibles(childSnapshot.key);

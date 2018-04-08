@@ -60,7 +60,7 @@
 		  </select>
 		  <button ng-hide="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchWishlist()">View Wishlist</button>
 		  <button ng-show="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchCollectiblesInCollection(currentFolder)">View Collection</button>
-		  <button ng-show="collection" class="btn btn-outline mr-sm-2" data-toggle="modal" data-target="#contactUserModal">Contact Info</button>
+		  <button ng-show="otherUser.shareEmail" class="btn btn-outline mr-sm-2" data-toggle="modal" data-target="#contactUserModal">Contact Info</button>
 	  </div>
     </div>
     <div ng-show="currentFolder" class="container">

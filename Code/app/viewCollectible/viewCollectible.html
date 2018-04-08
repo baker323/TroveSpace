@@ -53,9 +53,15 @@
 				<a class="float-right" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				  <i class="material-icons md-36 float-right hover">expand_more</i>
 				</a>
-				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-				  <p class="dropdown-item text-center unbold hover mb-0" href="" ng-click="voteForDuplicate()">
-					Mark as Duplicate
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="padding-bottom: 15px">
+				  <p class="dropdown-item unbold hover mb-0" href="" ng-click="voteForDuplicate()">
+					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">flag</i> Mark as Duplicate
+				  </p>
+				  <p ng-show="dateAddedToCollection" ng-if="forSale==null" class="dropdown-item unbold hover mb-0" href="" ng-click="markAsForSale(collectibleName)">
+					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">shopping_cart</i> Mark as For Sale
+				  </p>
+				  <p ng-show="dateAddedToCollection" ng-if="forSale!=null" class="dropdown-item unbold hover mb-0" href="" ng-click="markAsNotForSale(collectibleName)">
+					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">remove_shopping_cart</i> Mark as Not For Sale
 				  </p>
 			  </div>
           </h3>
@@ -106,13 +112,13 @@
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers' && key!='forSaleCount'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers'  && key!='forSaleCount'" class="form-group">
              <label for="exampleInput1">Last Edited By</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
@@ -148,8 +154,23 @@
 			  </div>
 		  </div>
 			  
+		  <div ng-show="collectible.forSaleCount!=null" class="form-group">
+			<label for="exampleInput1">Marked As For Sale <i ng-show="forSale" style="vertical-align: bottom" class="material-icons">check</i> {{forSale | amTimeAgo}}</label>
+				<div ng-hide="collectible.forSaleCount==0" class="input-group">
+					 <input ng-show="collectible.forSaleCount==1" value="{{collectible.forSaleCount}} Person" class="form-control" disabled>
+					 <input ng-show="collectible.forSaleCount>1 || collectible.forSaleCount==0" value="{{collectible.forSaleCount}} People" class="form-control" disabled>
+					 <span class="input-group-btn">
+				   		<button data-toggle="modal" data-target="#viewForSaleModal" type="button" class="btn btn-primary">View All</button>
+				     </span>
+				</div>
+			  <div ng-show="collectible.forSaleCount==0">
+			    <input ng-show="collectible.forSaleCount==1" value="{{collectible.forSaleCount}} Person" class="form-control" disabled>
+				<input ng-show="collectible.forSaleCount>1 || collectible.forSaleCount==0" value="{{collectible.forSaleCount}} People" class="form-control" disabled>
+			  </div>
+		  </div>
+			  
            <div ng-show="dateAddedToCollection" class="form-group">
-			   <label for="exampleInput1">Count</label>
+			   <label for="exampleInput1">How Many Owned</label>
                <div class="input-group">
 			   	   <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
 				   <span class="input-group-btn">
@@ -157,6 +178,7 @@
 				   </span>
 			   </div>
            </div>
+			  
 		   <div ng-hide="pending" class="form-group">
 			   <label for="exampleInput1">Upload Image:</label>
 			   <input id="collectibleImage" ng-model="collectibleImage" type="file" accept="image/*">
@@ -192,7 +214,7 @@
 					<div class="row">
 						<textarea ng-model="comment.text" class="form-control" rows="3" disabled></textarea>
 						<div style="text-align:right; display:block; width:100%">
-							<i ng-show="comment.upvoteUsers[currentUser.uid]==true" class="material-icons hover" style="vertical-align: bottom; color:green" ng-click="upvoteComment(comment.key)">thumb_up</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==true" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="upvoteComment(comment.key)">thumb_up</i> {{comment.upvotes}} <i ng-show="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons hover" style="vertical-align: bottom; color:red">thumb_down</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons md-dark hover" style="vertical-align: bottom">thumb_down</i> {{comment.downvotes}} <i class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="textareashow[comment.key] = !textareashow[comment.key]">chat</i> Reply<span ng-show="currentUser.displayName==comment.user"><i class="material-icons md-dark hover" ng-click="deleteComment(comment.key)" style="vertical-align: bottom">delete</i>Delete</span>
+							<i ng-show="comment.upvoteUsers[currentUser.uid]==true" class="material-icons hover" style="vertical-align: bottom; color:green" ng-click="upvoteComment(comment.key)">thumb_up</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==true" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="upvoteComment(comment.key)">thumb_up</i> {{comment.upvotes}} <i ng-show="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons hover" style="vertical-align: bottom; color:red">thumb_down</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons md-dark hover" style="vertical-align: bottom">thumb_down</i> {{comment.downvotes}} <i class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="textareashow[comment.key] = !textareashow[comment.key]">comment</i> Reply<span ng-show="currentUser.displayName==comment.user"><i class="material-icons md-dark hover" ng-click="deleteComment(comment.key)" style="vertical-align: bottom">delete</i>Delete</span>
 						</div>
 						<div style="margin-left: 100px;" ng-show="textareashow[comment.key]" class="input-group form-group">
 							<input ng-model="reply[comment.key]" class="form-control" placeholder="Enter Reply">
@@ -287,6 +309,30 @@
 			<div class="list-group">
 			  <a href="" ng-click="viewWishlistUser(key)" ng-repeat="(key, value) in wishlistUsers" name="message" class="list-group-item">
 				<i style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
+			  </a>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="viewForSaleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 class="modal-title" id="modalLabel">For Sale Listings</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<div class="list-group">
+			  <a href="" ng-click="viewForSaleUser(key)" ng-repeat="(key, value) in forSaleUsers" name="message" class="list-group-item">
+				<i style="vertical-align: bottom" class="material-icons hover">person</i> {{value.username}}
 			  </a>
 			</div>
 		  </div>
