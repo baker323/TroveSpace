@@ -38,6 +38,43 @@
   .unbold {
 	font-weight: normal;
   }
+	.star-rating{
+		font-size: 0;
+	}
+	.star-rating__wrap{
+		display: inline-block;
+		font-size: 1rem;
+	}
+	.star-rating__wrap:after{
+		content: "";
+		display: table;
+		clear: both;
+	}
+	.star-rating__ico{
+		float: right;
+		padding-left: 2px;
+		cursor: pointer;
+		color: #007bff;
+		font-size: 32px;
+	}
+	.star-rating-2__ico{
+		float: right;
+		padding-left: 2px;
+		color: gold;
+		font-size: 32px;
+	}
+	.star-rating__ico:last-child{
+		padding-left: 0;
+	}
+	.star-rating__input{
+		display: none;
+	}
+	.star-rating__ico:hover:before,
+	.star-rating__ico:hover ~ .star-rating__ico:before,
+	.star-rating__input:checked ~ .star-rating__ico:before
+	{
+		content: "\f005";
+	}
 
   </style>
 
@@ -102,6 +139,106 @@
 			    <img width="100%" class="img-responsive cover" ng-src="{{pendingimage}}">
 			  </div>
 		    </div>
+			<div class="form-group">
+             <label ng-show="averageRating!=0" for="exampleInput1">User Rating: {{averageRating}} Stars</label>
+			 <label ng-show="averageRating==0" for="exampleInput1">User Rating: None</label>
+             <div class="star-rating">
+				  <div ng-show="averageRating==0" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+				  </div>
+				  <div ng-show="averageRating==5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==4.5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-half-empty fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==4" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==3.5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-half-empty fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==3" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==2.5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-half-empty fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==2" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==1.5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-half-empty fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==1" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star fa-lg"></label>
+				  </div>
+				 <div ng-show="averageRating==0.5" class="star-rating__wrap">
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-o fa-lg"></label>
+					<label class="star-rating-2__ico fa fa-star-half-empty fa-lg"></label>
+				  </div>
+				</div>
+            </div>
+			<div class="form-group">
+             <label for="exampleInput1">My Rating</label>				
+			    <div class="star-rating">
+				  <div class="star-rating__wrap">
+					<input ng-checked="myRating==5" ng-click="rateStars(5)" class="star-rating__input" id="star-rating-5" type="radio" name="rating" value="5">
+					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-5"></label>
+					<input ng-checked="myRating==4" ng-click="rateStars(4)" class="star-rating__input" id="star-rating-4" type="radio" name="rating" value="4">
+					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-4"></label>
+					<input ng-checked="myRating==3" ng-click="rateStars(3)" class="star-rating__input" id="star-rating-3" type="radio" name="rating" value="3">
+					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-3"></label>
+					<input ng-checked="myRating==2" ng-click="rateStars(2)" class="star-rating__input" id="star-rating-2" type="radio" name="rating" value="2">
+					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-2"></label>
+					<input ng-checked="myRating==1" ng-click="rateStars(1)" class="star-rating__input" id="star-rating-1" type="radio" name="rating" value="1">
+					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-1"></label>
+				  </div>
+				</div>
+            </div>
             <div class="form-group">
              <label for="exampleInput1">Title</label>
              <input ng-model="collectibleName" class="form-control cover" id="collectibleName" disabled>
@@ -112,13 +249,13 @@
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers' && key!='forSaleCount'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers' && key!='forSaleCount' && key!='ratingUsers' && key!='ratingCount'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
              <input ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
 			  
-		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers'  && key!='forSaleCount'" class="form-group">
+		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers'  && key!='forSaleCount'  && key!='ratingUsers' && key!='ratingCount'" class="form-group">
              <label for="exampleInput1">Last Edited By</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>

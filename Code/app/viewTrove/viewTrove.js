@@ -106,9 +106,20 @@ angular.module('myApp.viewTrove', ['ngRoute', 'ngCookies'])
 					dateAdded: (new Date).getTime(),
 					name: collectibleName,
 					category: troveName
-				});
+				}).then(function() {
+					firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName).once('value').then(function(snapshot) {
+						if (snapshot.val() != null) {
+							firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName).remove();
 				
-				firebase.database().ref('users/' + user.uid + '/wishlist/' + collectibleName).remove();
+							firebase.database().ref('collectibles/' + collectibleName + '/wishlistCount').transaction(function(votes) {
+								var newVotes = votes - 1;
+								return newVotes;
+							});
+
+							firebase.database().ref('collectibles/' + collectibleName + '/wishlistUsers').child($scope.currentUser.uid).remove();
+						}
+					});
+				});
 
 				$rootScope.error("Item successfully added.");
 			} else {

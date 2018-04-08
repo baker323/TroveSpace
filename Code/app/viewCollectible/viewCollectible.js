@@ -411,6 +411,9 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 		$scope.fetchForSaleUsers($scope.collectibleName);
 		$scope.fetchComments($scope.collectibleName);
 		$scope.fetchForSaleStatus($scope.collectibleName);
+		$scope.fetchRatingCount($scope.collectibleName);
+		$scope.fetchMyRating($scope.collectibleName);
+		$scope.fetchAverageRating($scope.collectibleName);
 	}
 	
 	$scope.getCurrentUser = function() {
@@ -762,6 +765,69 @@ angular.module('myApp.viewCollectible', ['ngRoute', 'ngCookies'])
 				$scope.$apply();
 			} else {
 				$scope.forSale = null;
+			}
+		});
+	}
+	
+	$scope.rateStars = function(stars) {
+		console.log("Rate "+stars+" stars.");
+		firebase.database().ref('collectibles/' + $scope.collectibleName + '/ratingUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			if (snapshot.val() == null) {
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/ratingCount').transaction(function(votes) {
+					var newVotes = (votes || 0) + 1;
+					$scope.ratingCount = newVotes;
+					return newVotes;
+				}, function(error, committed, snapshot) {
+					firebase.database().ref('collectibles/' + $scope.collectibleName + '/ratingUsers').child($scope.currentUser.uid).set(stars).then(function() {
+						$scope.fetchAverageRating($scope.collectibleName);
+						$scope.fetchMyRating($scope.collectibleName);
+					});
+				});
+			} else {
+				firebase.database().ref('collectibles/' + $scope.collectibleName + '/ratingUsers').child($scope.currentUser.uid).set(stars).then(function() {
+					$scope.fetchAverageRating($scope.collectibleName);
+					$scope.fetchMyRating($scope.collectibleName);
+				});
+			}
+		});
+	}
+	
+	$scope.fetchMyRating = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/ratingUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			if (snapshot.val() != null) {
+				$scope.myRating = snapshot.val();
+				$scope.$apply();
+			} else {
+				$scope.myRating = null;
+				$scope.$apply();
+			}
+		});
+	}
+	
+	$scope.fetchAverageRating = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/ratingUsers').once('value').then(function(snapshot) {
+			if (snapshot.val() != null) {
+				$scope.totalRating = 0;
+				snapshot.forEach(function(childSnapshot) {
+					$scope.totalRating += childSnapshot.val();
+				});
+				$scope.averageRating = $scope.totalRating/$scope.ratingCount;
+				$scope.averageRating = Math.round($scope.averageRating*2)/2;
+				$scope.$apply();
+			} else {
+				$scope.averageRating = 0;
+				$scope.$apply();
+			}
+		});
+	}
+	
+	$scope.fetchRatingCount = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/ratingCount').once('value').then(function(snapshot) {
+			if (snapshot.val() != null) {
+				$scope.ratingCount = snapshot.val();
+				$scope.$apply();
+			} else {
+				$scope.ratingCount = null;
 			}
 		});
 	}

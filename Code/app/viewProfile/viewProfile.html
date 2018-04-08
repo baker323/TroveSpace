@@ -41,6 +41,11 @@
       right: 0;
     }
 		
+	.for-sale {
+		position: absolute;
+      	left: 0;
+	}
+		
 	.cover {
 	  border-radius: 5px;
 	  object-fit: cover;
@@ -82,6 +87,7 @@
                         <a ng-click="addToWishlist(collectible.name, collectible.category)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
+					<img ng-click="viewCollectible(collectible.name)" ng-show="forSaleCollectibles[collectible.name]" height="30%" class="img-responsive for-sale" src="saleLarge.png">
 					<img ng-click="viewCollectible(collectible.name)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[collectible.name]}}">
                 </div>
               </div>

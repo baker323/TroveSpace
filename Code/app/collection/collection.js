@@ -145,6 +145,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 					$scope.$apply();
 					snapshot.forEach(function(childSnapshot) {
 						$scope.getCollectibleImage(childSnapshot.key);
+						$scope.getForSaleCollectibles(childSnapshot.key);
 					});
 				}
 			});
@@ -160,6 +161,15 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 		}).catch(function(error) {
 			$scope.images[collectibleName] = "no_image_available.jpg";
 			$scope.$apply();
+		});
+	}
+	
+	$scope.getForSaleCollectibles = function(collectibleName) {
+		firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers/' + $scope.currentUser.uid).once('value').then(function(snapshot) {
+			if (snapshot.val() != null) {
+				$scope.forSaleCollectibles[collectibleName] = snapshot.val().dateAdded;
+				$scope.$apply();
+			}
 		});
 	}
 	
@@ -229,6 +239,19 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 
 						firebase.database().ref('collectibles/' + collectibleName + '/collectUsers').child($scope.currentUser.uid).remove();
 						
+						firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers').child($scope.currentUser.uid).once('value').then(function(snapshot) {
+							if (snapshot.val() != null) {
+								firebase.database().ref('collectibles/' + collectibleName + '/forSaleUsers').child($scope.currentUser.uid).remove();
+								
+								firebase.database().ref('collectibles/' + collectibleName + '/forSaleCount').transaction(function(votes) {
+									var newVotes = votes - 1;
+									return newVotes;
+								}, function(error, committed, snapshot) {
+
+								});
+							}
+						});
+						
 					} else {
 						firebase.database().ref('users/' + user.uid + '/folders/' + folderName + '/collectibles').child(collectibleName).remove()
 						.then(function() {
@@ -274,6 +297,7 @@ angular.module('myApp.collection', ['ngRoute', 'ngCookies'])
 	$scope.$on('$viewContentLoaded', function() {
 		if (window.location.href.includes('collection')) {
 			$scope.images = [];
+			$scope.forSaleCollectibles = [];
 			$scope.getCurrentUser();
 		}
 	});

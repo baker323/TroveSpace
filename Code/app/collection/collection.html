@@ -56,6 +56,11 @@
 	.option {
 	  background-color: #ffffff;
 	}
+	
+	.for-sale {
+	  position: absolute;
+      left: 0;
+	}
 
     </style>
   </head>
@@ -83,7 +88,8 @@
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
                     <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
-					<img height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
+					<img ng-click="viewCollectible(key)" ng-show="forSaleCollectibles[key]" height="30%" class="img-responsive for-sale" src="saleLarge.png">
+					<img ng-click="viewCollectible(key)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>
             </div>
