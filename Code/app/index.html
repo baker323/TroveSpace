@@ -72,6 +72,10 @@
 	    .material-icons.md-18 { font-size: 18px; }
 	    .hover {
 			cursor: pointer;
+			-webkit-user-select: none; /* Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+/Edge */
+			user-select: none; /* Standard */
 	    }
 	    .default {
 			cursor: default;
@@ -110,12 +114,10 @@
         <a ng-show="notifications" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="material-icons red hover">notifications_active</i>
         </a>
-        <div class="dropdown-menu" style="width:300px" aria-labelledby="navbarDropdown">
-          <div class="text-center">
-            <p class="default text-left dropdown-item" ng-repeat="(key, value) in notifications">
+        <div class="dropdown-menu" style="width:auto" aria-labelledby="navbarDropdown">
+          <div class="text-left dropdown-item" ng-repeat="(key, value) in notifications">
               <a class="hover" ng-click="viewNotification(key)">{{key}} has been edited.</a>
-			  <i class="material-icons md-dark md-18 float-right" ng-click="removeNotification(key)">clear</i>
-            </p>
+			  <i class="material-icons md-dark md-18 hover" ng-click="removeNotification(key)">clear</i>
           </div>
         </div>
       </li>
