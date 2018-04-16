@@ -101,6 +101,7 @@ angular.module('myApp.collectibleSearch', ['ngRoute', 'ngCookies'])
 	
 	$scope.addToCollection = function(collectibleName, folderName, troveName) {
 		var user = firebase.auth().currentUser;
+		console.log(folderName);
 		
 		firebase.database().ref('users/' + user.uid + '/collection/' + collectibleName).once('value').then(function(snapshot) {
 			if (snapshot.val() == null) {
