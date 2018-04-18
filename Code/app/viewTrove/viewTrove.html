@@ -40,15 +40,15 @@
       position: absolute;
       right: 0;
     }
-		
+
 	.cover {
 	  border-radius: 5px;
 	  object-fit: cover;
 	}
-		
+
 	.hover {
 	  cursor: pointer;
-	  -webkit-user-select: none; /* Safari */        
+	  -webkit-user-select: none; /* Safari */
 	  -moz-user-select: none; /* Firefox */
 	  -ms-user-select: none; /* IE10+/Edge */
 	  user-select: none; /* Standard */
@@ -58,7 +58,7 @@
 	  position: absolute;
 	  right: 15px;
 	}
-	
+
 	.dropdown-menu-right {
 	  right: 0;
 	  left: auto;
@@ -82,7 +82,7 @@
     </nav>
 	<div class="row justify-content-center">
 	  <div class="form-inline my-2 my-lg-0">
-		  <button class="btn mr-sm-2" ng-click="createNewCollectible(troveName)">New Collectible</button>
+		  <button name="newCollectible" class="btn mr-sm-2" ng-click="createNewCollectible(troveName)">New Collectible</button>
 	  	  <button ng-hide="following" class="btn mr-sm-2" ng-click="followTrove(troveName)">Follow Trove</button>
 		  <button ng-show="following" class="btn mr-sm-2" ng-click="unfollowTrove(troveName)">Unfollow Trove</button>
 	  </div>
@@ -96,16 +96,16 @@
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(key)" href="" id="title">{{key}}</h5>
                     <div class="dropdown">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button name="addButton" class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Add
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a ng-show="collections" ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
-						<a ng-hide="collections" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
-                        <a ng-click="addToWishlist(key, troveName)" class="dropdown-item" href="">Add to Wishlist</a>
+                        <a name="addToFolder" ng-show="collections" ng-click="addToFolder(key)" class="dropdown-item" href="">Add to Collection</a>
+						<a name="error_addToFolder" ng-hide="collections" ng-click="error('There are no folders that match this collectible. Please create a folder.')" class="dropdown-item" href="">Add to Collection</a>
+                        <a name="addToWishlist" ng-click="addToWishlist(key, troveName)" class="dropdown-item" href="">Add to Wishlist</a>
                       </div>
                     </div>
-					<img ng-click="viewCollectible(key)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
+					<img name="editCollectibleButton" ng-click="viewCollectible(key)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@
         </div>
       </div>
     </div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="addToCollectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -127,7 +127,7 @@
 		  <div class="modal-body">
 			<div class="row">
 			  <div name="message" class="col col-lg-9">
-				Please select a folder: 
+				Please select a folder:
 				<select ng-model="addToFolderName" class="form-control">
 					<option ng-repeat="(key, value) in collections">{{key}}</option>
 				</select>
@@ -135,12 +135,12 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="addToCollection(collectibleName, addToFolderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button ng-click="addToCollection(collectibleName, addToFolderName, troveName)" name="confirmAddToCollection" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

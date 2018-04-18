@@ -64,10 +64,10 @@
               </div>
               <div class="row justify-content-center my-3 mb-4">
                 <div class="col-4 text-center">
-                  <button ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
+                  <button name="updateUserInfo" ng-click="updateUserInfo(userInfo.email, userInfo.username, userInfo.firstName, userInfo.lastName)" type="button" id="btn" class="btn btn-success">Save</button>
                 </div>
                 <div class="col-4 text-center">
-                  <button data-toggle="modal" data-target="#deleteAccountModal" type="button" id="btn" class="btn btn-warning">Delete Account</button>
+                  <button name="delAcc" data-toggle="modal" data-target="#deleteAccountModal" type="button" id="btn" class="btn btn-warning">Delete Account</button>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -94,12 +94,12 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="deleteAccount(deleteAccountPassword)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button ng-click="deleteAccount(deleteAccountPassword)" name="confirmAcc" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

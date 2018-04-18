@@ -40,7 +40,7 @@
       position: absolute;
       right: 0;
     }
-		
+
 	.cover {
 	  border-radius: 5px;
 	  object-fit: cover;
@@ -57,7 +57,7 @@
     </nav>
 	<div class="row justify-content-center">
 	  <div class="form-inline my-2 my-lg-0">
-		  <button ng-hide="followedTroves" class="btn mr-sm-2" onclick="location.href='#!/createTrove'">New Trove</button>
+		  <button name="addNewTrove" ng-hide="followedTroves" class="btn mr-sm-2" onclick="location.href='#!/createTrove'">New Trove</button>
 	  	  <button ng-hide="followedTroves" class="btn mr-sm-2" ng-click="fetchFollowedTroves()">Followed Troves</button>
 		  <button ng-show="followedTroves" class="btn mr-sm-2" ng-click="fetchAllTroves()">All Troves</button>
 	  </div>
@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-	
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

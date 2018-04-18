@@ -42,7 +42,7 @@
       position: absolute;
       right: 0;
     }
-		
+
 	.cover {
 	  border-radius: 5px;
 	  object-fit: cover;
@@ -52,11 +52,11 @@
 	  background-color: #dddddd;
 	  height: 100%;
 	}
-		
+
 	.option {
 	  background-color: #ffffff;
 	}
-	
+
 	.for-sale {
 	  position: absolute;
       left: 0;
@@ -74,9 +74,9 @@
 		  <select ng-change="fetchCollectiblesInCollection(currentFolder)" ng-show="collections" ng-model="currentFolder" class="btn select mr-sm-2">
 		  <option class="option" ng-repeat="(key, value) in collections">{{key}}</option>
 		  </select>
-		  <button class="btn mr-sm-2" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
-		  <button ng-show="currentFolder" class="btn mr-sm-2" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
-		  <button ng-show="currentFolder" class="btn btn-outline mr-sm-2" ng-click="deleteFolder(currentFolder)">Delete</button>
+		  <button name="newFolder" class="btn mr-sm-2" data-toggle="modal" data-target="#createFolderModal">New Folder</button>
+		  <button name="renameFolder" ng-show="currentFolder" class="btn mr-sm-2" data-toggle="modal" data-target="#renameFolderModal">Rename</button>
+		  <button name="deleteFolder" ng-show="currentFolder" class="btn btn-outline mr-sm-2" ng-click="deleteFolder(currentFolder)">Delete</button>
 	  </div>
     </div>
     <div ng-show="currentFolder" class="container">
@@ -86,8 +86,8 @@
             <div class="row justify-content-center justify-content-md-start">
               <div ng-repeat="(key, value) in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
                 <div class="card" id="postCheck">
-                    <h5 ng-click="viewCollectible(key)" id="title">{{key}}</h5>
-                    <button ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
+                    <h5 name="editCollectibleInCollection" ng-click="viewCollectible(key)" id="title">{{key}}</h5>
+                    <button name="removeFromCollection" ng-click="removeFromCollection(key, currentFolder)" type="button" id="btn" class="btn btn-light">Remove</button>
 					<img ng-click="viewCollectible(key)" ng-show="forSaleCollectibles[key]" height="30%" class="img-responsive for-sale" src="saleLarge.png">
 					<img ng-click="viewCollectible(key)" height="80%" width="100%" class="img-responsive cover" ng-src="{{images[key]}}">
                 </div>
@@ -97,7 +97,7 @@
         </div>
       </div>
     </div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -112,7 +112,7 @@
 			<div class="row">
 			  <div name="message" class="col col-lg-9">
 				Please name your folder: <input ng-model="folderName" class="form-control" id="folderName" placeholder="Folder Name" required>
-				Please chose a category: 
+				Please chose a category:
 				<select ng-model="troveName" class="form-control">
 					<option ng-repeat="(key, value) in troves">{{key}}</option>
 				</select>
@@ -120,12 +120,12 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="createFolder(folderName, troveName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button ng-click="createFolder(folderName, troveName)" name="confirmFolder" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -144,12 +144,12 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-click="renameFolder(currentFolder, newName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button ng-click="renameFolder(currentFolder, newName)" name="confirmNewName" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

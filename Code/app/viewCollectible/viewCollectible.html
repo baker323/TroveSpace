@@ -15,22 +15,22 @@
   #head {
     font-weight: 500;
   }
-	  
+
   .card {
     padding-bottom: 100px;
   }
-	  
+
   .cover {
 	border-radius: 5px;
   }
-	  
+
   .material-icons.md-36 { font-size: 36px; }
-	  
+
   .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-	  
+
   .hover {
 	cursor: pointer;
-	-webkit-user-select: none; /* Safari */        
+	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
@@ -119,15 +119,15 @@
                 </div>
 			  </div>
               <div class="col-6">
-                <button ng-click="incrementKeepVotes(collectibleName)" type="button" id="edit" class="btn btn-success">Approve</button>
-		  		<button ng-click="incrementRevertVotes(collectibleName)" type="button" id="edit" class="btn btn-danger">Disapprove</button>
+                <button name="approveButton" ng-click="incrementKeepVotes(collectibleName)" type="button" id="edit" class="btn btn-success">Approve</button>
+		  		<button name="disapproveButton" ng-click="incrementRevertVotes(collectibleName)" type="button" id="edit" class="btn btn-danger">Disapprove</button>
               </div>
             </div>
           </div>
 			<hr />
         </div>
-        
-			
+
+
           <div class="card-body">
 			<div class="form-group row">
 			  <div class="col-6">
@@ -223,7 +223,7 @@
 				</div>
             </div>
 			<div class="form-group">
-             <label for="exampleInput1">My Rating</label>				
+             <label for="exampleInput1">My Rating</label>
 			    <div class="star-rating">
 				  <div class="star-rating__wrap">
 					<input ng-checked="myRating==5" ng-click="rateStars(5)" class="star-rating__input" id="star-rating-5" type="radio" name="rating" value="5">
@@ -248,21 +248,21 @@
             <textarea ng-model="collectible.description" class="form-control" id="collectibleDescription" rows="3"></textarea>
 			<textarea ng-show="collectible.pendingdescription" ng-model="collectible.pendingdescription" class="form-control" id="pendingCollectibleDescription" rows="3" disabled></textarea>
           </div>
-			  
+
 		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key!='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers' && key!='forSaleCount' && key!='ratingUsers' && key!='ratingCount'" class="form-group">
              <label for="exampleInput1">{{key}}</label>
-             <input ng-model="collectible[key]" class="form-control">
+             <input name="editExtra" ng-model="collectible[key]" class="form-control">
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
-			  
+
 		  <div ng-repeat="(key, value) in collectible" ng-if="key!='description' && key!='category' && key!='users' && key!='votes' && key!='name' && !key.includes('pending') && !key.includes('duplicate') && key=='lastEditedBy' && key!='collectUsers' && key!='collectCount' && !key.includes('wishlist') && key!='comments' && key!='forSaleUsers'  && key!='forSaleCount'  && key!='ratingUsers' && key!='ratingCount'" class="form-group">
              <label for="exampleInput1">Last Edited By</label>
              <input ng-model="collectible[key]" class="form-control" disabled>
 			 <input ng-show="collectible['pending'+key]" ng-model="collectible['pending'+key]" class="form-control" disabled>
           </div>
-			  
+
 		  <div ng-show="collectible.collectCount!=null" class="form-group">
-			<label for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | amTimeAgo}}</label>
+			<label name="addedToCollection" for="exampleInput1">Added to Collection <i ng-show="dateAddedToCollection" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToCollection | amTimeAgo}}</label>
 				<div ng-hide="collectible.collectCount==0" class="input-group">
 					 <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
@@ -275,9 +275,9 @@
 				<input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
 			  </div>
 		  </div>
-			  
+
 		  <div ng-show="collectible.wishlistCount!=null" class="form-group">
-			<label for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToWishlist | amTimeAgo}}</label>
+			<label name="addedToWishlist" for="exampleInput1">Added to Wishlist <i ng-show="dateAddedToWishlist" style="vertical-align: bottom" class="material-icons">check</i> {{dateAddedToWishlist | amTimeAgo}}</label>
 				<div ng-hide="collectible.wishlistCount==0" class="input-group">
 					 <input ng-show="collectible.wishlistCount==1" value="{{collectible.wishlistCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.wishlistCount>1 || collectible.wishlistCount==0" value="{{collectible.wishlistCount}} People" class="form-control" disabled>
@@ -290,7 +290,7 @@
 				<input ng-show="collectible.wishlistCount>1 || collectible.wishlistCount==0" value="{{collectible.wishlistCount}} People" class="form-control" disabled>
 			  </div>
 		  </div>
-			  
+
 		  <div ng-show="collectible.forSaleCount!=null" class="form-group">
 			<label for="exampleInput1">Marked As For Sale <i ng-show="forSale" style="vertical-align: bottom" class="material-icons">check</i> {{forSale | amTimeAgo}}</label>
 				<div ng-hide="collectible.forSaleCount==0" class="input-group">
@@ -305,7 +305,7 @@
 				<input ng-show="collectible.forSaleCount>1 || collectible.forSaleCount==0" value="{{collectible.forSaleCount}} People" class="form-control" disabled>
 			  </div>
 		  </div>
-			  
+
            <div ng-show="dateAddedToCollection" class="form-group">
 			   <label for="exampleInput1">How Many Owned</label>
                <div class="input-group">
@@ -315,16 +315,16 @@
 				   </span>
 			   </div>
            </div>
-			  
+
 		   <div ng-hide="pending" class="form-group">
 			   <label for="exampleInput1">Upload Image:</label>
 			   <input id="collectibleImage" ng-model="collectibleImage" type="file" accept="image/*">
 		   </div>
        </div>
-		
+
        <div class="text-center">
 		<button ng-click="goBack()" type="button" class="btn btn-danger">Back</button>
-		<button ng-click="editCollectible(collectibleName)" type="button" class="btn btn-warning">Submit Edit</button>
+		<button name="submitEditCollectible" ng-click="editCollectible(collectibleName)" type="button" class="btn btn-warning">Submit Edit</button>
       </div>
     </div>
     <div class="card card-nav-tabs">
@@ -345,7 +345,7 @@
 			  </div>
 			  <div ng-repeat="comment in comments" class="col-12">
 			  		<div class="row">
-						<i class="material-icons md-dark" style="vertical-align: bottom">person</i> {{comment.user}} - 
+						<i class="material-icons md-dark" style="vertical-align: bottom">person</i> {{comment.user}} -
 						{{comment.dateAdded | amTimeAgo}}
 					</div>
 					<div class="row">
@@ -360,7 +360,7 @@
 							</span>
 						</div>
 						<div ng-repeat="replyText in comment.replies" style="margin-left: 100px; text-align:left; display:block; width:100%" class="form-group">
-							<i class="material-icons md-dark" style="vertical-align: bottom">person</i>{{replyText.user}} - 
+							<i class="material-icons md-dark" style="vertical-align: bottom">person</i>{{replyText.user}} -
 							{{replyText.dateAdded | amTimeAgo}}<i class="material-icons md-dark hover" style="vertical-align: bottom" ng-show="currentUser.displayName==replyText.user" ng-click="deleteReply(replyText.key, comment.key)">close</i>
 							<input ng-model="replyText.text" class="form-control" disabled>
 						</div>
@@ -372,7 +372,7 @@
 
 </div>
 </div>
-	
+
 	<!-- Modal -->
 	<div class="modal fade" id="duplicateCollectibleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -386,7 +386,7 @@
 		  <div class="modal-body">
 			<div class="row">
 			  <div ng-hide="collectible.duplicateName" name="message" class="col col-lg-9">
-				Please select the duplicate collectible: 
+				Please select the duplicate collectible:
 				<select ng-model="duplicateCollectibleName" class="form-control">
 					<option ng-repeat="(key, value) in collectibles" ng-if="key!=collectibleName">{{key}}</option>
 				</select>
@@ -407,7 +407,7 @@
 		</div>
 	  </div>
 	</div>
-	
+
 	<!-- Modal -->
 	<div class="modal fade" id="viewUserListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -431,7 +431,7 @@
 		</div>
 	  </div>
 	</div>
-	
+
 	<!-- Modal -->
 	<div class="modal fade" id="viewWishlistModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -455,7 +455,7 @@
 		</div>
 	  </div>
 	</div>
-	
+
 	<!-- Modal -->
 	<div class="modal fade" id="viewForSaleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
