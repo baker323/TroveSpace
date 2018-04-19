@@ -58,8 +58,8 @@
 	<div class="row justify-content-center">
 	  <div class="form-inline my-2 my-lg-0">
 		  <button name="addNewTrove" ng-hide="followedTroves" class="btn mr-sm-2" onclick="location.href='#!/createTrove'">New Trove</button>
-	  	  <button ng-hide="followedTroves" class="btn mr-sm-2" ng-click="fetchFollowedTroves()">Followed Troves</button>
-		  <button ng-show="followedTroves" class="btn mr-sm-2" ng-click="fetchAllTroves()">All Troves</button>
+	  	  <button name="followedTrovesTab" ng-hide="followedTroves" class="btn mr-sm-2" ng-click="fetchFollowedTroves()">Followed Troves</button>
+		  <button name="allTrovesTab" ng-show="followedTroves" class="btn mr-sm-2" ng-click="fetchAllTroves()">All Troves</button>
 	  </div>
     </div>
 

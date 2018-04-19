@@ -83,8 +83,8 @@
 	<div class="row justify-content-center">
 	  <div class="form-inline my-2 my-lg-0">
 		  <button name="newCollectible" class="btn mr-sm-2" ng-click="createNewCollectible(troveName)">New Collectible</button>
-	  	  <button ng-hide="following" class="btn mr-sm-2" ng-click="followTrove(troveName)">Follow Trove</button>
-		  <button ng-show="following" class="btn mr-sm-2" ng-click="unfollowTrove(troveName)">Unfollow Trove</button>
+	  	  <button name="followingTrove" ng-hide="following" class="btn mr-sm-2" ng-click="followTrove(troveName)">Follow Trove</button>
+		  <button name="unfollowingTrove" ng-show="following" class="btn mr-sm-2" ng-click="unfollowTrove(troveName)">Unfollow Trove</button>
 	  </div>
     </div>
     <div class="container">

@@ -1,4 +1,4 @@
-describe('TroveSpace Login', function() {
+describe('TroveSpace Login: ', function() {
 
     // const URL = 'https://baker323.github.io/#!/login';
     const URL = 'http://127.0.0.1:60788/#!/login';
@@ -55,6 +55,10 @@ describe('TroveSpace Login', function() {
         browser.sleep(2000);
         element(by.name('logout')).click();
         browser.sleep(2000);
+    });
+
+    it('should login with new password', function() {
+        browser.get(URL);
 
         element.all(by.model('email')).first().sendKeys('test@test.com');
         element.all(by.model('password')).first().sendKeys('TEST18');
@@ -78,7 +82,6 @@ describe('TroveSpace Login', function() {
         element(by.name('logout')).click();
         browser.sleep(2000);
     });
-
 
     // change Account Information
     it('should successfully change the account information', function() {

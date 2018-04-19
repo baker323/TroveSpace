@@ -65,14 +65,14 @@
 	    .squareEdge {
 		  border-radius: 0px;
 		}
-	    .material-icons.md-dark { 
+	    .material-icons.md-dark {
 			color: rgba(0, 0, 0, 0.54);
 	  	}
     	.material-icons.red { color: red; }
 	    .material-icons.md-18 { font-size: 18px; }
 	    .hover {
 			cursor: pointer;
-			-webkit-user-select: none; /* Safari */        
+			-webkit-user-select: none; /* Safari */
 			-moz-user-select: none; /* Firefox */
 			-ms-user-select: none; /* IE10+/Edge */
 			user-select: none; /* Standard */
@@ -122,13 +122,13 @@
         </div>
       </li>
 	  <li ng-show="loggedIn" class="nav-item">
-        <a class="nav-link" href="#!/troves">View Troves</a>
+        <a name="viewTroves" class="nav-link" href="#!/troves">View Troves</a>
       </li>
       <li ng-show="loggedIn" class="nav-item">
-        <a class="nav-link" href="#!/collection">My Collection</a>
+        <a name="myCollection" class="nav-link" href="#!/collection">My Collection</a>
       </li>
 	  <li ng-show="loggedIn" class="nav-item">
-        <a class="nav-link" href="#!/wishlist">My Wishlist</a>
+        <a name="myWishlist" class="nav-link" href="#!/wishlist">My Wishlist</a>
       </li>
 	  <li ng-hide="loggedIn" class="nav-item">
         <a class="nav-link" href="#!/login">Sign In</a>
@@ -137,30 +137,30 @@
         <a class="nav-link" href="#!/register">Register</a>
       </li>
       <li ng-show="loggedIn" class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a name="settings" class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Settings
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-		  <a class="dropdown-item" href="#!/accinfo">My Account</a>
-          <a class="dropdown-item" href="" data-toggle="modal" data-target="#changePasswordModal">Change Password</a>
+		  <a name="account" class="dropdown-item" href="#!/accinfo">My Account</a>
+          <a name="pwChange" class="dropdown-item" href="" data-toggle="modal" data-target="#changePasswordModal">Change Password</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" ng-click="logout()">Logout</a>
+          <a name="logout" class="dropdown-item" href="#" ng-click="logout()">Logout</a>
         </div>
       </li>
     </ul>
 	<div ng-show="loggedIn" class="nav navbar-nav navbar-right navbar-form">
 		<div id="aa-input-container" class="input-group my-2 my-lg-0">
 		  <div class="input-group-prepend">
-			  <select ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select" id="option">
-				<option class="option">Troves</option>
-				<option class="option">Collectibles</option>
-				<option class="option">My Collection</option>
+			  <select name="searchCategorySelector" ng-change="searchSelection(searchIn)" ng-model="searchIn" class="btn select" id="option">
+				<option name="searchForTroves" class="option">Troves</option>
+				<option name="searchForCollectibles" class="option">Collectibles</option>
+				<option name="searchForMyCollection" class="option">My Collection</option>
 				<option ng-show="onTrovePage" class="option">Current Trove</option>
 			  </select>
 		  </div>
-		  <input ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
+		  <input name="searchTextInput" ng-model="searchQuery" type="search" id="aa-search-input" class="form-control" placeholder="Search TroveSpace" name="search" autocomplete="off">
 		  <div class="input-group-append">
-			<button ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
+			<button name="searchButton" ng-click="searchIndex(searchQuery, searchCategory)" class="btn btn-outline input-group-btn" type="submit">Search </button>
 		  </div>
 		</div>
 	</div>
@@ -203,7 +203,7 @@
 		</div>
 	  </div>
 	  <div class="modal-footer">
-		<button ng-click="changePassword(oldPassword, newPassword)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		<button ng-click="changePassword(oldPassword, newPassword)" name="submitPW" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 	  </div>
 	</div>
   </div>
@@ -214,7 +214,7 @@
   <![endif]-->
 
   <div ng-view></div>
-  
+
   <br />
   <div class="row justify-content-center">
 	  <img class="center" height="20" src="search-by-algolia.png">

@@ -40,12 +40,12 @@
       position: absolute;
       right: 0;
     }
-		
+
 	.for-sale {
 		position: absolute;
       	left: 0;
 	}
-		
+
 	.cover {
 	  border-radius: 5px;
 	  object-fit: cover;
@@ -60,12 +60,12 @@
     </nav>
 	<div class="row justify-content-center">
 	  <div class="form-inline my-2 my-lg-0">
-		  <select ng-hide="wishlist" ng-change="fetchCollectiblesInCollection(currentFolder)" ng-if="collections!=null" ng-model="currentFolder" class="btn select mr-sm-2">
-		  <option class="option" ng-repeat="(key, value) in collections">{{key}}</option>
+		  <select name="selectUserCategory" ng-hide="wishlist" ng-change="fetchCollectiblesInCollection(currentFolder)" ng-if="collections!=null" ng-model="currentFolder" class="btn select mr-sm-2">
+		  <option name="userCategoryOption" class="option" ng-repeat="(key, value) in collections">{{key}}</option>
 		  </select>
-		  <button ng-hide="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchWishlist()">View Wishlist</button>
-		  <button ng-show="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchCollectiblesInCollection(currentFolder)">View Collection</button>
-		  <button ng-show="otherUser.shareEmail" class="btn btn-outline mr-sm-2" data-toggle="modal" data-target="#contactUserModal">Contact Info</button>
+		  <button name="viewWishlistsInUser" ng-hide="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchWishlist()">View Wishlist</button>
+		  <button name="viewCollectionsInUser" ng-show="wishlist" class="btn btn-outline mr-sm-2" ng-click="fetchCollectiblesInCollection(currentFolder)">View Collection</button>
+		  <button name="contactInfo" ng-show="otherUser.shareEmail" class="btn btn-outline mr-sm-2" data-toggle="modal" data-target="#contactUserModal">Contact Info</button>
 	  </div>
     </div>
     <div ng-show="currentFolder" class="container">
@@ -74,7 +74,7 @@
           <div class="container">
             <div class="row justify-content-center justify-content-md-start">
               <div ng-repeat="collectible in collection" class="col-10 col-md-6 col-lg-4" id="postCol">
-				  
+
                 <div class="card" id="postCheck">
                     <h5 ng-click="viewCollectible(collectible.name)" id="title">{{collectible.name}}</h5>
 					<div class="dropdown">
@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="addToCollectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -110,7 +110,7 @@
 		  <div class="modal-body">
 			<div class="row">
 			  <div name="message" class="col col-lg-9">
-				Please select a folder: 
+				Please select a folder:
 				<select ng-model="addToFolderName[addToFolderTrove]" class="form-control">
 					<option ng-repeat="(key, value) in userCollections[addToFolderTrove]">{{key}}</option>
 				</select>
@@ -123,7 +123,7 @@
 		</div>
 	  </div>
 	</div>
-	  
+
 	<!-- Modal -->
 	<div class="modal fade" id="contactUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -141,12 +141,12 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button name="confirmUserContact" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	  
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

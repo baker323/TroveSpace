@@ -88,11 +88,11 @@
           <h3 class="card-header card-header-primary" id="head">
             {{collectibleName}}
 				<a class="float-right" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  <i class="material-icons md-36 float-right hover">expand_more</i>
+				  <i name="collectionDropdown" class="material-icons md-36 float-right hover">expand_more</i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="padding-bottom: 15px">
 				  <p class="dropdown-item unbold hover mb-0" href="" ng-click="voteForDuplicate()">
-					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">flag</i> Mark as Duplicate
+					<i name="markAsDuplicate" class="material-icons md-dark unbold hover" style="vertical-align: bottom">flag</i> Mark as Duplicate
 				  </p>
 				  <p ng-show="dateAddedToCollection" ng-if="forSale==null" class="dropdown-item unbold hover mb-0" href="" ng-click="markAsForSale(collectibleName)">
 					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">shopping_cart</i> Mark as For Sale
@@ -120,7 +120,7 @@
 			  </div>
               <div class="col-6">
                 <button name="approveButton" ng-click="incrementKeepVotes(collectibleName)" type="button" id="edit" class="btn btn-success">Approve</button>
-		  		<button name="disapproveButton" ng-click="incrementRevertVotes(collectibleName)" type="button" id="edit" class="btn btn-danger">Disapprove</button>
+		  		      <button name="disapproveButton" ng-click="incrementRevertVotes(collectibleName)" type="button" id="edit" class="btn btn-danger">Disapprove</button>
               </div>
             </div>
           </div>
@@ -227,15 +227,15 @@
 			    <div class="star-rating">
 				  <div class="star-rating__wrap">
 					<input ng-checked="myRating==5" ng-click="rateStars(5)" class="star-rating__input" id="star-rating-5" type="radio" name="rating" value="5">
-					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-5"></label>
+					<label name="star5" class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-5"></label>
 					<input ng-checked="myRating==4" ng-click="rateStars(4)" class="star-rating__input" id="star-rating-4" type="radio" name="rating" value="4">
-					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-4"></label>
+					<label name="star4" class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-4"></label>
 					<input ng-checked="myRating==3" ng-click="rateStars(3)" class="star-rating__input" id="star-rating-3" type="radio" name="rating" value="3">
-					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-3"></label>
+					<label name="star3" class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-3"></label>
 					<input ng-checked="myRating==2" ng-click="rateStars(2)" class="star-rating__input" id="star-rating-2" type="radio" name="rating" value="2">
-					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-2"></label>
+					<label name="star2" class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-2"></label>
 					<input ng-checked="myRating==1" ng-click="rateStars(1)" class="star-rating__input" id="star-rating-1" type="radio" name="rating" value="1">
-					<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-1"></label>
+					<label name="star1" class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-1"></label>
 				  </div>
 				</div>
             </div>
@@ -267,7 +267,7 @@
 					 <input ng-show="collectible.collectCount==1" value="{{collectible.collectCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.collectCount>1 || collectible.collectCount==0" value="{{collectible.collectCount}} People" class="form-control" disabled>
 					 <span class="input-group-btn">
-				   		<button data-toggle="modal" data-target="#viewUserListModal" type="button" class="btn btn-primary">View All</button>
+				   		<button name="viewAllUserCollection" data-toggle="modal" data-target="#viewUserListModal" type="button" class="btn btn-primary">View All</button>
 				     </span>
 				</div>
 			  <div ng-show="collectible.collectCount==0">
@@ -282,7 +282,7 @@
 					 <input ng-show="collectible.wishlistCount==1" value="{{collectible.wishlistCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.wishlistCount>1 || collectible.wishlistCount==0" value="{{collectible.wishlistCount}} People" class="form-control" disabled>
 					 <span class="input-group-btn">
-				   		<button data-toggle="modal" data-target="#viewWishlistModal" type="button" class="btn btn-primary">View All</button>
+				   		<button name="viewAllUserWishlist" data-toggle="modal" data-target="#viewWishlistModal" type="button" class="btn btn-primary">View All</button>
 				     </span>
 				</div>
 			  <div ng-show="collectible.wishlistCount==0">
@@ -311,7 +311,7 @@
                <div class="input-group">
 			   	   <input ng-model="multipleCount" class="form-control" id="multipleCount" value="{{multipleCount}}">
 				   <span class="input-group-btn">
-				   		<button ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
+				   		<button name="saveMultipleCount" ng-click="setMultipleCount(collectibleName, multipleCount)" type="button" class="btn btn-success">Save</button>
 				   </span>
 			   </div>
            </div>
@@ -335,12 +335,12 @@
 			<div class="form-group row">
 			  <div class="col-12">
 				  	<label for="exampleFormControlTextarea1">Enter Your Comment</label>
-            		<textarea ng-model="comment" class="form-control" id="comment" rows="3"></textarea>
+            		<textarea name="commentText" ng-model="comment" class="form-control" id="comment" rows="3"></textarea>
 				</div>
 			  </div>
 			  <div class="form-group row">
 				  <div class="col-12">
-			  	<button ng-click="sendComment(comment)" type="button" class="btn btn-primary">Submit</button>
+			  	<button name="submitComment" ng-click="sendComment(comment)" type="button" class="btn btn-primary">Submit</button>
 				  </div>
 			  </div>
 			  <div ng-repeat="comment in comments" class="col-12">
@@ -351,17 +351,17 @@
 					<div class="row">
 						<textarea ng-model="comment.text" class="form-control" rows="3" disabled></textarea>
 						<div style="text-align:right; display:block; width:100%">
-							<i ng-show="comment.upvoteUsers[currentUser.uid]==true" class="material-icons hover" style="vertical-align: bottom; color:green" ng-click="upvoteComment(comment.key)">thumb_up</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==true" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="upvoteComment(comment.key)">thumb_up</i> {{comment.upvotes}} <i ng-show="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons hover" style="vertical-align: bottom; color:red">thumb_down</i><i ng-hide="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons md-dark hover" style="vertical-align: bottom">thumb_down</i> {{comment.downvotes}} <i class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="textareashow[comment.key] = !textareashow[comment.key]">comment</i> Reply<span ng-show="currentUser.displayName==comment.user"><i class="material-icons md-dark hover" ng-click="deleteComment(comment.key)" style="vertical-align: bottom">delete</i>Delete</span>
+							<i name="un-upvoteComment" ng-show="comment.upvoteUsers[currentUser.uid]==true" class="material-icons hover" style="vertical-align: bottom; color:green" ng-click="upvoteComment(comment.key)">thumb_up</i><i name="upvoteComment" ng-hide="comment.upvoteUsers[currentUser.uid]==true" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="upvoteComment(comment.key)">thumb_up</i> {{comment.upvotes}} <i name="un-downvoteComment"  ng-show="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons hover" style="vertical-align: bottom; color:red">thumb_down</i><i name="downvoteComment" ng-hide="comment.upvoteUsers[currentUser.uid]==false" ng-click="downvoteComment(comment.key)" class="material-icons md-dark hover" style="vertical-align: bottom">thumb_down</i> {{comment.downvotes}} <i name="replayComment" class="material-icons md-dark hover" style="vertical-align: bottom" ng-click="textareashow[comment.key] = !textareashow[comment.key]">comment</i> Reply<span ng-show="currentUser.displayName==comment.user"><i name="commentDelete" class="material-icons md-dark hover" ng-click="deleteComment(comment.key)" style="vertical-align: bottom">delete</i>Delete</span>
 						</div>
 						<div style="margin-left: 100px;" ng-show="textareashow[comment.key]" class="input-group form-group">
-							<input ng-model="reply[comment.key]" class="form-control" placeholder="Enter Reply">
+							<input name="replayCommentText" ng-model="reply[comment.key]" class="form-control" placeholder="Enter Reply">
 							<span class="input-group-btn">
-								<button ng-click="sendReply(reply[comment.key], comment.key)" type="button" class="btn btn-primary"><i class="material-icons" style="vertical-align: bottom">reply</i></button>
+								<button name="submitReplyComment" ng-click="sendReply(reply[comment.key], comment.key)" type="button" class="btn btn-primary"><i class="material-icons" style="vertical-align: bottom">reply</i></button>
 							</span>
 						</div>
 						<div ng-repeat="replyText in comment.replies" style="margin-left: 100px; text-align:left; display:block; width:100%" class="form-group">
 							<i class="material-icons md-dark" style="vertical-align: bottom">person</i>{{replyText.user}} -
-							{{replyText.dateAdded | amTimeAgo}}<i class="material-icons md-dark hover" style="vertical-align: bottom" ng-show="currentUser.displayName==replyText.user" ng-click="deleteReply(replyText.key, comment.key)">close</i>
+							{{replyText.dateAdded | amTimeAgo}}<i name="deleteReplyComment" class="material-icons md-dark hover" style="vertical-align: bottom" ng-show="currentUser.displayName==replyText.user" ng-click="deleteReply(replyText.key, comment.key)">close</i>
 							<input ng-model="replyText.text" class="form-control" disabled>
 						</div>
 					</div>
@@ -387,8 +387,8 @@
 			<div class="row">
 			  <div ng-hide="collectible.duplicateName" name="message" class="col col-lg-9">
 				Please select the duplicate collectible:
-				<select ng-model="duplicateCollectibleName" class="form-control">
-					<option ng-repeat="(key, value) in collectibles" ng-if="key!=collectibleName">{{key}}</option>
+				<select name="selectDuplicateCollectible" ng-model="duplicateCollectibleName" class="form-control">
+					<option name="decideDuplicateCollectible" ng-repeat="(key, value) in collectibles" ng-if="key!=collectibleName">{{key}}</option>
 				</select>
 			  </div>
 			  <div ng-show="collectible.duplicateName" ng-if="collectible.duplicateYes==1" name="message" class="col col-lg-9">
@@ -400,9 +400,9 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button ng-show="collectible.duplicateName" ng-click="voteDuplicateCollectible(collectible.duplicateName)" name="confirm" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
-			<button ng-show="collectible.duplicateName" ng-click="voteNotDuplicateCollectible(duplicateCollectibleName)" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">No</button>
-			<button ng-hide="collectible.duplicateName" ng-click="voteDuplicateCollectible(duplicateCollectibleName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button name="duplicateNameYes" ng-show="collectible.duplicateName" ng-click="voteDuplicateCollectible(collectible.duplicateName)" name="confirm" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+			<button name="duplicateNameNo" ng-show="collectible.duplicateName" ng-click="voteNotDuplicateCollectible(duplicateCollectibleName)" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">No</button>
+			<button name="submitDuplicateName" ng-hide="collectible.duplicateName" ng-click="voteDuplicateCollectible(duplicateCollectibleName)" name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
@@ -421,7 +421,7 @@
 		  <div class="modal-body">
 			<div class="list-group">
 			  <a href="" ng-click="viewCollectUser(key)" ng-repeat="(key, value) in collectUsers" name="message" class="list-group-item">
-				<i style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
+				<i name="collectUser" style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
 			  </a>
 			</div>
 		  </div>
@@ -445,7 +445,7 @@
 		  <div class="modal-body">
 			<div class="list-group">
 			  <a href="" ng-click="viewWishlistUser(key)" ng-repeat="(key, value) in wishlistUsers" name="message" class="list-group-item">
-				<i style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
+				<i name="wishlistUser" style="vertical-align: bottom" class="material-icons hover">person</i> {{value}}
 			  </a>
 			</div>
 		  </div>
