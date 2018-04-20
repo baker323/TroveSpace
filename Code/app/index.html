@@ -101,7 +101,7 @@
 	  <!--Here you can ng-show when there is no notification-->
       <li ng-show="loggedIn" class="nav-item dropdown">
         <a ng-hide="notifications" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="material-icons md-dark hover">notifications_none</i>
+          <i name="non-notification" class="material-icons md-dark hover">notifications_none</i>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 		      <p class="text-center hover mb-0">
@@ -112,12 +112,12 @@
       <!--Here you can ng-show only when there is notification-->
       <li ng-show="loggedIn" class="nav-item dropdown">
         <a ng-show="notifications" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="material-icons red hover">notifications_active</i>
+          <i name="clickNotification" class="material-icons red hover">notifications_active</i>
         </a>
         <div class="dropdown-menu" style="width:auto" aria-labelledby="navbarDropdown">
           <div class="text-left dropdown-item" ng-repeat="(key, value) in notifications">
               <a class="hover" ng-click="viewNotification(key)">{{key}} has been edited.</a>
-			  <i class="material-icons md-dark md-18 hover" ng-click="removeNotification(key)">clear</i>
+			  <i name="removeNotification" class="material-icons md-dark md-18 hover" ng-click="removeNotification(key)">clear</i>
           </div>
         </div>
       </li>

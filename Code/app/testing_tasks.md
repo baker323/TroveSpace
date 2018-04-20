@@ -1,6 +1,5 @@
 Tasks
 - notification
-- request for removing Trove
 
 # Completed
 - marking duplicates // done
@@ -13,8 +12,9 @@ Tasks
 - view another user's collection // done
 - view another user's wishlist // done
 - comment on items // done
-- put "for sell" mark on my collection
-- see all "for sale" listings of a specific item.
+- put "for sell" mark on my collection // done
+- see all "for sale" listings of a specific item. // done
+- request for removing Trove // done
 
 # Find
 - timestamp does not work

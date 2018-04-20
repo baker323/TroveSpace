@@ -11,7 +11,7 @@ exports.config = {
         //'register/register_test.js', // done
         //'login/login_test.js', // done
         //'troves/troves_test.js', // done
-        'viewCollectible/viewCollectible_test.js', // done
+        //'viewCollectible/viewCollectible_test.js', // done
         //'troveSearch/troveSearch_test.js' // done
     ]
 }

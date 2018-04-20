@@ -2,7 +2,7 @@ describe('troves module', function() {
 
     // const URL = 'https://baker323.github.io/#!/login';
     const URL = 'http://127.0.0.1:60788/#!/login';
-
+/*
     it('should successfully added to wishlist', function() {
         // login
         browser.get(URL);
@@ -237,6 +237,7 @@ describe('troves module', function() {
         browser.sleep(2000);
         element(by.name('cancelCreateCollectible')).click();
     });
+
     // testing create new Troves
     it('should create new Trove', function() {
         // login
@@ -262,6 +263,42 @@ describe('troves module', function() {
         element(by.name('submitNewTrove')).click();
         browser.sleep(2000);
     });
+
+    it('should send remove request for the specific Trove', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(3)).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("There are currently no collectibles in this trove.");
+        element(by.name('confirm')).click();
+        browser.sleep(2000);
+        // dropdownForRemoveRequest
+        element(by.name('dropdownForRemoveRequest')).click();
+        browser.sleep(2000);
+        // sendRomveRequest
+        element(by.name('sendRomveRequest')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Request submitted for review.");
+        element(by.name('confirm')).click();
+        browser.sleep(2000);
+        // Your request has already been submitted.
+        element(by.name('dropdownForRemoveRequest')).click();
+        browser.sleep(2000);
+        // sendRomveRequest
+        element(by.name('sendRomveRequest')).click();
+        browser.sleep(2000);
+        expect(element(by.name('errorMessage')).getText()).toEqual("Your request has already been submitted.");
+        element(by.name('confirm')).click();
+    });*/
 
 
 });

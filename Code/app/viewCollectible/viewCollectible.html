@@ -95,10 +95,10 @@
 					<i name="markAsDuplicate" class="material-icons md-dark unbold hover" style="vertical-align: bottom">flag</i> Mark as Duplicate
 				  </p>
 				  <p ng-show="dateAddedToCollection" ng-if="forSale==null" class="dropdown-item unbold hover mb-0" href="" ng-click="markAsForSale(collectibleName)">
-					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">shopping_cart</i> Mark as For Sale
+					<i name="markAsForSale" class="material-icons md-dark unbold hover" style="vertical-align: bottom">shopping_cart</i> Mark as For Sale
 				  </p>
 				  <p ng-show="dateAddedToCollection" ng-if="forSale!=null" class="dropdown-item unbold hover mb-0" href="" ng-click="markAsNotForSale(collectibleName)">
-					<i class="material-icons md-dark unbold hover" style="vertical-align: bottom">remove_shopping_cart</i> Mark as Not For Sale
+					<i name="markAsNotForSale" class="material-icons md-dark unbold hover" style="vertical-align: bottom">remove_shopping_cart</i> Mark as Not For Sale
 				  </p>
 			  </div>
           </h3>
@@ -297,7 +297,7 @@
 					 <input ng-show="collectible.forSaleCount==1" value="{{collectible.forSaleCount}} Person" class="form-control" disabled>
 					 <input ng-show="collectible.forSaleCount>1 || collectible.forSaleCount==0" value="{{collectible.forSaleCount}} People" class="form-control" disabled>
 					 <span class="input-group-btn">
-				   		<button data-toggle="modal" data-target="#viewForSaleModal" type="button" class="btn btn-primary">View All</button>
+				   		<button name="viewAllUserForSale" data-toggle="modal" data-target="#viewForSaleModal" type="button" class="btn btn-primary">View All</button>
 				     </span>
 				</div>
 			  <div ng-show="collectible.forSaleCount==0">
@@ -474,7 +474,7 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button name="confirm" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+			<button name="confirmOKForSale" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
 		  </div>
 		</div>
 	  </div>
