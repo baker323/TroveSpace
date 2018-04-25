@@ -16,7 +16,6 @@
 - see all "for sale" listings of a specific item. // done
 - request for removing Trove // done
 - notification // done
-- timestamp does not work (Adam change the way to show)
 
 # Find
-
+- timestamp does not work // done: Adam change the way to show
