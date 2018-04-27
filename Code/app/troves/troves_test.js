@@ -263,7 +263,7 @@ describe('troves module', function() {
         element(by.name('submitNewTrove')).click();
         browser.sleep(2000);
     });
-
+*/
     it('should send remove request for the specific Trove', function() {
         browser.get(URL);
 
@@ -276,10 +276,7 @@ describe('troves module', function() {
         element(by.name('viewTroves')).click();
         browser.sleep(2000);
 
-        element(by.repeater('(key, value) in troves').row(3)).click();
-        browser.sleep(2000);
-        expect(element(by.name('errorMessage')).getText()).toEqual("There are currently no collectibles in this trove.");
-        element(by.name('confirm')).click();
+        element(by.repeater('(key, value) in troves').row(0)).click();
         browser.sleep(2000);
         // dropdownForRemoveRequest
         element(by.name('dropdownForRemoveRequest')).click();
@@ -298,7 +295,6 @@ describe('troves module', function() {
         browser.sleep(2000);
         expect(element(by.name('errorMessage')).getText()).toEqual("Your request has already been submitted.");
         element(by.name('confirm')).click();
-    });*/
-
+    });
 
 });

@@ -116,7 +116,7 @@
         </a>
         <div class="dropdown-menu" style="width:auto" aria-labelledby="navbarDropdown">
           <div class="text-left dropdown-item" ng-repeat="(key, value) in notifications">
-              <a class="hover" ng-click="viewNotification(key)">{{key}} has been edited.</a>
+              <a name="goNotificationPage" class="hover" ng-click="viewNotification(key)">{{key}} has been edited.</a>
 			  <i name="removeNotification" class="material-icons md-dark md-18 hover" ng-click="removeNotification(key)">clear</i>
           </div>
         </div>

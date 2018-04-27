@@ -35,7 +35,6 @@ describe('TroveSpace Edit Item: ', function() {
 
         browser.actions().mouseMove(element(by.name('submitEditCollectible'))).perform();
         browser.sleep(2000);
-
     });
 
 
@@ -78,8 +77,6 @@ describe('TroveSpace Edit Item: ', function() {
         expect(element(by.name('errorMessage')).getText()).toEqual("There are currently no collectibles in this folder.");
         element(by.name('confirm')).click();
         browser.sleep(2000);
-
-
     });
 
     it('should add timestamp for collection', function() {
@@ -201,6 +198,62 @@ describe('TroveSpace Edit Item: ', function() {
         element(by.name('confirm')).click();
         // disapproveButton
     });
+
+    it('edit another collection', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('testtest@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+
+        // add to wishlist
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+
+        element(by.repeater('(key, value) in troves').row(1)).click();
+        browser.sleep(2000);
+
+        // editCollectibleButton
+        element(by.name('editCollectibleButton')).click();
+        browser.sleep(2000);
+
+        // editDescription
+        element.all(by.model('collectible.description')).clear();
+        element.all(by.model('collectible.description')).first().sendKeys('hello world')
+        browser.sleep(2000);
+
+        element.all(by.name('editExtra')).clear();
+        element.all(by.name('editExtra')).get(0).sendKeys('Hello World');
+        browser.sleep(2000);
+
+        element(by.name('submitEditCollectible')).click();
+        browser.sleep(2000);
+
+        expect(element(by.name('errorMessage')).getText()).toEqual("Your edit has been submitted for approval.");
+        element(by.name('confirm')).click();
+        // disapproveButton
+    });
+
+    it('should check notification', function() {
+        browser.get(URL);
+
+        element.all(by.model('email')).first().sendKeys('test@test.com');
+        element.all(by.model('password')).first().sendKeys('test18');
+
+        element(by.name('login')).click();
+        browser.sleep(2000);
+        element(by.name('viewTroves')).click();
+        browser.sleep(2000);
+        //clickNotification
+        element(by.name('clickNotification')).click();
+        browser.sleep(2000);
+        // removeNotification
+        element(by.name('goNotificationPage')).click();
+        browser.sleep(2000);
+    })
+
 
     it('should get notification', function() {
         browser.get(URL);
@@ -465,7 +518,7 @@ describe('TroveSpace Edit Item: ', function() {
         element(by.name('viewAllUserCollection')).click();
         browser.sleep(2000);
         // collectUser
-        element.all(by.name('collectUser')).get(3).click();
+        element.all(by.name('collectUser')).get(2).click();
         browser.sleep(2000);
 
         // contactInfo
@@ -666,7 +719,7 @@ it('should replay comment on the collectible and vote', function() {
         element(by.name('confirm')).click();
         browser.sleep(2000);
     })
-
+/*
     it('should deny edit', function() {
         browser.get(URL);
 
@@ -765,7 +818,7 @@ it('should replay comment on the collectible and vote', function() {
         element(by.name('confirm')).click();
         browser.sleep(2000);
     });
-
+*/
     it('should delete the folders', function() {
         // login
         browser.get(URL);
