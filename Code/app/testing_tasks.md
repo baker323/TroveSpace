@@ -16,9 +16,10 @@
 - view another user's wishlist // done
 - comment on items // done
 - follow a trove // done
+- notification // done
 ## troves_test.js
 - request for removing Trove // done
-- notification // done
+
 
 # Find
 - timestamp does not work // done: Adam change the way to show
